@@ -8,6 +8,7 @@ import {
   FolderKanban,
   BarChart3,
   ClipboardList,
+  Shield,
 } from "lucide-react";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
@@ -17,6 +18,7 @@ const tabs = [
   { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban },
   { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3 },
   { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList },
+  { id: "audit", label: "Audit", href: "/audit", icon: Shield },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];

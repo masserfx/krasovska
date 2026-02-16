@@ -8,6 +8,7 @@ import {
   ProjectCategory,
   ProjectStatus,
 } from "@/types";
+import { AuditEntry } from "@/lib/audit";
 
 // --- Questionnaires ---
 
@@ -162,6 +163,23 @@ export async function regenerateAnalysis(questionnaireId: string): Promise<Analy
     method: "POST",
   });
   if (!res.ok) throw new Error("Nepodařilo se vygenerovat analýzu");
+  return res.json();
+}
+
+// --- Audit ---
+
+export async function fetchAuditLog(params?: {
+  questionnaire_id?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<AuditEntry[]> {
+  const query = new URLSearchParams();
+  if (params?.questionnaire_id) query.set("questionnaire_id", params.questionnaire_id);
+  if (params?.limit) query.set("limit", String(params.limit));
+  if (params?.offset) query.set("offset", String(params.offset));
+  const qs = query.toString();
+  const res = await fetch(`/api/audit${qs ? `?${qs}` : ""}`);
+  if (!res.ok) throw new Error("Nepodařilo se načíst audit log");
   return res.json();
 }
 

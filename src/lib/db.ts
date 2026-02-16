@@ -55,5 +55,21 @@ export async function ensureTable() {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS audit_log (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      questionnaire_id UUID NOT NULL REFERENCES questionnaires(id) ON DELETE CASCADE,
+      ip_address VARCHAR(45),
+      user_agent TEXT,
+      device_type VARCHAR(20),
+      country VARCHAR(100),
+      city VARCHAR(100),
+      geo_status VARCHAR(20) DEFAULT 'pending',
+      changed_sections JSONB DEFAULT '[]',
+      changed_fields JSONB DEFAULT '{}',
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
   initialized = true;
 }

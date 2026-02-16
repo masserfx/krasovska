@@ -1,6 +1,8 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { getClientIp, parseDeviceType, detectChanges, logAudit, resolveGeo } from "@/lib/audit";
 
 export async function GET(
   _request: Request,
@@ -38,6 +40,16 @@ export async function PUT(
     const { id } = await params;
     const { data, title } = await request.json();
 
+    // Fetch current data for diff
+    const { rows: currentRows } = await sql`
+      SELECT data FROM questionnaires WHERE id = ${id}
+    `;
+    const oldData = currentRows.length > 0 ? (currentRows[0].data || {}) : {};
+
+    // Detect changes
+    const { changedSections, changedFields } = detectChanges(oldData, data);
+
+    // Update questionnaire
     if (title !== undefined) {
       await sql`
         UPDATE questionnaires
@@ -51,6 +63,24 @@ export async function PUT(
         WHERE id = ${id}
       `;
     }
+
+    // Log audit if there were changes
+    if (changedSections.length > 0) {
+      const ip = getClientIp(request);
+      const ua = request.headers.get("user-agent");
+      const auditId = await logAudit({
+        questionnaire_id: id,
+        ip_address: ip,
+        user_agent: ua,
+        device_type: parseDeviceType(ua),
+        changed_sections: changedSections,
+        changed_fields: changedFields,
+      });
+
+      // Resolve geo asynchronously (non-blocking)
+      after(() => resolveGeo(auditId, ip));
+    }
+
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("PUT /api/questionnaires/[id] error:", error);
