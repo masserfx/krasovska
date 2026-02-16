@@ -17,6 +17,13 @@ export interface FieldConfig {
 
 export type FormData = Record<string, Record<string, string | string[]>>;
 
+export interface QuestionnaireMetadata {
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export const SECTIONS: QuestionnaireSection[] = [
   {
     id: "organizace",

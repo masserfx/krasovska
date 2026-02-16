@@ -1,37 +1,116 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SECTIONS, FormData } from "@/types";
+import { fetchQuestionnaire } from "@/lib/api";
+import { useAutoSave } from "@/hooks/useAutoSave";
 import SectionNav from "@/components/SectionNav";
 import SectionContent from "@/components/SectionContent";
 import ExportPanel from "@/components/ExportPanel";
-import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import SaveIndicator from "@/components/SaveIndicator";
+import { ChevronLeft, ChevronRight, Menu, X, Loader2 } from "lucide-react";
 
 const STORAGE_KEY = "hala-krasovska-questionnaire";
 
-export default function Home() {
+function QuestionnaireApp() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const questionnaireId = searchParams.get("id");
+
   const [activeSection, setActiveSection] = useState(SECTIONS[0].id);
   const [formData, setFormData] = useState<FormData>({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dbLoading, setDbLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  // Offline mode: no ?id= but old localStorage data exists
+  const [offlineMode, setOfflineMode] = useState(false);
 
+  const { status: saveStatus, markSynced } = useAutoSave(
+    questionnaireId,
+    formData
+  );
+
+  // If no ?id=, check for legacy localStorage data or redirect to /sessions
   useEffect(() => {
+    if (questionnaireId) return;
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        setFormData(JSON.parse(saved));
+        const data = JSON.parse(saved);
+        if (Object.keys(data).length > 0) {
+          setFormData(data);
+          setOfflineMode(true);
+          setMounted(true);
+          return;
+        }
       } catch {
         // ignore
       }
     }
-    setMounted(true);
-  }, []);
+    router.replace("/sessions");
+  }, [questionnaireId, router]);
 
+  // Load data from DB or localStorage (when ?id= is present)
   useEffect(() => {
-    if (mounted) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    if (!questionnaireId) return;
+
+    let cancelled = false;
+
+    async function loadFromDb() {
+      setDbLoading(true);
+      try {
+        const result = await fetchQuestionnaire(questionnaireId!);
+        if (cancelled) return;
+        const data = result.data || {};
+        setFormData(data);
+        setTitle(result.title);
+        markSynced(data);
+        // Cache to localStorage
+        localStorage.setItem(
+          `${STORAGE_KEY}-${questionnaireId}`,
+          JSON.stringify(data)
+        );
+      } catch {
+        // Fallback to localStorage
+        if (cancelled) return;
+        const saved = localStorage.getItem(
+          `${STORAGE_KEY}-${questionnaireId}`
+        );
+        if (saved) {
+          try {
+            setFormData(JSON.parse(saved));
+          } catch {
+            // ignore
+          }
+        }
+      } finally {
+        if (!cancelled) {
+          setDbLoading(false);
+          setMounted(true);
+        }
+      }
     }
-  }, [formData, mounted]);
+
+    loadFromDb();
+    return () => {
+      cancelled = true;
+    };
+  }, [questionnaireId, markSynced]);
+
+  // Cache to localStorage on change
+  useEffect(() => {
+    if (!mounted) return;
+    if (offlineMode) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    } else if (questionnaireId) {
+      localStorage.setItem(
+        `${STORAGE_KEY}-${questionnaireId}`,
+        JSON.stringify(formData)
+      );
+    }
+  }, [formData, mounted, questionnaireId, offlineMode]);
 
   const handleFieldChange = useCallback(
     (sectionId: string, fieldId: string, value: string | string[]) => {
@@ -67,10 +146,21 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!mounted) {
+  if (!questionnaireId && !offlineMode) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted">Načítání...</div>
+        <Loader2 className="h-6 w-6 animate-spin text-muted" />
+      </div>
+    );
+  }
+
+  if (!mounted || dbLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex items-center gap-3 text-muted">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Načítání dotazníku...
+        </div>
       </div>
     );
   }
@@ -93,15 +183,16 @@ export default function Home() {
             </button>
             <div>
               <h1 className="text-lg font-bold text-foreground">
-                Hala Krašovská
+                {title || "Hala Krašovská"}
               </h1>
               <p className="text-xs text-muted">
                 Projektový dotazník — ERP/CRM systém
               </p>
             </div>
           </div>
-          <div className="hidden items-center gap-2 text-xs text-muted sm:flex">
-            <span className="rounded-full bg-primary-light/10 px-3 py-1 font-medium text-primary">
+          <div className="flex items-center gap-3">
+            <SaveIndicator status={saveStatus} />
+            <span className="hidden rounded-full bg-primary-light/10 px-3 py-1 text-xs font-medium text-primary sm:inline-block">
               Sekce {currentIndex + 1} / {SECTIONS.length}
             </span>
           </div>
@@ -191,5 +282,19 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-muted" />
+        </div>
+      }
+    >
+      <QuestionnaireApp />
+    </Suspense>
   );
 }

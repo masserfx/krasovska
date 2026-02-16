@@ -2,8 +2,9 @@
 
 import { SECTIONS, FormData } from "@/types";
 import { sectionFields } from "@/data/fields";
-import { Download, Printer, Save, Upload } from "lucide-react";
+import { Download, Printer, Save, Upload, FolderOpen } from "lucide-react";
 import { useRef } from "react";
+import Link from "next/link";
 
 interface ExportPanelProps {
   formData: FormData;
@@ -181,6 +182,14 @@ export default function ExportPanel({ formData, onImport }: ExportPanelProps) {
             className="hidden"
           />
         </label>
+
+        <Link
+          href="/sessions"
+          className="flex w-full items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-background"
+        >
+          <FolderOpen className="h-4 w-4" />
+          Správa dotazníků
+        </Link>
       </div>
     </div>
   );
