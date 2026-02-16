@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hala Krašovská — Projektový dotazník",
+  title: "Hala Krašovská — Projektový management",
   description:
-    "Vstupní dotazník pro analýzu požadavků na ERP/CRM systém Sportovní haly Krašovská",
+    "ERP/CRM systém Sportovní haly Krašovská — dotazník, analýza, projekty a úkoly",
 };
 
 export default function RootLayout({
