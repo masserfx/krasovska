@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -9,6 +9,8 @@ import {
   BarChart3,
   ClipboardList,
 } from "lucide-react";
+
+const STORAGE_KEY = "hala-krasovska-active-qid";
 
 const tabs = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -21,7 +23,17 @@ type TabId = (typeof tabs)[number]["id"];
 
 function HeaderContent({ activeTab }: { activeTab: TabId }) {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const idFromUrl = searchParams.get("id");
+  const [id, setId] = useState(idFromUrl);
+
+  useEffect(() => {
+    if (idFromUrl) {
+      setId(idFromUrl);
+      return;
+    }
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) setId(stored);
+  }, [idFromUrl]);
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">

@@ -1,21 +1,20 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { AnalysisResult, RecommendedProject } from "@/types";
 import {
   fetchAnalysis,
   regenerateAnalysis,
   createProject,
 } from "@/lib/api";
+import { useQuestionnaireId } from "@/hooks/useQuestionnaireId";
 import AppHeader from "@/components/AppHeader";
 import AnalysisView from "@/components/AnalysisView";
 import EmptyState from "@/components/EmptyState";
 import { Loader2, BarChart3 } from "lucide-react";
 
 function AnalysisContent() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = useQuestionnaireId();
 
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,11 +69,12 @@ function AnalysisContent() {
 
   if (!id) {
     return (
-      <EmptyState
-        icon={BarChart3}
-        title="Chybí identifikátor dotazníku"
-        description="Pro zobrazení analýzy je potřeba platný dotazník."
-      />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex items-center gap-3 text-muted">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Přesměrování...
+        </div>
+      </div>
     );
   }
 

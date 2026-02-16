@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { DashboardData } from "@/types";
 import { fetchDashboard } from "@/lib/api";
+import { useQuestionnaireId } from "@/hooks/useQuestionnaireId";
 import AppHeader from "@/components/AppHeader";
 import DashboardStats from "@/components/DashboardStats";
 import ProjectsOverview from "@/components/ProjectsOverview";
@@ -12,8 +12,7 @@ import EmptyState from "@/components/EmptyState";
 import { Loader2, LayoutDashboard } from "lucide-react";
 
 function DashboardContent() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = useQuestionnaireId();
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,11 +38,12 @@ function DashboardContent() {
 
   if (!id) {
     return (
-      <EmptyState
-        icon={LayoutDashboard}
-        title="Chybí identifikátor dotazníku"
-        description="Pro zobrazení dashboardu je potřeba platný dotazník."
-      />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex items-center gap-3 text-muted">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Přesměrování...
+        </div>
+      </div>
     );
   }
 
