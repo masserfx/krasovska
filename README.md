@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hala Krašovská — Projektový dotazník
 
-## Getting Started
+Webová aplikace pro sběr požadavků na ERP/CRM systém **Sportovní haly Krašovská** v Plzni. Slouží jako strukturovaný vstupní dotazník pro první schůzku s vedením haly.
 
-First, run the development server:
+## O projektu
+
+Sportovní hala Krašovská (Badmintonová Akademie Plzeň, z.s.) je moderní sportovní centrum s 9 badmintonovými kurty, víceúčelovou plochou, cvičebním sálem, saunou a bistrem. Hala pořádá turnaje včetně mezinárodních, provozuje kroužky a kurzy pro všechny věkové kategorie.
+
+Cílem projektu je navrhnout a implementovat on-premise ERP/CRM systém, který pokryje:
+
+- Rezervace sportovišť
+- Členskou evidenci a CRM
+- Správu aktivit, kroužků a kurzů
+- Organizaci turnajů a akcí
+- E-shop s prodejem sportovního vybavení
+- Provoz restaurace / bistra
+- Finance, fakturaci a reporting
+- Marketing a komunikaci
+
+## Dotazník
+
+Aplikace obsahuje **14 tematických sekcí** se **130+ otázkami** pokrývajícími kompletní analýzu potřeb:
+
+| Sekce | Zaměření |
+|-------|----------|
+| Organizace a vedení | Právní forma, struktura, rozhodování |
+| Personální zajištění | Zaměstnanci, trenéři, směny, mzdy |
+| Finance a rozpočet | Příjmy, dotace, platby, účetnictví |
+| Sportoviště a prostory | Kurty, sály, sauna, kapacity |
+| Rezervační systém | Současný stav, požadavky na nový systém |
+| Členství a CRM | Členské programy, evidence, komunikace |
+| Aktivity a kroužky | Sporty, kurzy, registrace, docházka |
+| Turnaje a akce | Organizace, mezinárodní akce, rozpočty |
+| E-shop a prodej | Sortiment, platby, sklad, doprava |
+| Restaurace / Bistro | Provoz, menu, pokladna, HACCP |
+| Marketing a komunikace | Web, soc. sítě, branding, PR |
+| IT infrastruktura | HW, síť, server, bezpečnost |
+| Legislativa a GDPR | Ochrana dat, smlouvy, pojištění |
+| Cíle a vize projektu | Priority, termíny, kritéria úspěchu |
+
+## Funkce
+
+- **Automatické ukládání** — data se průběžně ukládají do localStorage
+- **Progress tracking** — vizuální přehled vyplněnosti každé sekce
+- **Export JSON** — pro strojové zpracování a opětovný import
+- **Export TXT** — čitelný textový report pro tisk a sdílení
+- **Import** — načtení dříve uloženého dotazníku
+- **Tisk** — optimalizovaný tiskový výstup
+- **Responzivní design** — desktop, tablet i mobil
+
+## Technologie
+
+- [Next.js](https://nextjs.org/) 16 (App Router)
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/) 4
+- [Lucide React](https://lucide.dev/) (ikony)
+
+## Spuštění
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikace poběží na [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Licence
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Interní projekt — všechna práva vyhrazena.
