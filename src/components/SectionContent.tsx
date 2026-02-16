@@ -1,8 +1,15 @@
 "use client";
 
-import { SECTIONS, FormData } from "@/types";
+import { SECTIONS, FormData, FieldConfig } from "@/types";
 import { sectionFields } from "@/data/fields";
 import FormField from "./FormField";
+
+const noteField: FieldConfig = {
+  id: "poznamka",
+  label: "Poznámka",
+  type: "textarea",
+  placeholder: "Nápad na vylepšení?..., Urgentní:...",
+};
 
 interface SectionContentProps {
   sectionId: string;
@@ -37,6 +44,14 @@ export default function SectionContent({
             onChange={(value) => onFieldChange(sectionId, field.id, value)}
           />
         ))}
+
+        <hr className="border-border" />
+
+        <FormField
+          field={noteField}
+          value={sectionData["poznamka"] || ""}
+          onChange={(value) => onFieldChange(sectionId, "poznamka", value)}
+        />
       </div>
     </div>
   );
