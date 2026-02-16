@@ -11,6 +11,8 @@ import {
   HelpCircle,
   Loader2,
   ChevronDown,
+  ChevronRight,
+  Fingerprint,
 } from "lucide-react";
 import { fetchAuditLog } from "@/lib/api";
 import { AuditEntry } from "@/lib/audit";
@@ -96,6 +98,7 @@ export default function AuditPage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const load = useCallback(async (offset: number) => {
     const data = await fetchAuditLog({ limit: PAGE_SIZE, offset });
@@ -175,47 +178,114 @@ export default function AuditPage() {
                 </tr>
               </thead>
               <tbody>
-                {entries.map((entry) => (
-                  <tr
-                    key={entry.id}
-                    className="border-b border-border last:border-0 hover:bg-gray-50/50"
-                  >
-                    <td className="whitespace-nowrap px-4 py-3 text-muted">
-                      {formatTime(entry.created_at)}
-                    </td>
-                    <td className="px-4 py-3 font-medium text-foreground">
-                      {entry.questionnaire_title || "—"}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">
-                      {entry.ip_address || "—"}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-muted">
-                      <GeoDisplay entry={entry} />
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3">
-                      <span className="flex items-center gap-1.5 text-muted">
-                        <DeviceIcon type={entry.device_type} />
-                        <span className="text-xs capitalize">
-                          {entry.device_type || "?"}
-                        </span>
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-1">
-                        {(entry.changed_sections || []).map((sec) => (
-                          <span
-                            key={sec}
-                            className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                              SECTION_COLORS[sec] || "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {SECTION_LABELS[sec] || sec}
+                {entries.map((entry) => {
+                  const isExpanded = expandedId === entry.id;
+                  const di = entry.device_info;
+                  return (
+                    <>
+                      <tr
+                        key={entry.id}
+                        className="border-b border-border last:border-0 hover:bg-gray-50/50 cursor-pointer"
+                        onClick={() => setExpandedId(isExpanded ? null : entry.id)}
+                      >
+                        <td className="whitespace-nowrap px-4 py-3 text-muted">
+                          <span className="flex items-center gap-1">
+                            {di ? (
+                              isExpanded ? (
+                                <ChevronDown className="h-3.5 w-3.5 text-muted/60" />
+                              ) : (
+                                <ChevronRight className="h-3.5 w-3.5 text-muted/60" />
+                              )
+                            ) : (
+                              <span className="inline-block w-3.5" />
+                            )}
+                            {formatTime(entry.created_at)}
                           </span>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-foreground">
+                          {entry.questionnaire_title || "—"}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">
+                          {entry.ip_address || "—"}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-muted">
+                          <GeoDisplay entry={entry} />
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <span className="flex items-center gap-1.5 text-muted">
+                            <DeviceIcon type={entry.device_type} />
+                            <span className="text-xs capitalize">
+                              {entry.device_type || "?"}
+                            </span>
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-wrap gap-1">
+                            {(entry.changed_sections || []).map((sec) => (
+                              <span
+                                key={sec}
+                                className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                                  SECTION_COLORS[sec] || "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {SECTION_LABELS[sec] || sec}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                      {isExpanded && di && (
+                        <tr key={`${entry.id}-detail`} className="border-b border-border bg-gray-50/80">
+                          <td colSpan={6} className="px-4 py-3">
+                            <div className="flex items-start gap-2">
+                              <Fingerprint className="mt-0.5 h-4 w-4 text-primary/60" />
+                              <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-xs sm:grid-cols-3 md:grid-cols-4">
+                                <div>
+                                  <span className="text-muted">Obrazovka: </span>
+                                  <span className="font-medium">{di.screen}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Viewport: </span>
+                                  <span className="font-medium">{di.viewport}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Platforma: </span>
+                                  <span className="font-medium">{di.platform}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Jazyk: </span>
+                                  <span className="font-medium">{di.language}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Timezone: </span>
+                                  <span className="font-medium">{di.timezone}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Barvy: </span>
+                                  <span className="font-medium">{di.colorDepth}-bit</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted">Touch: </span>
+                                  <span className="font-medium">{di.touchPoints} bodů</span>
+                                </div>
+                                {di.connection && (
+                                  <div>
+                                    <span className="text-muted">Spojení: </span>
+                                    <span className="font-medium">{di.connection}</span>
+                                  </div>
+                                )}
+                                <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                                  <span className="text-muted">Device ID: </span>
+                                  <span className="font-mono font-medium">{di.deviceId}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                })}
               </tbody>
             </table>
           </div>

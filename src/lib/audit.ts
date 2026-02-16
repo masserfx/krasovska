@@ -1,6 +1,18 @@
 import { sql } from "@vercel/postgres";
 import { FormData } from "@/types";
 
+export interface DeviceInfo {
+  screen: string;
+  viewport: string;
+  language: string;
+  timezone: string;
+  platform: string;
+  deviceId: string;
+  colorDepth: number;
+  touchPoints: number;
+  connection?: string;
+}
+
 export interface AuditEntry {
   id: string;
   questionnaire_id: string;
@@ -12,6 +24,7 @@ export interface AuditEntry {
   geo_status: string;
   changed_sections: string[];
   changed_fields: Record<string, string[]>;
+  device_info: DeviceInfo | null;
   created_at: string;
   questionnaire_title?: string;
 }
@@ -70,16 +83,18 @@ export async function logAudit(entry: {
   device_type: string;
   changed_sections: string[];
   changed_fields: Record<string, string[]>;
+  device_info?: DeviceInfo | null;
 }): Promise<string> {
   const { rows } = await sql`
-    INSERT INTO audit_log (questionnaire_id, ip_address, user_agent, device_type, changed_sections, changed_fields)
+    INSERT INTO audit_log (questionnaire_id, ip_address, user_agent, device_type, changed_sections, changed_fields, device_info)
     VALUES (
       ${entry.questionnaire_id},
       ${entry.ip_address},
       ${entry.user_agent},
       ${entry.device_type},
       ${JSON.stringify(entry.changed_sections)},
-      ${JSON.stringify(entry.changed_fields)}
+      ${JSON.stringify(entry.changed_fields)},
+      ${JSON.stringify(entry.device_info || {})}
     )
     RETURNING id
   `;

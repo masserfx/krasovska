@@ -38,7 +38,7 @@ export async function PUT(
   try {
     await ensureTable();
     const { id } = await params;
-    const { data, title } = await request.json();
+    const { data, title, deviceInfo } = await request.json();
 
     // Fetch current data for diff
     const { rows: currentRows } = await sql`
@@ -75,6 +75,7 @@ export async function PUT(
         device_type: parseDeviceType(ua),
         changed_sections: changedSections,
         changed_fields: changedFields,
+        device_info: deviceInfo || null,
       });
 
       // Resolve geo asynchronously (non-blocking)

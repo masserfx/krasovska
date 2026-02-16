@@ -67,8 +67,14 @@ export async function ensureTable() {
       geo_status VARCHAR(20) DEFAULT 'pending',
       changed_sections JSONB DEFAULT '[]',
       changed_fields JSONB DEFAULT '{}',
+      device_info JSONB DEFAULT '{}',
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
+  `;
+
+  // Migration: add device_info column if missing
+  await sql`
+    ALTER TABLE audit_log ADD COLUMN IF NOT EXISTS device_info JSONB DEFAULT '{}'
   `;
 
   initialized = true;

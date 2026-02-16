@@ -8,7 +8,7 @@ import {
   ProjectCategory,
   ProjectStatus,
 } from "@/types";
-import { AuditEntry } from "@/lib/audit";
+import { AuditEntry, DeviceInfo } from "@/lib/audit";
 
 // --- Questionnaires ---
 
@@ -43,12 +43,13 @@ export async function createQuestionnaire(
 export async function updateQuestionnaire(
   id: string,
   data: FormData,
-  title?: string
+  title?: string,
+  deviceInfo?: DeviceInfo
 ): Promise<void> {
   const res = await fetch(`${BASE}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ data, title }),
+    body: JSON.stringify({ data, title, deviceInfo }),
   });
   if (!res.ok) throw new Error("Nepodařilo se uložit dotazník");
 }

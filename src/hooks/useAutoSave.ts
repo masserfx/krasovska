@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { FormData } from "@/types";
 import { updateQuestionnaire } from "@/lib/api";
+import { getDeviceFingerprint } from "@/lib/fingerprint";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
@@ -17,7 +18,8 @@ export function useAutoSave(id: string | null, formData: FormData) {
 
       setStatus("saving");
       try {
-        await updateQuestionnaire(id, data);
+        const deviceInfo = getDeviceFingerprint();
+        await updateQuestionnaire(id, data, undefined, deviceInfo);
         lastSavedRef.current = serialized;
         setStatus("saved");
       } catch {
