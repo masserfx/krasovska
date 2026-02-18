@@ -21,9 +21,11 @@ function saveCart(items: CartItem[]) {
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setItems(loadCart());
+    setLoaded(true);
   }, []);
 
   const persist = useCallback((next: CartItem[]) => {
@@ -76,5 +78,5 @@ export function useCart() {
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
   const total = items.reduce((sum, i) => sum + i.price_czk * i.quantity, 0);
 
-  return { items, addItem, removeItem, updateQuantity, clearCart, itemCount, total };
+  return { items, loaded, addItem, removeItem, updateQuantity, clearCart, itemCount, total };
 }

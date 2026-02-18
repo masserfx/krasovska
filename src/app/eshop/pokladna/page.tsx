@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
@@ -9,12 +9,23 @@ import CheckoutForm from "@/components/eshop/CheckoutForm";
 
 function CheckoutContent() {
   const router = useRouter();
-  const { items, total, clearCart, itemCount } = useCart();
+  const { items, loaded, total, clearCart, itemCount } = useCart();
 
-  if (itemCount === 0) {
-    router.push("/eshop/kosik");
-    return null;
+  useEffect(() => {
+    if (loaded && itemCount === 0) {
+      router.push("/eshop/kosik");
+    }
+  }, [loaded, itemCount, router]);
+
+  if (!loaded) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted" />
+      </div>
+    );
   }
+
+  if (itemCount === 0) return null;
 
   function handleSuccess(orderId: string) {
     clearCart();
