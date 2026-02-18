@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
@@ -10,9 +10,10 @@ import CheckoutForm from "@/components/eshop/CheckoutForm";
 function CheckoutContent() {
   const router = useRouter();
   const { items, loaded, total, clearCart, itemCount } = useCart();
+  const checkoutDone = useRef(false);
 
   useEffect(() => {
-    if (loaded && itemCount === 0) {
+    if (loaded && itemCount === 0 && !checkoutDone.current) {
       router.push("/eshop/kosik");
     }
   }, [loaded, itemCount, router]);
@@ -28,6 +29,7 @@ function CheckoutContent() {
   if (itemCount === 0) return null;
 
   function handleSuccess(orderId: string) {
+    checkoutDone.current = true;
     clearCart();
     router.push(`/eshop/dekujeme?order=${orderId}`);
   }

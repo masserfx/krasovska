@@ -86,21 +86,36 @@ export async function POST(request: NextRequest) {
       VALUES (${order.id}, ${total}, 'pending')
     `;
 
-    // 5. Create Comgate payment
-    const comgate = await createPayment({
-      order_id: order.id,
-      order_number: orderNumber,
-      amount_halere: total,
-      email,
-    });
+    // 5. Create Comgate payment (if credentials configured)
+    const comgateMerchant = process.env.COMGATE_MERCHANT;
+    if (comgateMerchant) {
+      const comgate = await createPayment({
+        order_id: order.id,
+        order_number: orderNumber,
+        amount_halere: total,
+        email,
+      });
 
-    // 6. Update payment with Comgate transaction ID
+      await sql`
+        UPDATE payments SET comgate_trans_id = ${comgate.trans_id} WHERE order_id = ${order.id}
+      `;
+
+      return NextResponse.json({
+        redirect_url: comgate.redirect_url,
+        order_id: order.id,
+      });
+    }
+
+    // Comgate not configured — mark as paid and redirect to thank you page
     await sql`
-      UPDATE payments SET comgate_trans_id = ${comgate.trans_id} WHERE order_id = ${order.id}
+      UPDATE payments SET status = 'paid', paid_at = NOW() WHERE order_id = ${order.id}
+    `;
+    await sql`
+      UPDATE orders SET status = 'paid', updated_at = NOW() WHERE id = ${order.id}
     `;
 
     return NextResponse.json({
-      redirect_url: comgate.redirect_url,
+      redirect_url: null,
       order_id: order.id,
     });
   } catch (error) {
