@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { QuestionnaireMetadata } from "@/types";
 import { fetchQuestionnaires, createQuestionnaire, deleteQuestionnaire } from "@/lib/api";
 import { Plus, Trash2, FileText, Loader2, AlertCircle } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
 
 export default function SessionsPage() {
   const router = useRouter();
@@ -67,16 +68,7 @@ export default function SessionsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-white/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-          <div>
-            <h1 className="text-lg font-bold text-foreground">
-              Hala Krašovská
-            </h1>
-            <p className="text-xs text-muted">Správa dotazníků</p>
-          </div>
-        </div>
-      </header>
+      <AppHeader activeTab="sessions" />
 
       <div className="mx-auto max-w-3xl px-4 py-8">
         <div className="mb-6 flex items-center justify-between">

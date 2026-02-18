@@ -71,7 +71,7 @@ function OrdersContent() {
 export default function AdminOrdersPage() {
   return (
     <div className="min-h-screen bg-background">
-      <AppHeader activeTab="eshop" />
+      <AppHeader activeTab="objednavky" />
       <main className="mx-auto max-w-7xl px-4 py-6">
         <Suspense
           fallback={

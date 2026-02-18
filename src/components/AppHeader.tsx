@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   FolderKanban,
@@ -10,24 +11,49 @@ import {
   ClipboardList,
   Shield,
   ShoppingCart,
+  Package,
+  Receipt,
+  FileText,
+  type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+import type { UserRole } from "@/types/auth";
+import { ROLE_HIERARCHY } from "@/types/auth";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
 
-const tabs = [
-  { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban },
-  { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3 },
-  { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList },
-  { id: "audit", label: "Audit", href: "/audit", icon: Shield },
+interface TabDef {
+  id: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  minRole?: UserRole;
+  appendQid?: boolean;
+}
+
+const tabs: TabDef[] = [
+  { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member", appendQid: true },
+  { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member", appendQid: true },
+  { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3, minRole: "admin", appendQid: true },
+  { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList, minRole: "member", appendQid: true },
+  { id: "sessions", label: "Relace", href: "/sessions", icon: FileText, minRole: "admin" },
+  { id: "audit", label: "Audit", href: "/audit", icon: Shield, minRole: "admin" },
   { id: "eshop", label: "E-shop", href: "/eshop", icon: ShoppingCart },
-] as const;
+  { id: "eshop-admin", label: "Produkty", href: "/eshop/admin", icon: Package, minRole: "admin" },
+  { id: "objednavky", label: "Objednávky", href: "/eshop/admin/objednavky", icon: Receipt, minRole: "reception" },
+];
 
-type TabId = (typeof tabs)[number]["id"];
+function visibleTabs(role: UserRole | undefined): TabDef[] {
+  return tabs.filter((tab) => {
+    if (!tab.minRole) return true;
+    if (!role) return false;
+    return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[tab.minRole];
+  });
+}
 
-function HeaderContent({ activeTab }: { activeTab: TabId }) {
+function HeaderContent({ activeTab }: { activeTab: string }) {
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const idFromUrl = searchParams.get("id");
   const [id, setId] = useState(idFromUrl);
 
@@ -39,6 +65,9 @@ function HeaderContent({ activeTab }: { activeTab: TabId }) {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) setId(stored);
   }, [idFromUrl]);
+
+  const role = session?.user?.role as UserRole | undefined;
+  const filtered = visibleTabs(role);
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
@@ -56,10 +85,10 @@ function HeaderContent({ activeTab }: { activeTab: TabId }) {
 
         {/* Tab navigation */}
         <nav className="-mb-px flex gap-1 overflow-x-auto">
-          {tabs.map((tab) => {
+          {filtered.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.id === activeTab;
-            const href = id ? `${tab.href}?id=${id}` : tab.href;
+            const href = id && tab.appendQid ? `${tab.href}?id=${id}` : tab.href;
 
             return (
               <Link
@@ -82,7 +111,7 @@ function HeaderContent({ activeTab }: { activeTab: TabId }) {
   );
 }
 
-export default function AppHeader({ activeTab }: { activeTab: TabId }) {
+export default function AppHeader({ activeTab }: { activeTab: string }) {
   return (
     <Suspense
       fallback={

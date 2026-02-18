@@ -17,6 +17,7 @@ import {
 import { fetchAuditLog } from "@/lib/api";
 import { AuditEntry } from "@/lib/audit";
 import { SECTIONS } from "@/types";
+import AppHeader from "@/components/AppHeader";
 
 const SECTION_LABELS: Record<string, string> = {};
 for (const s of SECTIONS) {
@@ -126,6 +127,8 @@ export default function AuditPage() {
   }
 
   return (
+    <div className="min-h-screen bg-background">
+    <AppHeader activeTab="audit" />
     <div className="mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
@@ -309,6 +312,7 @@ export default function AuditPage() {
           )}
         </>
       )}
+    </div>
     </div>
   );
 }
