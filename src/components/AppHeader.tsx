@@ -9,6 +9,7 @@ import {
   BarChart3,
   ClipboardList,
   Shield,
+  ShoppingCart,
 } from "lucide-react";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
@@ -19,6 +20,7 @@ const tabs = [
   { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3 },
   { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList },
   { id: "audit", label: "Audit", href: "/audit", icon: Shield },
+  { id: "eshop", label: "E-shop", href: "/eshop", icon: ShoppingCart },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];

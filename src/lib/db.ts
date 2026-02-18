@@ -77,5 +77,83 @@ export async function ensureTable() {
     ALTER TABLE audit_log ADD COLUMN IF NOT EXISTS device_info JSONB DEFAULT '{}'
   `;
 
+  // --- E-shop tables ---
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS products (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name VARCHAR(255) NOT NULL,
+      slug VARCHAR(255) NOT NULL UNIQUE,
+      description TEXT,
+      price_czk INTEGER NOT NULL,
+      compare_price_czk INTEGER,
+      category VARCHAR(100) NOT NULL,
+      image_url TEXT,
+      stock_quantity INTEGER DEFAULT 0,
+      is_active BOOLEAN DEFAULT true,
+      sort_order INTEGER DEFAULT 0,
+      metadata JSONB DEFAULT '{}',
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS discount_codes (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      code VARCHAR(50) NOT NULL UNIQUE,
+      discount_percent INTEGER,
+      discount_amount INTEGER,
+      min_order_amount INTEGER DEFAULT 0,
+      max_uses INTEGER,
+      used_count INTEGER DEFAULT 0,
+      valid_from TIMESTAMPTZ DEFAULT NOW(),
+      valid_until TIMESTAMPTZ,
+      is_active BOOLEAN DEFAULT true,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS orders (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      order_number VARCHAR(20) NOT NULL UNIQUE,
+      email VARCHAR(255) NOT NULL,
+      phone VARCHAR(50),
+      customer_name VARCHAR(255) NOT NULL,
+      items JSONB NOT NULL,
+      subtotal INTEGER NOT NULL,
+      discount_amount INTEGER DEFAULT 0,
+      discount_code VARCHAR(50),
+      total INTEGER NOT NULL,
+      status VARCHAR(30) DEFAULT 'pending',
+      delivery_method VARCHAR(50) DEFAULT 'pickup',
+      note TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS payments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+      comgate_trans_id VARCHAR(100),
+      amount INTEGER NOT NULL,
+      status VARCHAR(30) DEFAULT 'pending',
+      method VARCHAR(50),
+      paid_at TIMESTAMPTZ,
+      raw_response JSONB DEFAULT '{}',
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  // E-shop indexes
+  await sql`CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_payments_order_id ON payments(order_id)`;
+
   initialized = true;
 }
