@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
 import { generateSlug } from "@/lib/eshop-utils";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,6 +38,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await requireAuth("admin");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const body = await request.json();
     const { name, description, price_czk, compare_price_czk, category, image_url, stock_quantity, is_active, sort_order, metadata } = body;

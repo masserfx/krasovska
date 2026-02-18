@@ -1,12 +1,16 @@
 import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await requireAuth("reception");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const { id } = await params;
 
@@ -27,6 +31,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await requireAuth("reception");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const { id } = await params;
     const body = await request.json();

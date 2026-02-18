@@ -1,6 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function GET(
   _request: NextRequest,
@@ -27,6 +28,9 @@ export async function PUT(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const user = await requireAuth("admin");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const { slug } = await params;
     const body = await request.json();
@@ -73,6 +77,9 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const user = await requireAuth("admin");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const { slug } = await params;
 

@@ -1,9 +1,13 @@
 import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function GET(request: NextRequest) {
   try {
+    const user = await requireAuth("reception");
+    if (isAuthError(user)) return user;
+
     await ensureTable();
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");

@@ -155,5 +155,22 @@ export async function ensureTable() {
   await sql`CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_payments_order_id ON payments(order_id)`;
 
+  // --- Users table (auth) ---
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password_hash VARCHAR(255) NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      role VARCHAR(20) NOT NULL DEFAULT 'member',
+      is_active BOOLEAN DEFAULT true,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`;
+
   initialized = true;
 }

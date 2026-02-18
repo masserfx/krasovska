@@ -11,6 +11,7 @@ import {
   Shield,
   ShoppingCart,
 } from "lucide-react";
+import UserMenu from "@/components/UserMenu";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
 
@@ -50,6 +51,7 @@ function HeaderContent({ activeTab }: { activeTab: TabId }) {
             </h1>
             <p className="text-xs text-muted">Projektový management</p>
           </div>
+          <UserMenu />
         </div>
 
         {/* Tab navigation */}
