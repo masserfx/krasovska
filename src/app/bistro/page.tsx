@@ -10,7 +10,7 @@ import BriefingViewer from "@/components/bistro/BriefingViewer";
 type Tab = "kanban" | "gantt" | "kontroling" | "briefing";
 
 export default function BistroPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("kanban");
+  const [activeTab, setActiveTab] = useState<Tab>("briefing");
 
   return (
     <div className="min-h-screen bg-background">
