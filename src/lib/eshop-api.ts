@@ -142,6 +142,22 @@ export async function fetchLowStockCount(): Promise<number> {
   }
 }
 
+// --- Dashboard ---
+
+export interface DashboardData {
+  revenue: { today: number; week: number; month: number; year: number };
+  pending: { paid: number; preparing: number; ready: number; total: number };
+  orders_today: number;
+  top_products: { name: string; qty: number; revenue: number }[];
+  daily_revenue: { day: string; revenue: number; orders: number }[];
+}
+
+export async function fetchDashboard(): Promise<DashboardData> {
+  const res = await fetch("/api/eshop/dashboard");
+  if (!res.ok) throw new Error("Nepodařilo se načíst dashboard");
+  return res.json();
+}
+
 // --- Quick Sale (POS) ---
 
 export interface QuickSaleData {

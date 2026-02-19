@@ -7,6 +7,7 @@ import { fetchOrders } from "@/lib/eshop-api";
 import AppHeader from "@/components/AppHeader";
 import OrderTable from "@/components/eshop/OrderTable";
 import QuickSaleModal from "@/components/eshop/QuickSaleModal";
+import EshopKpiCards from "@/components/eshop/EshopKpiCards";
 
 const statuses: (OrderStatus | "all")[] = ["all", "pending", "paid", "preparing", "ready", "completed", "cancelled"];
 
@@ -36,6 +37,8 @@ function OrdersContent() {
 
   return (
     <>
+      <EshopKpiCards />
+
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-foreground">Objednávky</h2>

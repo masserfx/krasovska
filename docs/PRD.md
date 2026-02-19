@@ -1,6 +1,6 @@
 # PRD: Hala Krašovská — ERP/CRM Systém
 
-> **Verze:** 1.0 | **Datum:** 2026-02-18 | **Zdroj dat:** Dotazník „Schůzka 16. 2. 2026" vyplněný klientem
+> **Verze:** 1.1 | **Datum:** 2026-02-19 | **Zdroj dat:** Dotazník „Schůzka 16. 2. 2026" vyplněný klientem
 
 ---
 
@@ -270,6 +270,78 @@ Tyto sekce dotazníku zůstaly **kompletně prázdné**:
 | Závislost na městě (energie) | Politické riziko | Dokumentovat dohodu |
 | 2 lidé editují vzdáleně | Potřeba collaboration features | Implementováno (audit log) |
 | Prázdné sekce dotazníku | Neúplné požadavky | Follow-up schůzka |
+
+---
+
+## 10. Implementovaný stav — E-shop (v1.0)
+
+> Stav k 19. 2. 2026 — 5 sprintů dokončeno, deploy na Vercel
+
+### 10.1 Základní e-shop (pre-sprint)
+- Katalog produktů s kategoriemi (rakety, košíčky, oblečení, doplňky, permanentky, vouchery)
+- Nákupní košík (localStorage) s množstevním ovládáním
+- Checkout s platební bránou Comgate (produkční)
+- Slevové kódy (procentuální i pevné)
+- Admin CRUD pro produkty (obrázky, ceny v haléřích, aktivní/neaktivní)
+- Správa objednávek se stavovým workflow: pending → paid → preparing → ready → completed / cancelled
+
+### 10.2 Sprint 1 — POS Quick Sale
+- **Rychlý prodej na recepci** — modální okno s gridem produktů, vyhledáváním, košíkem
+- Platba hotovost / karta (bez Comgate) — objednávka se vytvoří rovnou jako dokončená
+- API endpoint `/api/eshop/quick-sale` s autorizací pro recepci+
+- Automatické odpočítání skladu při prodeji
+- Badge typu platby v tabulce objednávek (Hotovost / Karta)
+
+### 10.3 Sprint 2 — QR kódy
+- **QR štítky na produkty** — stránka `/eshop/admin/qr` s výběrem produktů, generováním QR kódů a tiskovým layoutem (3 sloupce)
+- QR kód = URL `/eshop/s/{product-uuid}` → redirect na produkt
+- **QR skener v mobilu** — nativní `BarcodeDetector` API, kamera, scan guide overlay
+- Integrace skeneru do POS modalu — sken přidá produkt do košíku
+- CSS `@media print` optimalizace pro tisk štítků
+
+### 10.4 Sprint 3 — Email notifikace
+- **Resend SDK** pro transakční emaily
+- Potvrzení objednávky zákazníkovi (HTML šablona s položkami, cenami, pickup info)
+- Notifikace o nové objednávce na provozní email
+- Odesílání po online platbě (checkout) i po Comgate callback (PAID)
+- Lazy inicializace SDK (build-time kompatibilita bez env vars)
+
+### 10.5 Sprint 4 — Skladové hospodářství
+- **Stránka Sklad** (`/eshop/admin/sklad`) — přehled zásob s barevným kódováním
+- `low_stock_threshold` sloupec v DB — konfigurovatelné minimum na produkt
+- 3 summary karty: aktivní produkty / pod minimem / vyprodáno
+- Filtr: Vše / Pod minimem
+- CSV export (BOM + středníkový separátor pro Excel CZ)
+- **Badge v navigaci** — červený indikátor počtu produktů pod minimem (sklad tab)
+- Rozšíření ProductForm o pole „Minimum skladem"
+
+### 10.6 Sprint 5 — KPI Dashboard
+- **API `/api/eshop/dashboard`** — agregované SQL dotazy přes orders tabulku
+- Tržby: dnes / týden / měsíc / rok (jen zaplacené objednávky)
+- Progress bar k ročnímu cíli 350 000 Kč
+- Mini bar chart denních tržeb za posledních 7 dní (hover tooltip)
+- Top 5 produktů měsíce (množství + tržba) pomocí `jsonb_array_elements`
+- Čekající objednávky panel (zaplaceno / příprava / k vydání)
+- Integrace nad tabulkou objednávek na stránce `/eshop/admin/objednavky`
+
+### 10.7 Plánované sprinty
+
+| Sprint | Popis | Stav |
+|--------|-------|------|
+| Sprint 6 | RFID kreditní systém — propojení s 350 čipovými kartami | Plánován |
+| Sprint 7 | Turnajové pre-ordery — předobjednávky na akce | Plánován |
+
+### 10.8 E-shop technické parametry
+
+| Parametr | Hodnota |
+|----------|---------|
+| Platební brána | Comgate (produkční) |
+| Email provider | Resend (volitelný, graceful degradation) |
+| Měna | CZK (haléřové ukládání) |
+| QR formát | URL s UUID produktu |
+| Autorizace admin | NextAuth + role (admin/reception) |
+| Roční cíl tržeb | 350 000 Kč |
+| DB | Vercel Postgres (Neon) — JSONB pro položky objednávek |
 
 ---
 
