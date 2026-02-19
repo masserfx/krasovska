@@ -14,11 +14,12 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await req.json();
-  const { name, role, is_active, password } = body as {
+  const { name, role, is_active, password, section_permissions } = body as {
     name?: string;
     role?: string;
     is_active?: boolean;
     password?: string;
+    section_permissions?: string[] | null;
   };
 
   if (role) {
@@ -31,7 +32,9 @@ export async function PATCH(
     }
   }
 
-  const { rows: existing } = await sql`SELECT * FROM users WHERE id = ${id}`;
+  const { rows: existing } = await sql`
+    SELECT id, name, role, is_active, section_permissions FROM users WHERE id = ${id}
+  `;
   if (existing.length === 0) {
     return NextResponse.json({ error: "Uživatel nenalezen" }, { status: 404 });
   }
@@ -40,26 +43,30 @@ export async function PATCH(
   const newName = name ?? user.name;
   const newRole = role ?? user.role;
   const newActive = is_active ?? user.is_active;
+  // null = reset to role defaults, undefined = keep existing, string[] = set explicitly
+  const newPerms = section_permissions !== undefined ? section_permissions : user.section_permissions;
 
   if (password) {
     const hash = await bcrypt.hash(password, 12);
     await sql`
       UPDATE users
       SET name = ${newName}, role = ${newRole}, is_active = ${newActive},
-          password_hash = ${hash}, updated_at = NOW()
+          password_hash = ${hash}, section_permissions = ${newPerms as unknown as null},
+          updated_at = NOW()
       WHERE id = ${id}
     `;
   } else {
     await sql`
       UPDATE users
       SET name = ${newName}, role = ${newRole}, is_active = ${newActive},
+          section_permissions = ${newPerms as unknown as null},
           updated_at = NOW()
       WHERE id = ${id}
     `;
   }
 
   const { rows } = await sql`
-    SELECT id, email, name, role, is_active, created_at, updated_at
+    SELECT id, email, name, role, is_active, section_permissions, created_at, updated_at
     FROM users WHERE id = ${id}
   `;
   return NextResponse.json(rows[0]);
@@ -74,7 +81,6 @@ export async function DELETE(
 
   const { id } = await params;
 
-  // Prevent deleting yourself
   if (auth.id === id) {
     return NextResponse.json(
       { error: "Nemůžete smazat svůj vlastní účet" },

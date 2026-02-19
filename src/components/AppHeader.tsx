@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -34,24 +34,32 @@ interface TabDef {
 }
 
 const tabs: TabDef[] = [
-  { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member", appendQid: true },
-  { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member" },
-  { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3, minRole: "admin", appendQid: true },
-  { id: "bistro", label: "Bistro", href: "/bistro", icon: UtensilsCrossed, minRole: "member" },
-  { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList, minRole: "member", appendQid: true },
-  { id: "users", label: "Uživatelé", href: "/users", icon: Users, minRole: "admin" },
-  { id: "sessions", label: "Relace", href: "/sessions", icon: FileText, minRole: "admin" },
-  { id: "audit", label: "Audit", href: "/audit", icon: Shield, minRole: "admin" },
-  { id: "eshop", label: "E-shop", href: "/eshop", icon: ShoppingCart },
-  { id: "eshop-admin", label: "Produkty", href: "/eshop/admin", icon: Package, minRole: "admin" },
-  { id: "objednavky", label: "Objednávky", href: "/eshop/admin/objednavky", icon: Receipt, minRole: "reception" },
+  { id: "dashboard",    label: "Dashboard",   href: "/dashboard",              icon: LayoutDashboard, minRole: "member",    appendQid: true },
+  { id: "projects",     label: "Projekty",    href: "/projects",               icon: FolderKanban,    minRole: "member" },
+  { id: "bistro",       label: "Bistro",      href: "/bistro",                 icon: UtensilsCrossed, minRole: "member" },
+  { id: "questionnaire",label: "Dotazník",    href: "/",                       icon: ClipboardList,   minRole: "member",    appendQid: true },
+  { id: "analysis",     label: "Analýza",     href: "/analysis",               icon: BarChart3,       minRole: "admin",     appendQid: true },
+  { id: "users",        label: "Uživatelé",   href: "/users",                  icon: Users,           minRole: "admin" },
+  { id: "sessions",     label: "Relace",      href: "/sessions",               icon: FileText,        minRole: "admin" },
+  { id: "audit",        label: "Audit",       href: "/audit",                  icon: Shield,          minRole: "admin" },
+  { id: "eshop",        label: "E-shop",      href: "/eshop",                  icon: ShoppingCart },
+  { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         minRole: "admin" },
+  { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         minRole: "reception" },
 ];
 
-function visibleTabs(role: UserRole | undefined): TabDef[] {
-  return tabs.filter((tab) => {
-    if (!tab.minRole) return true;
-    if (!role) return false;
-    return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[tab.minRole];
+function visibleTabs(role: UserRole | undefined, sectionPerms: string[] | null): TabDef[] {
+  if (!role) return tabs.filter((t) => !t.minRole);
+  if (role === "admin") return tabs;
+
+  if (sectionPerms !== null) {
+    // Explicit per-user permissions: show tab if id is in the list, or tab is public
+    return tabs.filter((t) => !t.minRole || sectionPerms.includes(t.id));
+  }
+
+  // Fall back to role-based minRole defaults
+  return tabs.filter((t) => {
+    if (!t.minRole) return true;
+    return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[t.minRole];
   });
 }
 
@@ -64,10 +72,24 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
     return localStorage.getItem(STORAGE_KEY);
   });
 
-  const id = idFromUrl ?? storedId;
+  // Live-refresh permissions from DB so changes take effect without re-login
+  const [livePerms, setLivePerms] = useState<string[] | null | undefined>(undefined);
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((d) => setLivePerms(d.section_permissions ?? null))
+      .catch(() => setLivePerms(null));
+  }, [session?.user?.id]);
 
+  const id = idFromUrl ?? storedId;
   const role = session?.user?.role as UserRole | undefined;
-  const filtered = visibleTabs(role);
+
+  // Use live permissions if loaded, otherwise fall back to JWT-cached value
+  const sectionPerms: string[] | null =
+    livePerms !== undefined ? livePerms : (session?.user?.sectionPermissions ?? null);
+
+  const filtered = visibleTabs(role, sectionPerms);
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
@@ -75,9 +97,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
         {/* Title row */}
         <div className="flex items-center justify-between py-3">
           <div>
-            <h1 className="text-lg font-bold text-foreground">
-              Hala Krašovská
-            </h1>
+            <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
             <p className="text-xs text-muted">Projektový management</p>
           </div>
           <UserMenu />
@@ -117,9 +137,7 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       fallback={
         <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
           <div className="mx-auto max-w-7xl px-4 py-3">
-            <h1 className="text-lg font-bold text-foreground">
-              Hala Krašovská
-            </h1>
+            <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
             <p className="text-xs text-muted">Projektový management</p>
           </div>
         </header>

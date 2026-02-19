@@ -23,7 +23,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         await ensureTable();
 
         const { rows } = await sql`
-          SELECT id, email, name, role, password_hash, is_active
+          SELECT id, email, name, role, password_hash, is_active, section_permissions
           FROM users
           WHERE email = ${email}
         `;
@@ -44,6 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role,
+          sectionPermissions: user.section_permissions ?? null,
         };
       },
     }),
@@ -56,12 +57,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id as string;
         token.role = user.role;
+        token.sectionPermissions = user.sectionPermissions;
       }
       return token;
     },
     session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as UserRole;
+      session.user.sectionPermissions = token.sectionPermissions as string[] | null;
       return session;
     },
   },

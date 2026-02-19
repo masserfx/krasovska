@@ -12,7 +12,7 @@ export async function GET() {
 
   await ensureTable();
   const { rows } = await sql`
-    SELECT id, email, name, role, is_active, created_at, updated_at
+    SELECT id, email, name, role, is_active, section_permissions, created_at, updated_at
     FROM users
     ORDER BY created_at ASC
   `;
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
   const { rows } = await sql`
     INSERT INTO users (email, password_hash, name, role)
     VALUES (${email}, ${passwordHash}, ${name}, ${role})
-    RETURNING id, email, name, role, is_active, created_at
+    RETURNING id, email, name, role, is_active, section_permissions, created_at
   `;
 
   return NextResponse.json(rows[0], { status: 201 });

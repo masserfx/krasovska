@@ -171,6 +171,7 @@ export async function ensureTable() {
   `;
 
   await sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS section_permissions TEXT[]`;
 
   // --- Bistro tables ---
 
