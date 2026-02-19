@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { Product } from "@/types/eshop";
@@ -8,11 +8,18 @@ import { useCart } from "@/hooks/useCart";
 import AppHeader from "@/components/AppHeader";
 import ProductGrid from "@/components/eshop/ProductGrid";
 import CartDrawer from "@/components/eshop/CartDrawer";
+import CartToast from "@/components/eshop/CartToast";
+
+interface ToastItem {
+  name: string;
+  image_url: string | null;
+}
 
 function EshopContent() {
   const router = useRouter();
   const { items, addItem, removeItem, updateQuantity, total, itemCount } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
+  const [toastItem, setToastItem] = useState<ToastItem | null>(null);
 
   function handleAddToCart(product: Product) {
     addItem({
@@ -21,12 +28,14 @@ function EshopContent() {
       price_czk: product.price_czk,
       image_url: product.image_url,
     });
-    setCartOpen(true);
+    setToastItem({ name: product.name, image_url: product.image_url });
   }
 
   function handleProductClick(product: Product) {
     router.push(`/eshop/${product.slug}`);
   }
+
+  const dismissToast = useCallback(() => setToastItem(null), []);
 
   return (
     <>
@@ -66,6 +75,8 @@ function EshopContent() {
           router.push("/eshop/kosik");
         }}
       />
+
+      <CartToast item={toastItem} onDismiss={dismissToast} />
     </>
   );
 }

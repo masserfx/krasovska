@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Loader2, Package } from "lucide-react";
-import { Product, ProductCategory } from "@/types/eshop";
+import { Package } from "lucide-react";
+import { Product } from "@/types/eshop";
 import { fetchProducts } from "@/lib/eshop-api";
 import ProductCard from "./ProductCard";
 import CategoryFilter from "./CategoryFilter";
+import { ProductGridSkeleton } from "./ProductSkeleton";
 
 interface Props {
   onAddToCart: (product: Product) => void;
@@ -15,7 +16,7 @@ interface Props {
 export default function ProductGrid({ onAddToCart, onProductClick }: Props) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState<ProductCategory | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {
@@ -51,9 +52,7 @@ export default function ProductGrid({ onAddToCart, onProductClick }: Props) {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-muted" />
-        </div>
+        <ProductGridSkeleton />
       ) : products.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Package className="mb-4 h-12 w-12 text-muted" />

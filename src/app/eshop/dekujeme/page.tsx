@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
+import CheckoutSteps from "@/components/eshop/CheckoutSteps";
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -12,7 +13,8 @@ function ThankYouContent() {
   const pending = searchParams.get("pending");
 
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <CheckoutSteps currentStep={3} />
       {pending ? (
         <Clock className="mb-4 h-16 w-16 text-amber-500" />
       ) : (

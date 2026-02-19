@@ -7,6 +7,7 @@ import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/lib/eshop-utils";
 import AppHeader from "@/components/AppHeader";
 import CartItemRow from "@/components/eshop/CartItemRow";
+import CheckoutSteps from "@/components/eshop/CheckoutSteps";
 
 function CartContent() {
   const router = useRouter();
@@ -30,6 +31,8 @@ function CartContent() {
 
   return (
     <>
+      <CheckoutSteps currentStep={1} />
+
       <button
         onClick={() => router.push("/eshop")}
         className="mb-6 flex items-center gap-2 text-sm text-muted hover:text-foreground"

@@ -6,6 +6,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import AppHeader from "@/components/AppHeader";
 import CheckoutForm from "@/components/eshop/CheckoutForm";
+import CheckoutSteps from "@/components/eshop/CheckoutSteps";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -36,6 +37,8 @@ function CheckoutContent() {
 
   return (
     <>
+      <CheckoutSteps currentStep={2} />
+
       <button
         onClick={() => router.push("/eshop/kosik")}
         className="mb-6 flex items-center gap-2 text-sm text-muted hover:text-foreground"

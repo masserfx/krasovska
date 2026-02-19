@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { X, ShoppingCart } from "lucide-react";
 import { CartItem } from "@/types/eshop";
 import { formatPrice } from "@/lib/eshop-utils";
@@ -24,18 +25,56 @@ export default function CartDrawer({
   onRemoveItem,
   onCheckout,
 }: Props) {
-  if (!open) return null;
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      // mount first, then animate in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setShow(true));
+      });
+    } else {
+      setShow(false);
+    }
+  }, [open]);
+
+  // prevent body scroll when drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [open]);
+
+  if (!open && !show) return null;
+
+  function handleClose() {
+    setShow(false);
+    setTimeout(onClose, 300);
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative flex w-full max-w-md flex-col bg-white shadow-xl">
+      {/* Backdrop */}
+      <div
+        className={`absolute inset-0 bg-black transition-opacity duration-300 ${
+          show ? "opacity-50" : "opacity-0"
+        }`}
+        onClick={handleClose}
+      />
+
+      {/* Panel */}
+      <div
+        className={`relative flex w-full max-w-md flex-col bg-white shadow-xl transition-transform duration-300 ${
+          show ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-bold text-foreground">Košík</h2>
           </div>
-          <button onClick={onClose} className="text-muted hover:text-foreground">
+          <button onClick={handleClose} className="text-muted hover:text-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
