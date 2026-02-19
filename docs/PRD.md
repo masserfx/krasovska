@@ -1,6 +1,6 @@
 # PRD: Hala Krašovská — ERP/CRM Systém
 
-> **Verze:** 1.1 | **Datum:** 2026-02-19 | **Zdroj dat:** Dotazník „Schůzka 16. 2. 2026" vyplněný klientem
+> **Verze:** 1.2 | **Datum:** 2026-02-19 | **Zdroj dat:** Dotazník „Schůzka 16. 2. 2026" vyplněný klientem
 
 ---
 
@@ -306,14 +306,20 @@ Tyto sekce dotazníku zůstaly **kompletně prázdné**:
 - Odesílání po online platbě (checkout) i po Comgate callback (PAID)
 - Lazy inicializace SDK (build-time kompatibilita bez env vars)
 
-### 10.5 Sprint 4 — Skladové hospodářství
-- **Stránka Sklad** (`/eshop/admin/sklad`) — přehled zásob s barevným kódováním
+### 10.5 Sprint 4 — Skladové hospodářství + Shopify-style editor
+- **Stránka Sklad** (`/eshop/admin/sklad`) — Shopify-inspirovaný editor s dvousloupcovým layoutem
+- **Inline editace** — klik na číslo Skladem/Minimum → vstupní pole → Enter/blur uloží (PATCH API)
+- **+/- adjustment buttons** — rychlá úprava ±1 kus bez otevírání editoru
+- **Stock level bary** — barevný vizuální indikátor stavu (zelená/amber/červená)
+- **Filtr** — Vše / Pod minimem + dropdown kategorie + fulltext vyhledávání
+- **Správa kategorií** — pravý panel s editací, přejmenováním a mazáním kategorií
+- DB tabulka `product_categories` s auto-seed 10 výchozích kategorií
+- API: `PATCH /api/eshop/stock/[id]` (stock_quantity, stock_delta, low_stock_threshold)
+- API: CRUD `/api/eshop/categories` + `/api/eshop/categories/[slug]`
+- Optimistic update lokálního stavu při úpravách
+- CSV export produktů pod minimem (BOM + středníkový separátor pro Excel CZ)
+- **Badge v navigaci** — červený indikátor počtu produktů pod minimem
 - `low_stock_threshold` sloupec v DB — konfigurovatelné minimum na produkt
-- 3 summary karty: aktivní produkty / pod minimem / vyprodáno
-- Filtr: Vše / Pod minimem
-- CSV export (BOM + středníkový separátor pro Excel CZ)
-- **Badge v navigaci** — červený indikátor počtu produktů pod minimem (sklad tab)
-- Rozšíření ProductForm o pole „Minimum skladem"
 
 ### 10.6 Sprint 5 — KPI Dashboard
 - **API `/api/eshop/dashboard`** — agregované SQL dotazy přes orders tabulku
@@ -324,14 +330,27 @@ Tyto sekce dotazníku zůstaly **kompletně prázdné**:
 - Čekající objednávky panel (zaplaceno / příprava / k vydání)
 - Integrace nad tabulkou objednávek na stránce `/eshop/admin/objednavky`
 
-### 10.7 Plánované sprinty
+### 10.7 UX — Dropdown navigace
+- **5 skupin místo 13 plochých tabů** — Dashboard (link), Projekty ▾, Provoz ▾, E-shop správa ▾, Správa ▾
+- Dropdown menu s click-to-open, click-outside-to-close
+- Aktivní skupina zvýrazněna modře (podle aktuální stránky)
+- Low stock badge na skupině „E-shop správa"
+- Viditelnost skupin respektuje user role a per-user section permissions
+
+### 10.8 EOS — Checklist pro schůzku
+- Interaktivní stránka `/eos` s 8 sekcemi a 32 otázkami
+- Sekce: Základní info, Evidence členů, RFID karty, Platby, API/Integrace, Workflow, GDPR, Budoucnost
+- Checkboxy s progress barem, inline poznámky, tisk
+- Příprava na integraci se systémem správy členů (350 RFID karet)
+
+### 10.9 Plánované sprinty
 
 | Sprint | Popis | Stav |
 |--------|-------|------|
-| Sprint 6 | RFID kreditní systém — propojení s 350 čipovými kartami | Plánován |
+| Sprint 6 | RFID kreditní systém — propojení s 350 čipovými kartami | Čeká na EOS rešerši |
 | Sprint 7 | Turnajové pre-ordery — předobjednávky na akce | Plánován |
 
-### 10.8 E-shop technické parametry
+### 10.10 E-shop technické parametry
 
 | Parametr | Hodnota |
 |----------|---------|
