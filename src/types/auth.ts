@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "reception" | "member";
+export type UserRole = "admin" | "coordinator" | "reception" | "member";
 
 export interface AppUser {
   id: string;
@@ -12,12 +12,14 @@ export interface AppUser {
 
 export const USER_ROLE_LABELS: Record<UserRole, string> = {
   admin: "Administrátor",
+  coordinator: "Koordinátor projektů",
   reception: "Recepce",
   member: "Člen",
 };
 
 export const ROLE_HIERARCHY: Record<UserRole, number> = {
   admin: 2,
+  coordinator: 1,
   reception: 1,
   member: 0,
 };
