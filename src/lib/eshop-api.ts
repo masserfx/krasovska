@@ -117,3 +117,24 @@ export async function submitCheckout(
   }
   return res.json();
 }
+
+// --- Quick Sale (POS) ---
+
+export interface QuickSaleData {
+  items: { product_id: string; quantity: number }[];
+  payment_method: "cash" | "card";
+  customer_name?: string;
+}
+
+export async function submitQuickSale(data: QuickSaleData): Promise<Order> {
+  const res = await fetch("/api/eshop/quick-sale", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Nepodařilo se vytvořit prodej");
+  }
+  return res.json();
+}

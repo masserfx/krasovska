@@ -46,7 +46,14 @@ export default function OrderTable({ orders, onUpdate }: Props) {
         <tbody>
           {orders.map((order) => (
             <tr key={order.id} className="border-b border-border">
-              <td className="py-3 pr-4 font-mono text-xs">{order.order_number}</td>
+              <td className="py-3 pr-4">
+                <div className="font-mono text-xs">{order.order_number}</div>
+                {order.delivery_method.startsWith("reception_") && (
+                  <span className="inline-block mt-0.5 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
+                    {order.delivery_method === "reception_cash" ? "Hotovost" : "Karta"}
+                  </span>
+                )}
+              </td>
               <td className="py-3 pr-4">
                 <div className="font-medium text-foreground">{order.customer_name}</div>
                 <div className="text-xs text-muted">{order.email}</div>

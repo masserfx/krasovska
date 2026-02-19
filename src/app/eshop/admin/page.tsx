@@ -1,7 +1,8 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { Plus, Loader2, Package, Pencil, Trash2 } from "lucide-react";
+import { Plus, Loader2, Package, Pencil, Trash2, QrCode } from "lucide-react";
+import Link from "next/link";
 import { Product, PRODUCT_CATEGORY_LABELS, ProductCategory } from "@/types/eshop";
 import { fetchProducts, deleteProduct } from "@/lib/eshop-api";
 import { formatPrice } from "@/lib/eshop-utils";
@@ -60,13 +61,22 @@ function AdminContent() {
             {products.length} {products.length === 1 ? "produkt" : products.length < 5 ? "produkty" : "produktů"}
           </p>
         </div>
-        <button
-          onClick={() => { setEditProduct(undefined); setShowForm(true); }}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark"
-        >
-          <Plus className="h-4 w-4" />
-          Nový produkt
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/eshop/admin/qr"
+            className="flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background"
+          >
+            <QrCode className="h-4 w-4" />
+            QR štítky
+          </Link>
+          <button
+            onClick={() => { setEditProduct(undefined); setShowForm(true); }}
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark"
+          >
+            <Plus className="h-4 w-4" />
+            Nový produkt
+          </button>
+        </div>
       </div>
 
       {loading ? (

@@ -77,6 +77,7 @@ export interface Payment {
 
 export type OrderStatus = "pending" | "paid" | "preparing" | "ready" | "completed" | "cancelled";
 export type PaymentStatus = "pending" | "paid" | "cancelled" | "refunded";
+export type DeliveryMethod = "pickup" | "reception_cash" | "reception_card";
 
 export type ProductCategory =
   | "rackets"
@@ -117,4 +118,10 @@ export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
   paid: "Zaplaceno",
   cancelled: "Zrušeno",
   refunded: "Vráceno",
+};
+
+export const DELIVERY_METHOD_LABELS: Record<DeliveryMethod, string> = {
+  pickup: "Osobní odběr (online platba)",
+  reception_cash: "Recepce — hotovost",
+  reception_card: "Recepce — karta",
 };

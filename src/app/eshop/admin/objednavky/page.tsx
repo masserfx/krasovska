@@ -1,11 +1,12 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { Loader2, Package } from "lucide-react";
+import { Loader2, Package, Plus } from "lucide-react";
 import { Order, OrderStatus, ORDER_STATUS_LABELS } from "@/types/eshop";
 import { fetchOrders } from "@/lib/eshop-api";
 import AppHeader from "@/components/AppHeader";
 import OrderTable from "@/components/eshop/OrderTable";
+import QuickSaleModal from "@/components/eshop/QuickSaleModal";
 
 const statuses: (OrderStatus | "all")[] = ["all", "pending", "paid", "preparing", "ready", "completed", "cancelled"];
 
@@ -13,6 +14,7 @@ function OrdersContent() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
+  const [showQuickSale, setShowQuickSale] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -34,9 +36,18 @@ function OrdersContent() {
 
   return (
     <>
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-foreground">Objednávky</h2>
-        <p className="text-sm text-muted">Správa a přehled objednávek</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Objednávky</h2>
+          <p className="text-sm text-muted">Správa a přehled objednávek</p>
+        </div>
+        <button
+          onClick={() => setShowQuickSale(true)}
+          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark"
+        >
+          <Plus className="h-4 w-4" />
+          Nový prodej
+        </button>
       </div>
 
       <div className="mb-6 flex flex-wrap gap-2">
@@ -63,6 +74,13 @@ function OrdersContent() {
         <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
           <OrderTable orders={orders} onUpdate={load} />
         </div>
+      )}
+
+      {showQuickSale && (
+        <QuickSaleModal
+          onClose={() => setShowQuickSale(false)}
+          onComplete={load}
+        />
       )}
     </>
   );

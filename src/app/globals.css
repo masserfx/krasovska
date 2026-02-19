@@ -60,6 +60,9 @@ body {
   .print-break {
     page-break-before: always;
   }
+  @page {
+    margin: 10mm;
+  }
 }
 
 /* Textarea auto-resize helper */
