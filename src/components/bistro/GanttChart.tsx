@@ -27,6 +27,9 @@ const MONTHS = [
   { key: "2026-07", label: "Červenec" },
   { key: "2026-08", label: "Srpen" },
   { key: "2026-09", label: "Září" },
+  { key: "2026-10", label: "Říjen" },
+  { key: "2026-11", label: "Listopad" },
+  { key: "2026-12", label: "Prosinec" },
 ];
 
 const PHASE_COLORS = [
@@ -92,7 +95,7 @@ export default function GanttChart() {
     <div className="overflow-x-auto">
       {/* Header */}
       <div
-        className="grid gap-px min-w-[700px]"
+        className="grid gap-px min-w-[900px]"
         style={{
           gridTemplateColumns: `180px repeat(${MONTHS.length}, 1fr)`,
         }}

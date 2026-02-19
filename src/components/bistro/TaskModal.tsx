@@ -6,10 +6,15 @@ import type { BistroTask, BistroPhase, BistroTaskType, BistroPriority, BistroTas
 const ASSIGNEES = [
   "Tomáš Knopp",
   "Vedoucí bistra",
+  "Kuchař",
   "Brigádník",
   "IT",
   "Grafik / Marketing",
   "Dodavatelé",
+  "HACCP konzultant",
+  "Servisní technik",
+  "KHS Plzeň",
+  "Pivovar",
 ];
 
 const PRIORITIES: { value: BistroPriority; label: string; dot: string }[] = [

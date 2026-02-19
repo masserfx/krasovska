@@ -6,11 +6,12 @@ import KanbanBoard from "@/components/bistro/KanbanBoard";
 import GanttChart from "@/components/bistro/GanttChart";
 import ControllingDashboard from "@/components/bistro/ControllingDashboard";
 import BriefingViewer from "@/components/bistro/BriefingViewer";
+import StrategyView from "@/components/bistro/strategy/StrategyView";
 
-type Tab = "kanban" | "gantt" | "kontroling" | "briefing";
+type Tab = "strategie" | "kanban" | "gantt" | "kontroling" | "briefing";
 
 export default function BistroPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("briefing");
+  const [activeTab, setActiveTab] = useState<Tab>("strategie");
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,6 +29,7 @@ export default function BistroPage() {
         {/* Tab buttons */}
         <div className="flex gap-2 mb-6 border-b border-border">
           {[
+            { id: "strategie", label: "Strategie" },
             { id: "kanban", label: "Kanban" },
             { id: "gantt", label: "Gantt" },
             { id: "kontroling", label: "Kontroling" },
@@ -48,6 +50,7 @@ export default function BistroPage() {
         </div>
 
         {/* Tab content */}
+        {activeTab === "strategie" && <StrategyView />}
         {activeTab === "kanban" && <KanbanBoard />}
         {activeTab === "gantt" && <GanttChart />}
         {activeTab === "kontroling" && <ControllingDashboard />}

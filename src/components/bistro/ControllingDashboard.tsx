@@ -16,6 +16,8 @@ interface KpiRow {
 }
 
 const MONTH_LABELS: Record<string, string> = {
+  "2026-02": "Únor",
+  "2026-03": "Březen",
   "2026-04": "Duben",
   "2026-05": "Květen",
   "2026-06": "Červen",
