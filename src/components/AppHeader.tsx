@@ -26,29 +26,41 @@ import { ROLE_HIERARCHY } from "@/types/auth";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
 
+type TabGroup = "overview" | "project" | "operations" | "eshop-mgmt" | "admin";
+
 interface TabDef {
   id: string;
   label: string;
   href: string;
   icon: LucideIcon;
+  group: TabGroup;
   minRole?: UserRole;
   appendQid?: boolean;
 }
 
 const tabs: TabDef[] = [
-  { id: "dashboard",    label: "Dashboard",   href: "/dashboard",              icon: LayoutDashboard, minRole: "member",    appendQid: true },
-  { id: "projects",     label: "Projekty",    href: "/projects",               icon: FolderKanban,    minRole: "member" },
-  { id: "bistro",       label: "Bistro",      href: "/bistro",                 icon: UtensilsCrossed, minRole: "member" },
-  { id: "questionnaire",label: "Dotazník",    href: "/",                       icon: ClipboardList,   minRole: "member",    appendQid: true },
-  { id: "analysis",     label: "Analýza",     href: "/analysis",               icon: BarChart3,       minRole: "admin",     appendQid: true },
-  { id: "users",        label: "Uživatelé",   href: "/users",                  icon: Users,           minRole: "admin" },
-  { id: "sessions",     label: "Relace",      href: "/sessions",               icon: FileText,        minRole: "admin" },
-  { id: "audit",        label: "Audit",       href: "/audit",                  icon: Shield,          minRole: "admin" },
-  { id: "eshop",        label: "E-shop",      href: "/eshop",                  icon: ShoppingCart },
-  { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         minRole: "admin" },
-  { id: "sklad",        label: "Sklad",       href: "/eshop/admin/sklad",      icon: Warehouse,       minRole: "reception" },
-  { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         minRole: "reception" },
-  { id: "eos",          label: "EOS",         href: "/eos",                    icon: ScanLine,        minRole: "admin" },
+  // ── Přehled ──
+  { id: "dashboard",    label: "Dashboard",   href: "/dashboard",              icon: LayoutDashboard, group: "overview",   minRole: "member",    appendQid: true },
+
+  // ── Projekty & analýza ──
+  { id: "projects",     label: "Projekty",    href: "/projects",               icon: FolderKanban,    group: "project",    minRole: "member" },
+  { id: "questionnaire",label: "Dotazník",    href: "/",                       icon: ClipboardList,   group: "project",    minRole: "member",    appendQid: true },
+  { id: "analysis",     label: "Analýza",     href: "/analysis",               icon: BarChart3,       group: "project",    minRole: "admin",     appendQid: true },
+
+  // ── Provoz ──
+  { id: "bistro",       label: "Bistro",      href: "/bistro",                 icon: UtensilsCrossed, group: "operations", minRole: "member" },
+  { id: "eshop",        label: "E-shop",      href: "/eshop",                  icon: ShoppingCart,    group: "operations" },
+
+  // ── E-shop správa ──
+  { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         group: "eshop-mgmt", minRole: "reception" },
+  { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         group: "eshop-mgmt", minRole: "admin" },
+  { id: "sklad",        label: "Sklad",       href: "/eshop/admin/sklad",      icon: Warehouse,       group: "eshop-mgmt", minRole: "reception" },
+
+  // ── Správa systému ──
+  { id: "users",        label: "Uživatelé",   href: "/users",                  icon: Users,           group: "admin" },
+  { id: "sessions",     label: "Relace",      href: "/sessions",               icon: FileText,        group: "admin" },
+  { id: "audit",        label: "Audit",       href: "/audit",                  icon: Shield,          group: "admin" },
+  { id: "eos",          label: "EOS",         href: "/eos",                    icon: ScanLine,        group: "admin" },
 ];
 
 function visibleTabs(role: UserRole | undefined, sectionPerms: string[] | null): TabDef[] {
@@ -119,30 +131,36 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
         </div>
 
         {/* Tab navigation */}
-        <nav className="-mb-px flex gap-1 overflow-x-auto">
-          {filtered.map((tab) => {
+        <nav className="-mb-px flex gap-0.5 overflow-x-auto">
+          {filtered.map((tab, i) => {
             const Icon = tab.icon;
             const isActive = tab.id === activeTab;
             const href = id && tab.appendQid ? `${tab.href}?id=${id}` : tab.href;
+            const prevGroup = i > 0 ? filtered[i - 1].group : null;
+            const showSep = prevGroup !== null && prevGroup !== tab.group;
 
             return (
-              <Link
-                key={tab.id}
-                href={href}
-                className={`relative flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted hover:border-border hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {tab.label}
-                {tab.id === "sklad" && lowStockCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
-                    {lowStockCount}
-                  </span>
+              <span key={tab.id} className="flex items-center">
+                {showSep && (
+                  <span className="mx-1 h-5 w-px bg-border/60" aria-hidden />
                 )}
-              </Link>
+                <Link
+                  href={href}
+                  className={`relative flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted hover:border-border hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                  {tab.id === "sklad" && lowStockCount > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+                      {lowStockCount}
+                    </span>
+                  )}
+                </Link>
+              </span>
             );
           })}
         </nav>
