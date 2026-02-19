@@ -52,6 +52,13 @@ function QuestionnaireApp() {
     router.replace("/sessions");
   }, [questionnaireId, router]);
 
+  // Persist active questionnaire ID for nav links
+  useEffect(() => {
+    if (questionnaireId) {
+      localStorage.setItem("hala-krasovska-active-qid", questionnaireId);
+    }
+  }, [questionnaireId]);
+
   // Load data from DB or localStorage (when ?id= is present)
   useEffect(() => {
     if (!questionnaireId) return;

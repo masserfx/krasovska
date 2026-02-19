@@ -1,4 +1,5 @@
 import { FormData, AnalysisResult, Insight, Metric, RecommendedProject, Priority } from "@/types";
+import { getStrategicData } from "./strategic-data";
 
 // Helper to safely get a string value from form data
 function getString(data: FormData, section: string, field: string): string {
@@ -488,10 +489,17 @@ export function generateAnalysis(formData: FormData): AnalysisResult {
     });
   }
 
+  const strategic = getStrategicData();
+
   return {
-    metrics,
-    swot: { strengths, weaknesses, opportunities, threats },
-    insights,
-    recommended_projects: recommendedProjects,
+    metrics: [...strategic.metrics, ...metrics],
+    swot: {
+      strengths: [...strategic.strengths, ...strengths],
+      weaknesses: [...strategic.weaknesses, ...weaknesses],
+      opportunities: [...strategic.opportunities, ...opportunities],
+      threats: [...strategic.threats, ...threats],
+    },
+    insights: [...strategic.insights, ...insights],
+    recommended_projects: [...strategic.recommended_projects, ...recommendedProjects],
   };
 }

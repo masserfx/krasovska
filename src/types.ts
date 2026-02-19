@@ -153,6 +153,53 @@ export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
   done: "Hotovo",
 };
 
+// --- Bistro types ---
+
+export type BistroPhaseStatus = 'planned' | 'active' | 'completed';
+export type BistroTaskStatus = 'todo' | 'in_progress' | 'done';
+export type BistroPriority = 'low' | 'medium' | 'high';
+export type BistroTaskType = 'task' | 'milestone' | 'goal';
+
+export interface BistroPhase {
+  id: string;
+  title: string;
+  description: string | null;
+  phase_number: number;
+  start_date: string;
+  end_date: string;
+  status: BistroPhaseStatus;
+  color: string;
+}
+
+export interface BistroTask {
+  id: string;
+  phase_id: string;
+  title: string;
+  description: string | null;
+  type: BistroTaskType;
+  status: BistroTaskStatus;
+  priority: BistroPriority;
+  assignee: string | null;
+  due_date: string | null;
+  sort_order: number;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BistroKpi {
+  id: string;
+  month_year: string;
+  revenue_target: number;
+  revenue_actual: number | null;
+  covers_target: number;
+  covers_actual: number | null;
+  avg_ticket_target: number;
+  avg_ticket_actual: number | null;
+  fixed_costs: number;
+  variable_costs_actual: number | null;
+}
+
 export const SECTIONS: QuestionnaireSection[] = [
   {
     id: "organizace",

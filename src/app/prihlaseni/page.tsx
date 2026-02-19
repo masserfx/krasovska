@@ -7,7 +7,7 @@ import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") || "/sessions";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +22,7 @@ function LoginForm() {
     const result = await signIn("credentials", {
       email,
       password,
+      callbackUrl,
       redirect: false,
     });
 
@@ -29,7 +30,7 @@ function LoginForm() {
       setError("Nesprávný e-mail nebo heslo");
       setLoading(false);
     } else {
-      window.location.href = callbackUrl;
+      window.location.href = result?.url || callbackUrl;
     }
   }
 

@@ -11,7 +11,8 @@ import { useQuestionnaireId } from "@/hooks/useQuestionnaireId";
 import AppHeader from "@/components/AppHeader";
 import AnalysisView from "@/components/AnalysisView";
 import EmptyState from "@/components/EmptyState";
-import { Loader2, BarChart3 } from "lucide-react";
+import { Loader2, BarChart3, FileText } from "lucide-react";
+import Link from "next/link";
 
 function AnalysisContent() {
   const id = useQuestionnaireId();
@@ -70,9 +71,12 @@ function AnalysisContent() {
   if (!id) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 text-muted">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Přesměrování...
+        <div className="text-center">
+          <FileText className="mx-auto mb-3 h-10 w-10 text-muted/40" />
+          <p className="mb-2 text-sm font-medium text-foreground">Žádný dotazník není vybrán</p>
+          <Link href="/sessions" className="text-sm text-primary hover:underline">
+            Vybrat dotazník
+          </Link>
         </div>
       </div>
     );

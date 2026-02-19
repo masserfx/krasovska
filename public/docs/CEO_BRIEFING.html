@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<style>
+
+@page {
+    size: A4;
+    margin: 1.8cm 1.5cm 1.8cm 1.5cm;
+    @bottom-right { content: counter(page) " / " counter(pages); font-size: 9pt; color: #888; }
+}
+body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.45;
+    color: #1a1a1a;
+}
+h1 {
+    font-size: 17pt;
+    border-bottom: 2.5px solid #1a1a1a;
+    padding-bottom: 4px;
+    margin-top: 0;
+}
+h2 {
+    font-size: 12pt;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 3px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+}
+h3 {
+    font-size: 10.5pt;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #333;
+}
+h4 {
+    font-size: 10pt;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    color: #444;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 8px 0 12px 0;
+    table-layout: fixed;
+}
+thead tr {
+    background: #1a1a1a;
+    color: #fff;
+}
+thead th {
+    padding: 5px 7px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+tbody tr:nth-child(even) { background: #f5f5f5; }
+tbody tr:nth-child(odd)  { background: #fff; }
+td {
+    padding: 4px 7px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: none;
+}
+/* First column wider for label columns */
+td:first-child, th:first-child {
+    white-space: nowrap;
+    width: auto;
+}
+/* Bold rows (markdown **text**) */
+td strong { white-space: nowrap; }
+blockquote {
+    border-left: 4px solid #1a1a1a;
+    margin: 10px 0;
+    padding: 6px 12px;
+    background: #f9f9f9;
+    font-style: italic;
+}
+code {
+    background: #f0f0f0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 8.5pt;
+}
+ul, ol {
+    margin: 5px 0;
+    padding-left: 18px;
+}
+li { margin-bottom: 2px; }
+p { margin: 5px 0; }
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 14px 0;
+}
+/* Prevent page break inside tables */
+table { page-break-inside: auto; }
+tr { page-break-inside: avoid; }
+/* Highlight doporuceni row */
+tr:has(td strong) { }
+
+</style>
+</head>
+<body>
+<h1 id="ceo-briefing-bistro-hala-krašovská">CEO Briefing: Bistro Hala
+Krašovská</h1>
+<blockquote>
+<p><strong>Pro:</strong> Tomáš Knopp, provozní ředitel BAP z.s.
+<strong>Datum:</strong> 2026-02-19 | <strong>Verze:</strong> 1.1
+<strong>Rozhodnutí potřebná:</strong> IHNED</p>
+</blockquote>
+<hr />
+<h2 id="executive-summary">1. EXECUTIVE SUMMARY</h2>
+<h3 id="příležitost-v-číslech">Příležitost v číslech</h3>
+<table>
+<thead>
+<tr>
+<th>Ukazatel</th>
+<th>Hodnota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Současný roční obrat haly</td>
+<td>3,5 mil. Kč</td>
+</tr>
+<tr>
+<td>Potenciál bistra (ročně, stabilizovaně)</td>
+<td>2,1 – 4,1 mil. Kč</td>
+</tr>
+<tr>
+<td>Navýšení obratu haly</td>
+<td>+29 – 56 %</td>
+</tr>
+<tr>
+<td>Captive audience</td>
+<td>350 členů (RFID), 80–125 osob/den, 48 turnajů/rok</td>
+</tr>
+<tr>
+<td>Energie a nájem</td>
+<td>0 Kč (hradí město)</td>
+</tr>
+<tr>
+<td>Plně vybavená kuchyně</td>
+<td>Ano (konvektomat, mrazáky, nerez stoly)</td>
+</tr>
+<tr>
+<td>Nejbližší sportovní gastro konkurent</td>
+<td>Žádný (monopol v areálu)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doporučená-strategie">Doporučená strategie</h3>
+<p><strong>Spustit bistro ve 3 fázích: okamžitý Quick Start na
+polotovarech (investice 75 000–85 000 Kč, 2 týdny), paralelně najít
+kuchaře a po 3 měsících upgradovat na Standard model s čerstvou kuchyní
+a delivery.</strong></p>
+<h3 id="klíčová-rizika-top-3">Klíčová rizika (TOP 3)</h3>
+<ol type="1">
+<li><strong>Nenalezení kuchaře</strong> – v ČR chybí 12 000 kuchařů;
+realistický nábor 4–8 týdnů. Mitigace: MVP model jako bridge, personální
+agentura jako záloha.</li>
+<li><strong>Nízké tržby v prvních měsících</strong> – při poklesu tržeb
+o 20 % je Standard model trvale ztrátový. Mitigace: turnajový catering
+je make-or-break faktor (20 000–30 000 Kč/měs).</li>
+<li><strong>Sezónní propad (léto –30 %)</strong> – červen–srpen znamená
+pokles návštěvnosti. Mitigace: letní kempy, grilovací akce, redukce
+personálu.</li>
+</ol>
+<h3 id="rozhodnutí-potřebná-od-tomáše-knoppa-dnes">Rozhodnutí potřebná
+od Tomáše Knoppa DNES</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Rozhodnutí</th>
+<th>Možnosti</th>
+<th>Doporučení</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Spustit Quick Start (Fáze 0)?</strong></td>
+<td>ANO / NE</td>
+<td>ANO – minimální riziko, 75 000–85 000 Kč</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Schválit rozpočet na nábor kuchaře?</strong></td>
+<td>5 000–12 000 Kč na inzerci</td>
+<td>ANO – začít ihned</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Vybrat POS systém?</strong></td>
+<td>Dotykačka KOMPLET (990 Kč/měs)</td>
+<td>ANO – integrace Wolt/Bolt, offline mód</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Kontaktovat KHS Plzeň?</strong></td>
+<td>Zahájit schvalovací proces</td>
+<td>ANO – trvá 4–8 týdnů</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="fázovaný-plán-spuštění">2. FÁZOVANÝ PLÁN SPUŠTĚNÍ</h2>
+<h3 id="fáze-0-quick-wins-týden-12-investice-75-00085-000-kč">Fáze 0:
+Quick Wins (Týden 1–2, investice 75 000–85 000 Kč)</h3>
+<blockquote>
+<p><strong>Revize investice 2026-02-19:</strong> Grill a kávovar již k
+dispozici, revize spotřebičů není potřeba. Úspora 57 000 Kč oproti
+původnímu odhadu 138 000 Kč. HACCP – Tomáš Knopp ověří stav: pokud OK =
+0 Kč, pokud nutné = +10 000 Kč.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Položka</th>
+<th>Částka</th>
+<th>Poznámka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chladicí vitrína</td>
+<td>18 000 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>POS tablet + tiskárna + terminál</td>
+<td>15 000 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>První naskladnění (polotovary + nápoje)</td>
+<td>25 000 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>Obaly takeaway</td>
+<td>5 000 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>Grafika menu + tabule</td>
+<td>5 000 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>Rezerva</td>
+<td>6 800 Kč</td>
+<td></td>
+</tr>
+<tr>
+<td>HACCP dokumentace</td>
+<td>TBD</td>
+<td>0 Kč (pokud OK) nebo 10 000 Kč</td>
+</tr>
+<tr>
+<td><strong>CELKEM</strong></td>
+<td><strong>75 000–85 000 Kč</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="co-lze-spustit-zítra">Co lze spustit ZÍTRA</h4>
+<ul>
+<li>Kontaktovat pivovar (Plzeňský Prazdroj) – výpůjčka čepovacích
+zařízení zdarma</li>
+<li>Zveřejnit inzerát na kuchaře (Gastrojobs.cz, Jobs.cz, Facebook
+„Kuchaři CZ”)</li>
+<li>Ověřit stav HACCP dokumentace s Tomášem Knoppem</li>
+</ul>
+<h4 id="co-spustit-tento-týden">Co spustit tento týden</h4>
+<ul>
+<li>Nákup mražených polotovarů v Makro (burgery, pizza základy, dezerty)
+– 25 000 Kč</li>
+<li>Objednat POS systém Dotykačka (tablet + tiskárna + terminál) – 15
+000 Kč</li>
+<li>Nábor 1–2 brigádníků (DPP, studenti ZČU Bolevec) – interně +
+nástěnky</li>
+<li>Objednat chladicí vitrinu – 18 000 Kč</li>
+</ul>
+<h4 id="co-spustit-příští-týden">Co spustit příští týden</h4>
+<ul>
+<li>Instalace kávovaru a čepování</li>
+<li>Školení brigádníka (obsluha kávovaru, gril, hygiena) – 1–2 dny</li>
+<li>Testovací provoz (1 den, pouze pro členy)</li>
+<li>Social media oznámení: „Bistro otevřeno – pilotní provoz”</li>
+<li><strong>Spuštění nouzového provozu: burgery z polotovarů, bagety,
+káva, čepované pivo</strong></li>
+</ul>
+<h4 id="odhadované-tržby-z-fáze-0">Odhadované tržby z Fáze 0</h4>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Scénář</th>
+<th>Zákazníků/den</th>
+<th>Měsíční tržba</th>
+<th>Měsíční náklady</th>
+<th>Výsledek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesimistický</td>
+<td>16</td>
+<td>39 520 Kč</td>
+<td>57 100 Kč</td>
+<td>–17 580 Kč</td>
+</tr>
+<tr>
+<td><strong>Realistický</strong></td>
+<td><strong>21</strong></td>
+<td><strong>62 920 Kč</strong></td>
+<td><strong>65 300 Kč</strong></td>
+<td><strong>–2 380 Kč</strong></td>
+</tr>
+<tr>
+<td>Optimistický</td>
+<td>30</td>
+<td>93 600 Kč</td>
+<td>74 900 Kč</td>
+<td>+18 700 Kč</td>
+</tr>
+</tbody>
+</table>
+<p>Hlavní přínos není zisk, ale: <strong>testování poptávky, budování
+návyků zákazníků, data pro kuchaře, a okamžitý cash flow z nápojů (marže
+65–91 %).</strong></p>
+<hr />
+<h3 id="fáze-1-mvp-standard-měsíc-13">Fáze 1: MVP → Standard (Měsíc
+1–3)</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Týden</th>
+<th>Krok</th>
+<th>Investice</th>
+<th>Zodpovědný</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1–T2</td>
+<td>Quick Start provoz (polotovary)</td>
+<td>Zahrnuto ve Fázi 0</td>
+<td>Brigádník + Tomáš</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>Zahájení náboru kuchaře (4 kanály současně)</td>
+<td>5 000–12 000 Kč</td>
+<td>Tomáš</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Objednání pizza pece, pákového kávovaru, fritézy</td>
+<td>112 000 Kč</td>
+<td>Vedoucí bistra</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Zadání HACCP dokumentace (plná verze)</td>
+<td>10 000 Kč</td>
+<td>Vedoucí bistra</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Pohovory kuchař (1. kolo)</td>
+<td>–</td>
+<td>Tomáš</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Smlouva s pivovarem a dodavateli</td>
+<td>–</td>
+<td>Vedoucí bistra</td>
+</tr>
+<tr>
+<td>T5–T6</td>
+<td>Nástup kuchaře, onboarding, testovací vaření</td>
+<td>–</td>
+<td>Vedoucí bistra</td>
+</tr>
+<tr>
+<td>T7–T8</td>
+<td>Soft opening (pouze členové, redukované menu)</td>
+<td>–</td>
+<td>Celý tým</td>
+</tr>
+<tr>
+<td>T10–T12</td>
+<td>Plný provoz, první turnajový catering</td>
+<td>–</td>
+<td>Celý tým</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Personál Fáze 1 (Standard model): 106 896 Kč/měs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pozice</th>
+<th>Úvazek</th>
+<th>Náklady/měs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kuchař (HPP)</td>
+<td>Plný</td>
+<td>42 816 Kč</td>
+</tr>
+<tr>
+<td>Obsluha (DPP, 2 osoby)</td>
+<td>240 h celkem</td>
+<td>24 000 Kč</td>
+</tr>
+<tr>
+<td>Brigádníci (turnaje + víkendy)</td>
+<td>DPP</td>
+<td>10 080 Kč</td>
+</tr>
+<tr>
+<td>Vedoucí bistra (0,5 úvazku, OSVČ)</td>
+<td>OSVČ</td>
+<td>18 000 Kč</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="fáze-2-standard-full-měsíc-36">Fáze 2: Standard → Full (Měsíc
+3–6)</h3>
+<p><strong>Trigger podmínky pro přechod z Fáze 1:</strong> - Tržby M2–M3
+&gt; 80 000 Kč/měs - 20+ zákazníků/den - Kuchař nastoupil a
+stabilizován</p>
+<p><strong>Kroky:</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Krok</th>
+<th>Termín</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registrace na Wolt</td>
+<td>M3</td>
+<td>Onboarding 2–4 týdny, provize 30 %</td>
+</tr>
+<tr>
+<td>Registrace na Bolt Food</td>
+<td>M3</td>
+<td>Onboarding 1–3 týdny, provize 25–30 %</td>
+</tr>
+<tr>
+<td>Registrace na Foodora</td>
+<td>M4</td>
+<td>Po stabilizaci na Wolt/Bolt</td>
+</tr>
+<tr>
+<td>Grand Opening</td>
+<td>M4</td>
+<td>Slavnostní otevření, letáky Bolevec, akce 1+1</td>
+</tr>
+<tr>
+<td>Věrnostní program</td>
+<td>M4</td>
+<td>RFID integrace, členská sleva 5–15 %</td>
+</tr>
+<tr>
+<td>Menu rozšíření</td>
+<td>M4+</td>
+<td>Denní menu, sportovní bowly, dětské menu</td>
+</tr>
+<tr>
+<td>Spuštění online objednávek</td>
+<td>M4+</td>
+<td>QR kód na stolech (Dotykačka Objednávky, 0 % provize)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="fáze-3-full-operace-měsíc-612">Fáze 3: Full Operace (Měsíc
+6–12)</h3>
+<p><strong>Trigger podmínky:</strong> - Tržby M5–M6 &gt; 180 000 Kč/měs
+- Delivery spuštěno a funkční - Kuchař stabilní, tým zaběhnutý</p>
+<p><strong>Kroky:</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aktivita</th>
+<th>Investice</th>
+<th>Měsíční přínos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salonky (firemní akce, narozeniny)</td>
+<td>43 000 Kč</td>
+<td>22 000–44 000 Kč</td>
+</tr>
+<tr>
+<td>Grilovací akce (léto, pozemek haly)</td>
+<td>35 000 Kč (smoker/gril)</td>
+<td>18 000 Kč</td>
+</tr>
+<tr>
+<td>TV obrazovky (sportovní přenosy)</td>
+<td>30 000 Kč</td>
+<td>Zvýšení návštěvnosti</td>
+</tr>
+<tr>
+<td>Firemní teambuilding balíčky</td>
+<td>Zahrnuto v salonkách</td>
+<td>26 000 Kč</td>
+</tr>
+<tr>
+<td>Dětské narozeninové party</td>
+<td>Zahrnuto v salonkách</td>
+<td>12 000 Kč</td>
+</tr>
+<tr>
+<td>Venkovní mobiliář</td>
+<td>40 000 Kč</td>
+<td>Letní sezóna</td>
+</tr>
+</tbody>
+</table>
+<p><strong>KPI pro upgrade na Full:</strong></p>
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Cíl M6</th>
+<th>Cíl M12</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Denní tržby (průměr)</td>
+<td>5 000 Kč</td>
+<td>6 500 Kč</td>
+</tr>
+<tr>
+<td>Food cost</td>
+<td>max. 32 %</td>
+<td>max. 30 %</td>
+</tr>
+<tr>
+<td>Zákazníků/den</td>
+<td>30</td>
+<td>40</td>
+</tr>
+<tr>
+<td>Google hodnocení</td>
+<td>4,3 hvězd</td>
+<td>4,5 hvězd</td>
+</tr>
+<tr>
+<td>Salonky (akcí/měsíc)</td>
+<td>6</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rozhodovací-matice-abc-scénářů">3. ROZHODOVACÍ MATICE A/B/C
+SCÉNÁŘŮ</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ukazatel</th>
+<th>A – Quick Start</th>
+<th>B – Standard</th>
+<th>C – Full Operace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Období</strong></td>
+<td>Měsíce 0–3</td>
+<td>Měsíce 3–6</td>
+<td>Měsíce 6–12</td>
+</tr>
+<tr>
+<td><strong>Jednorázová investice</strong></td>
+<td>75–85 tis. Kč</td>
+<td>+238 tis. (celkem ~315 tis.)</td>
+<td>+227 tis. (celkem ~540 tis.)</td>
+</tr>
+<tr>
+<td><strong>Fixní náklady/měs</strong></td>
+<td>47 500 Kč</td>
+<td>124 000 Kč</td>
+<td>163 000 Kč</td>
+</tr>
+<tr>
+<td><strong>Food cost</strong></td>
+<td>38 %</td>
+<td>28 %</td>
+<td>26 %</td>
+</tr>
+<tr>
+<td><strong>Break-even tržby/měs</strong></td>
+<td>83 333 Kč</td>
+<td>185–203 tis. Kč</td>
+<td>267 213 Kč</td>
+</tr>
+<tr>
+<td><strong>Cílové tržby/měs</strong></td>
+<td>89 000 Kč</td>
+<td>212 000 Kč</td>
+<td>343 000 Kč</td>
+</tr>
+<tr>
+<td><strong>Provozní break-even</strong></td>
+<td>Měsíc 3</td>
+<td>Měsíc 7 (celkově)</td>
+<td>Měsíc 8 (celkově)</td>
+</tr>
+<tr>
+<td><strong>Personál na směně</strong></td>
+<td>1</td>
+<td>2–3</td>
+<td>3–4</td>
+</tr>
+<tr>
+<td><strong>Roční EBITDA (stab.)</strong></td>
+<td>20–85 tis. Kč</td>
+<td>100–160 tis. Kč</td>
+<td><strong>550–730 tis. Kč</strong></td>
+</tr>
+<tr>
+<td><strong>Odolnost (–20 % tržby)</strong></td>
+<td>Ztrátový</td>
+<td>Ztrátový</td>
+<td><strong>Stále ziskový</strong></td>
+</tr>
+<tr>
+<td><strong>Max. kumulativní ztráta</strong></td>
+<td>–160 tis. Kč</td>
+<td>–455 tis. Kč</td>
+<td>–685 tis. Kč</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doporučení-fázový-přístup-a-b-c">DOPORUČENÍ: Fázový přístup A →
+B → C</h3>
+<p><strong>Proč ne rovnou B nebo C?</strong> - A validuje trh za 75–85
+tis. Kč místo ~315 tis. Kč (plný Standard model) - A generuje data (co
+se prodává, kolik lidí chodí) - A běží paralelně s náborem kuchaře (4–8
+týdnů) - Pokud se A nezdaří (tržby &lt; 50 000 Kč/měs po 3 měsících) →
+STOP, minimální ztráta</p>
+<p><strong>Go/No-Go kritéria:</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Přechod</th>
+<th>GO podmínka</th>
+<th>STOP podmínka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A → B</td>
+<td>Tržby M2–M3 &gt; 80 000 Kč/měs, 20+ zák./den</td>
+<td>Tržby &lt; 50 000 Kč po 3 měsících</td>
+</tr>
+<tr>
+<td>B → C</td>
+<td>Tržby M5–M6 &gt; 180 000 Kč/měs, delivery běží</td>
+<td>Tržby &lt; 140 000 Kč, kuchař nenalezen</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="akční-checklist-příštích-14-dní">4. AKČNÍ CHECKLIST – PŘÍŠTÍCH
+14 DNÍ</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Vlastník</th>
+<th>Termín</th>
+<th>Náklad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Rozhodnutí: spustit Quick Start (ANO/NE)</td>
+<td>Tomáš Knopp</td>
+<td><strong>DNES</strong></td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Schválit rozpočet 75–85 tis. Kč na Fázi 0</td>
+<td>Tomáš Knopp</td>
+<td><strong>DNES</strong></td>
+<td>–</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Ověřit stav HACCP dokumentace</strong> (Tomáš tvrdí OK –
+potvrdit písemně)</td>
+<td>Tomáš Knopp</td>
+<td><strong>DNES</strong></td>
+<td>0 / 10 000 Kč</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kontaktovat KHS Plzeň – informace o schválení provozovny</td>
+<td>Tomáš Knopp</td>
+<td>Tento týden</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ověřit ŽL – hostinská činnost (kdo je držitel?)</td>
+<td>Tomáš Knopp</td>
+<td>Tento týden</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Zveřejnit inzerát na kuchaře (Gastrojobs, Jobs.cz, Facebook,
+Práce.cz)</td>
+<td>Tomáš Knopp</td>
+<td>Tento týden</td>
+<td>5 000 Kč</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Objednat POS systém Dotykačka KOMPLET</td>
+<td>Tomáš / IT</td>
+<td>Tento týden</td>
+<td>990 Kč/měs + 15 000 Kč HW</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Kontaktovat Plzeňský Prazdroj – smlouva na čepovací zařízení</td>
+<td>Tomáš Knopp</td>
+<td>Tento týden</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Nákup v Makro: mražené burgery, pizza základy, nápoje, obaly</td>
+<td>Tomáš / brigádník</td>
+<td>Týden 1</td>
+<td>25 000 Kč</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Objednat chladicí vitrinu</td>
+<td>Tomáš Knopp</td>
+<td>Týden 1</td>
+<td>18 000 Kč</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Nábor 1–2 brigádníků (DPP, studenti ZČU Bolevec)</td>
+<td>Tomáš Knopp</td>
+<td>Týden 1</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Instalace čepování (pivovar)</td>
+<td>Dodavatelé</td>
+<td>Týden 2</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Školení brigádníka (kávovar, gril, hygiena, POS)</td>
+<td>Tomáš / Dotykačka</td>
+<td>Týden 2</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Připravit jednoduchý ceník (tabule / tisk)</td>
+<td>Grafik / Tomáš</td>
+<td>Týden 2</td>
+<td>5 000 Kč</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Testovací provoz (1 den, pouze členové)</td>
+<td>Brigádník</td>
+<td>Týden 2</td>
+<td>~2 000 Kč (suroviny)</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Social media oznámení: „Bistro otevřeno – pilotní provoz”</td>
+<td>Tomáš / marketing</td>
+<td>Týden 2</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Registrace na Wolt (zahájit onboarding, trvá 2–4 týdny)</td>
+<td>Tomáš Knopp</td>
+<td>Týden 2</td>
+<td>0 Kč</td>
+</tr>
+<tr>
+<td>18</td>
+<td><strong>SPUŠTĚNÍ nouzového provozu</strong></td>
+<td>Brigádník</td>
+<td><strong>Konec týdne 2</strong></td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="klíčová-rizika-a-mitigace">5. KLÍČOVÁ RIZIKA A MITIGACE</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Riziko</th>
+<th>Pravděpodobnost</th>
+<th>Dopad</th>
+<th>Mitigace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Nenalezení kuchaře do 6 týdnů</strong></td>
+<td>Střední</td>
+<td>Kritický</td>
+<td>Spustit MVP okamžitě jako bridge. Zapojit personální agenturu
+(HOFMANN, Manpower Plzeň). Zvýšit nabídku mzdy o 10–15 %. Kontaktovat
+gastro školy (SOU Plzeň). Ghost Kitchen model jako poslední záloha.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Tržby pod break-even</strong></td>
+<td>Střední</td>
+<td>Vysoký</td>
+<td>Turnajový catering je klíčový (+20–30 tis. Kč/měs). Krizový prodej
+přes recepci haly. Členské slevy. Aktivní marketing na 350 členů.
+Go/No-Go gate po 3 měsících.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Sezónní propad (léto –30 %)</strong></td>
+<td>Jistá</td>
+<td>Střední</td>
+<td>Letní kempy (stravování dětí). Grilovací akce na pozemku haly.
+Spolupráce s akcemi u Boleveckého rybníka. Redukce personálu (DPP
+flexibilita).</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Odchod kuchaře (zkušební doba)</strong></td>
+<td>Střední</td>
+<td>Vysoký</td>
+<td>Kvalitní onboarding. Motivační bonusy (5 000 Kč po 3 měs., 10 000 Kč
+po 6 měs.). Podíl na tržbách nad plán (1–3 %). Dokumentace receptur.
+Přechod na MVP do 2 dnů.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Město změní podmínky (energie)</strong></td>
+<td>Nízká</td>
+<td>Kritický</td>
+<td>Monitorovat vztah s městem. Dokumentovat přínos bistra pro komunitu.
+Průběžně získávat podporu zastupitelů.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="doporučení-delivery-stack">6. DOPORUČENÍ DELIVERY STACK</h2>
+<h3 id="porovnání-platforem">Porovnání platforem</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Platforma</th>
+<th>Provize</th>
+<th>Onboarding</th>
+<th>Priorita</th>
+<th>Důvod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dotykačka Objednávky</strong></td>
+<td><strong>0 %</strong></td>
+<td>1 týden (součást POS)</td>
+<td><strong>Základ</strong></td>
+<td>QR kód na stolech, web objednávky, takeaway. Žádná provize.</td>
+</tr>
+<tr>
+<td><strong>Wolt</strong></td>
+<td>30 %</td>
+<td>2–4 týdny</td>
+<td>1. platforma</td>
+<td>Největší objem v Plzni, integrace s Dotykačkou, Wolt+ zákazníci</td>
+</tr>
+<tr>
+<td><strong>Bolt Food</strong></td>
+<td>25–30 %</td>
+<td>1–3 týdny</td>
+<td>2. platforma</td>
+<td>Nižší provize, rostoucí báze (synergie s Bolt taxi)</td>
+</tr>
+<tr>
+<td><strong>Foodora</strong></td>
+<td>30 %</td>
+<td>2–3 týdny</td>
+<td>3. platforma</td>
+<td>Nejširší pokrytí ČR, ale překryv s Wolt/Bolt</td>
+</tr>
+<tr>
+<td><strong>OneMenu.cz</strong></td>
+<td>3,79 %</td>
+<td>–</td>
+<td>Volitelně</td>
+<td>Nízká provize, malý dosah</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doporučené-pořadí">Doporučené pořadí</h3>
+<ol type="1">
+<li><strong>Měsíc 1:</strong> Dotykačka Objednávky (0 % provize) –
+základ pro in-house a takeaway</li>
+<li><strong>Měsíc 3:</strong> Wolt + Bolt Food současně – registraci
+zahájit v T2, aby byly připraveny na soft launch</li>
+<li><strong>Měsíc 4:</strong> Foodora – po stabilizaci na Wolt/Bolt</li>
+<li><strong>Měsíc 6+:</strong> Vlastní rozvoz pro velké objednávky
+(catering, firemní) s nulovou provizí</li>
+</ol>
+<h3 id="cenová-strategie">Cenová strategie</h3>
+<ul>
+<li><strong>Bistro ceny:</strong> základní úroveň</li>
+<li><strong>Delivery ceny:</strong> +15–25 % markup (kompenzace provize
+30 %)</li>
+<li><strong>Členové haly (přímo v bistru):</strong> –5 až –15 % sleva
+(motivace objednávat přímo, 0 % provize)</li>
+<li><strong>Cílový podíl delivery:</strong> max. 20 % tržeb (provize 30
+% dramaticky snižuje marži)</li>
+</ul>
+<hr />
+<h2 id="finanční-přehled-na-1-stránce">7. FINANČNÍ PŘEHLED NA 1
+STRÁNCE</h2>
+<h3 id="investice-a-náklady">Investice a náklady</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>A – Quick Start</th>
+<th>B – Standard</th>
+<th>C – Full Operace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Jednorázová investice</strong></td>
+<td>75–85 tis. Kč</td>
+<td>+238 tis. Kč</td>
+<td>+227 tis. Kč</td>
+</tr>
+<tr>
+<td><strong>Kumulativní investice</strong></td>
+<td>75–85 tis. Kč</td>
+<td>~315 tis. Kč</td>
+<td>~540 tis. Kč</td>
+</tr>
+<tr>
+<td><strong>Fixní náklady/měs</strong></td>
+<td>47 500 Kč</td>
+<td>124 000 Kč</td>
+<td>163 000 Kč</td>
+</tr>
+<tr>
+<td><strong>Z toho personál</strong></td>
+<td>35 000 Kč</td>
+<td>92 000 Kč</td>
+<td>119 000 Kč</td>
+</tr>
+<tr>
+<td><strong>Food cost</strong></td>
+<td>38 %</td>
+<td>28 %</td>
+<td>26 %</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tržby-a-ziskovost">Tržby a ziskovost</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>A – Quick Start</th>
+<th>B – Standard</th>
+<th>C – Full Operace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Break-even tržby/měs</strong></td>
+<td>83 333 Kč</td>
+<td>203 279 Kč</td>
+<td>267 213 Kč</td>
+</tr>
+<tr>
+<td><strong>Cílové tržby/měs</strong></td>
+<td>89 000 Kč</td>
+<td>212 000 Kč</td>
+<td>343 000 Kč</td>
+</tr>
+<tr>
+<td><strong>EBITDA/měs (stabilní)</strong></td>
+<td>+730 – +7 000 Kč</td>
+<td>+5 320 – +13 250 Kč</td>
+<td>+42 000 – +61 000 Kč</td>
+</tr>
+<tr>
+<td><strong>Roční EBITDA (stabilní)</strong></td>
+<td>20–85 tis. Kč</td>
+<td>100–160 tis. Kč</td>
+<td><strong>550–730 tis. Kč</strong></td>
+</tr>
+<tr>
+<td><strong>Roční tržby (stabilní)</strong></td>
+<td>~1 mil. Kč</td>
+<td>~2,1 mil. Kč</td>
+<td><strong>3,6–4,1 mil. Kč</strong></td>
+</tr>
+<tr>
+<td><strong>Provozní break-even</strong></td>
+<td>Měsíc 3</td>
+<td>Měsíc 7</td>
+<td>Měsíc 8</td>
+</tr>
+<tr>
+<td><strong>Max. kumulativní ztráta</strong></td>
+<td>–160 tis. Kč</td>
+<td>–455 tis. Kč</td>
+<td>–685 tis. Kč</td>
+</tr>
+</tbody>
+</table>
+<h3 id="klíčové-finanční-předpoklady">Klíčové finanční předpoklady</h3>
+<ul>
+<li><strong>Energie = 0 Kč</strong> (hradí město) – eliminuje největší
+variabilní náklad gastro provozu</li>
+<li><strong>Nájem = 0 Kč</strong> (vlastní prostor)</li>
+<li><strong>Průměrná útrata:</strong> 120 Kč (polotovary) → 145 Kč
+(čerstvé) → 155 Kč (full)</li>
+<li><strong>Turnajový catering:</strong> 20–30 tis. Kč/měs =
+make-or-break faktor pro Scénář B</li>
+<li><strong>Salonky + eventy:</strong> 80–100 tis. Kč/měs = hlavní
+driver zisku ve Scénáři C (marže 55–85 %)</li>
+</ul>
+<h3 id="nejdůležitější-číslo">Nejdůležitější číslo</h3>
+<blockquote>
+<p><strong>Při fázovém přístupu A → B → C dosáhne bistro roční EBITDA
+550 000 – 730 000 Kč, což představuje navýšení celkového obratu haly o
+100+ %.</strong></p>
+</blockquote>
+<hr />
+<blockquote>
+<p><strong>Zpracováno:</strong> 2026-02-19 <strong>Podklady:</strong>
+BISTRO_STRATEGIE.md, BISTRO_TRHY.md, BISTRO_PERSONAL.md,
+BISTRO_DELIVERY.md, BISTRO_FINANCNI_MODEL.md, PRD.md <strong>Další
+krok:</strong> Tomáš Knopp rozhodne o spuštění Fáze 0 a schválí rozpočet
+75–85 tis. Kč. První krok dnes: ověřit stav HACCP dokumentace.</p>
+</blockquote>
+
+</body>
+</html>

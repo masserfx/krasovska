@@ -172,5 +172,55 @@ export async function ensureTable() {
 
   await sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`;
 
+  // --- Bistro tables ---
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS bistro_phases (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      title VARCHAR(100) NOT NULL,
+      description TEXT,
+      phase_number INTEGER NOT NULL,
+      start_date DATE,
+      end_date DATE,
+      status VARCHAR(20) DEFAULT 'planned'
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS bistro_tasks (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      phase_id UUID REFERENCES bistro_phases(id) ON DELETE CASCADE,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      status VARCHAR(20) DEFAULT 'todo',
+      priority VARCHAR(10) DEFAULT 'medium',
+      assignee VARCHAR(100),
+      due_date DATE,
+      sort_order INTEGER DEFAULT 0,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS bistro_kpis (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      month_year VARCHAR(7) NOT NULL,
+      revenue_target INTEGER,
+      revenue_actual INTEGER,
+      covers_target INTEGER,
+      covers_actual INTEGER,
+      avg_ticket_target INTEGER,
+      avg_ticket_actual INTEGER,
+      fixed_costs INTEGER DEFAULT 47500,
+      variable_costs_actual INTEGER
+    )
+  `;
+
+  // Bistro migrations
+  await sql`ALTER TABLE bistro_tasks ADD COLUMN IF NOT EXISTS type VARCHAR(20) DEFAULT 'task'`;
+  await sql`ALTER TABLE bistro_tasks ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE bistro_phases ADD COLUMN IF NOT EXISTS color VARCHAR(20) DEFAULT 'blue'`;
+
   initialized = true;
 }

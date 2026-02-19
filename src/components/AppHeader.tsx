@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -14,6 +14,7 @@ import {
   Package,
   Receipt,
   FileText,
+  UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
@@ -33,8 +34,9 @@ interface TabDef {
 
 const tabs: TabDef[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member", appendQid: true },
-  { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member", appendQid: true },
+  { id: "projects", label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member" },
   { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3, minRole: "admin", appendQid: true },
+  { id: "bistro", label: "Bistro", href: "/bistro", icon: UtensilsCrossed, minRole: "member" },
   { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList, minRole: "member", appendQid: true },
   { id: "sessions", label: "Relace", href: "/sessions", icon: FileText, minRole: "admin" },
   { id: "audit", label: "Audit", href: "/audit", icon: Shield, minRole: "admin" },
@@ -55,16 +57,12 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
   const idFromUrl = searchParams.get("id");
-  const [id, setId] = useState(idFromUrl);
+  const [storedId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(STORAGE_KEY);
+  });
 
-  useEffect(() => {
-    if (idFromUrl) {
-      setId(idFromUrl);
-      return;
-    }
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) setId(stored);
-  }, [idFromUrl]);
+  const id = idFromUrl ?? storedId;
 
   const role = session?.user?.role as UserRole | undefined;
   const filtered = visibleTabs(role);

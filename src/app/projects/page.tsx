@@ -2,7 +2,8 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, FolderKanban, Loader2 } from "lucide-react";
+import { Plus, FolderKanban, Loader2, FileText } from "lucide-react";
+import Link from "next/link";
 import { Project, ProjectCategory, ProjectStatus } from "@/types";
 import { fetchProjects } from "@/lib/api";
 import { useQuestionnaireId } from "@/hooks/useQuestionnaireId";
@@ -56,9 +57,12 @@ function ProjectsContent() {
   if (!questionnaireId) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 text-muted">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Přesměrování...
+        <div className="text-center">
+          <FileText className="mx-auto mb-3 h-10 w-10 text-muted/40" />
+          <p className="mb-2 text-sm font-medium text-foreground">Žádný dotazník není vybrán</p>
+          <Link href="/sessions" className="text-sm text-primary hover:underline">
+            Vybrat dotazník
+          </Link>
         </div>
       </div>
     );
