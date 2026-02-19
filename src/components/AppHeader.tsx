@@ -17,6 +17,7 @@ import {
   UtensilsCrossed,
   Users,
   Warehouse,
+  ScanLine,
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
@@ -47,6 +48,7 @@ const tabs: TabDef[] = [
   { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         minRole: "admin" },
   { id: "sklad",        label: "Sklad",       href: "/eshop/admin/sklad",      icon: Warehouse,       minRole: "reception" },
   { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         minRole: "reception" },
+  { id: "eos",          label: "EOS",         href: "/eos",                    icon: ScanLine,        minRole: "admin" },
 ];
 
 function visibleTabs(role: UserRole | undefined, sectionPerms: string[] | null): TabDef[] {
