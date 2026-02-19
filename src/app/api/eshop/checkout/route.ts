@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
 import { generateOrderNumber } from "@/lib/eshop-utils";
 import { createPayment } from "@/lib/comgate";
+import { sendOrderConfirmation, sendNewOrderNotification } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -113,6 +114,20 @@ export async function POST(request: NextRequest) {
     await sql`
       UPDATE orders SET status = 'paid', updated_at = NOW() WHERE id = ${order.id}
     `;
+
+    // Send emails (non-blocking)
+    const emailData = {
+      order_number: orderNumber,
+      customer_name,
+      email,
+      items: orderItems,
+      subtotal,
+      discount_amount,
+      total,
+      delivery_method: "pickup",
+    };
+    sendOrderConfirmation(emailData);
+    sendNewOrderNotification(emailData);
 
     return NextResponse.json({
       redirect_url: null,

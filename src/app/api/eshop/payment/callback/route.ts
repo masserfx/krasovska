@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
 import { verifyPayment } from "@/lib/comgate";
+import { sendOrderConfirmation, sendNewOrderNotification } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,6 +43,26 @@ export async function POST(request: NextRequest) {
       await sql`
         UPDATE orders SET status = 'paid', updated_at = NOW() WHERE id = ${payment.order_id}
       `;
+
+      // Send confirmation emails
+      const { rows: orderRows } = await sql`
+        SELECT * FROM orders WHERE id = ${payment.order_id}
+      `;
+      if (orderRows.length > 0) {
+        const order = orderRows[0];
+        const emailData = {
+          order_number: order.order_number,
+          customer_name: order.customer_name,
+          email: order.email,
+          items: typeof order.items === "string" ? JSON.parse(order.items) : order.items,
+          subtotal: order.subtotal,
+          discount_amount: order.discount_amount,
+          total: order.total,
+          delivery_method: order.delivery_method,
+        };
+        sendOrderConfirmation(emailData);
+        sendNewOrderNotification(emailData);
+      }
     } else if (verified.status === "CANCELLED" || status === "CANCELLED") {
       await sql`
         UPDATE payments
