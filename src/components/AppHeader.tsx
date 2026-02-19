@@ -15,6 +15,7 @@ import {
   Receipt,
   FileText,
   UtensilsCrossed,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
@@ -38,6 +39,7 @@ const tabs: TabDef[] = [
   { id: "analysis", label: "Analýza", href: "/analysis", icon: BarChart3, minRole: "admin", appendQid: true },
   { id: "bistro", label: "Bistro", href: "/bistro", icon: UtensilsCrossed, minRole: "member" },
   { id: "questionnaire", label: "Dotazník", href: "/", icon: ClipboardList, minRole: "member", appendQid: true },
+  { id: "users", label: "Uživatelé", href: "/users", icon: Users, minRole: "admin" },
   { id: "sessions", label: "Relace", href: "/sessions", icon: FileText, minRole: "admin" },
   { id: "audit", label: "Audit", href: "/audit", icon: Shield, minRole: "admin" },
   { id: "eshop", label: "E-shop", href: "/eshop", icon: ShoppingCart },
