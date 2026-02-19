@@ -28,6 +28,7 @@ export default function ProductForm({ product, onSave, onCancel }: Props) {
   const [category, setCategory] = useState<ProductCategory>(product?.category || "rackets");
   const [imageUrl, setImageUrl] = useState(product?.image_url || "");
   const [stockQuantity, setStockQuantity] = useState(String(product?.stock_quantity ?? 0));
+  const [lowStockThreshold, setLowStockThreshold] = useState(String(product?.low_stock_threshold ?? 5));
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -45,6 +46,7 @@ export default function ProductForm({ product, onSave, onCancel }: Props) {
         category,
         image_url: imageUrl || null,
         stock_quantity: Number(stockQuantity),
+        low_stock_threshold: Number(lowStockThreshold),
         is_active: isActive,
         sort_order: product?.sort_order ?? 0,
         metadata: product?.metadata ?? {},
@@ -164,6 +166,19 @@ export default function ProductForm({ product, onSave, onCancel }: Props) {
                 className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-foreground">
+              Minimum skladem (alert pod touto hodnotou)
+            </label>
+            <input
+              type="number"
+              value={lowStockThreshold}
+              onChange={(e) => setLowStockThreshold(e.target.value)}
+              min="0"
+              className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            />
           </div>
 
           <div>

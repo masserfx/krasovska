@@ -49,6 +49,7 @@ export async function PUT(
     const category = body.category ?? p.category;
     const image_url = body.image_url ?? p.image_url;
     const stock_quantity = body.stock_quantity ?? p.stock_quantity;
+    const low_stock_threshold = body.low_stock_threshold ?? p.low_stock_threshold ?? 5;
     const is_active = body.is_active ?? p.is_active;
     const sort_order = body.sort_order ?? p.sort_order;
     const metadata = body.metadata ? JSON.stringify(body.metadata) : JSON.stringify(p.metadata || {});
@@ -58,7 +59,7 @@ export async function PUT(
       SET name = ${name}, slug = ${newSlug}, description = ${description},
           price_czk = ${price_czk}, compare_price_czk = ${compare_price_czk},
           category = ${category}, image_url = ${image_url},
-          stock_quantity = ${stock_quantity}, is_active = ${is_active},
+          stock_quantity = ${stock_quantity}, low_stock_threshold = ${low_stock_threshold}, is_active = ${is_active},
           sort_order = ${sort_order}, metadata = ${metadata},
           updated_at = NOW()
       WHERE slug = ${slug}

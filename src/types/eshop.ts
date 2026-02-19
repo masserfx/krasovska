@@ -10,6 +10,7 @@ export interface Product {
   category: ProductCategory;
   image_url: string | null;
   stock_quantity: number;
+  low_stock_threshold: number;
   is_active: boolean;
   sort_order: number;
   metadata: Record<string, unknown>;

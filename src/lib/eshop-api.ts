@@ -118,6 +118,30 @@ export async function submitCheckout(
   return res.json();
 }
 
+// --- Stock ---
+
+export interface StockData {
+  low_stock_count: number;
+  products: (Pick<Product, "id" | "name" | "slug" | "category" | "stock_quantity" | "low_stock_threshold" | "is_active" | "price_czk">)[];
+}
+
+export async function fetchStock(): Promise<StockData> {
+  const res = await fetch("/api/eshop/stock");
+  if (!res.ok) throw new Error("Nepodařilo se načíst sklad");
+  return res.json();
+}
+
+export async function fetchLowStockCount(): Promise<number> {
+  try {
+    const res = await fetch("/api/eshop/stock");
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return data.low_stock_count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 // --- Quick Sale (POS) ---
 
 export interface QuickSaleData {

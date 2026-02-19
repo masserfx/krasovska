@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { Plus, Loader2, Package, Pencil, Trash2, QrCode } from "lucide-react";
+import { Plus, Loader2, Package, Pencil, Trash2, QrCode, Warehouse } from "lucide-react";
 import Link from "next/link";
 import { Product, PRODUCT_CATEGORY_LABELS, ProductCategory } from "@/types/eshop";
 import { fetchProducts, deleteProduct } from "@/lib/eshop-api";
@@ -62,6 +62,13 @@ function AdminContent() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href="/eshop/admin/sklad"
+            className="flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background"
+          >
+            <Warehouse className="h-4 w-4" />
+            Sklad
+          </Link>
           <Link
             href="/eshop/admin/qr"
             className="flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background"

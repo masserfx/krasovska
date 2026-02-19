@@ -16,6 +16,7 @@ import {
   FileText,
   UtensilsCrossed,
   Users,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
@@ -44,6 +45,7 @@ const tabs: TabDef[] = [
   { id: "audit",        label: "Audit",       href: "/audit",                  icon: Shield,          minRole: "admin" },
   { id: "eshop",        label: "E-shop",      href: "/eshop",                  icon: ShoppingCart },
   { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         minRole: "admin" },
+  { id: "sklad",        label: "Sklad",       href: "/eshop/admin/sklad",      icon: Warehouse,       minRole: "reception" },
   { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         minRole: "reception" },
 ];
 
@@ -74,6 +76,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
 
   // Live-refresh permissions from DB so changes take effect without re-login
   const [livePerms, setLivePerms] = useState<string[] | null | undefined>(undefined);
+  const [lowStockCount, setLowStockCount] = useState(0);
   useEffect(() => {
     if (!session?.user?.id) return;
     fetch("/api/me")
@@ -81,6 +84,16 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
       .then((d) => setLivePerms(d.section_permissions ?? null))
       .catch(() => setLivePerms(null));
   }, [session?.user?.id]);
+
+  // Low stock badge — only for roles that can see the stock tab
+  useEffect(() => {
+    const r = session?.user?.role;
+    if (!r || !["admin", "coordinator", "reception"].includes(r)) return;
+    fetch("/api/eshop/stock")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((d) => { if (d) setLowStockCount(d.low_stock_count ?? 0); })
+      .catch(() => {});
+  }, [session?.user?.role]);
 
   const id = idFromUrl ?? storedId;
   const role = session?.user?.role as UserRole | undefined;
@@ -114,7 +127,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
               <Link
                 key={tab.id}
                 href={href}
-                className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                className={`relative flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? "border-primary text-primary"
                     : "border-transparent text-muted hover:border-border hover:text-foreground"
@@ -122,6 +135,11 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
               >
                 <Icon className="h-4 w-4" />
                 {tab.label}
+                {tab.id === "sklad" && lowStockCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+                    {lowStockCount}
+                  </span>
+                )}
               </Link>
             );
           })}

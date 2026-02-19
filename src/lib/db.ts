@@ -177,6 +177,9 @@ export async function ensureTable() {
   await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS visibility VARCHAR(20) DEFAULT 'all'`;
   await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS visibility VARCHAR(20) DEFAULT 'all'`;
 
+  // Stock threshold migration
+  await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS low_stock_threshold INTEGER DEFAULT 5`;
+
   // --- Bistro tables ---
 
   await sql`
