@@ -1,8 +1,12 @@
 import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth("member");
+  if (isAuthError(auth)) return auth;
+
   try {
     await ensureTable();
 
@@ -11,7 +15,6 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
-    // Build WHERE conditions
     const conditions: string[] = [];
     const values: unknown[] = [];
 
@@ -28,7 +31,14 @@ export async function GET(request: NextRequest) {
       conditions.push(`p.status = $${values.length}`);
     }
 
-    const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    // Visibility filter — $N reused intentionally (valid in PostgreSQL)
+    values.push(auth.role);
+    const ri = values.length;
+    conditions.push(
+      `(p.visibility = 'all' OR (p.visibility = 'management' AND $${ri} IN ('admin', 'coordinator')) OR $${ri} = 'admin')`
+    );
+
+    const where = `WHERE ${conditions.join(" AND ")}`;
 
     const { rows } = await sql.query(
       `SELECT p.*,
@@ -50,19 +60,26 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAuth("member");
+  if (isAuthError(auth)) return auth;
+
   try {
     await ensureTable();
 
     const body = await request.json();
-    const { title, description, category, status, priority, questionnaire_id, due_date } = body;
+    const { title, description, category, status, priority, questionnaire_id, due_date, visibility } = body;
 
     if (!title || !category) {
       return NextResponse.json({ error: "Title and category are required" }, { status: 400 });
     }
 
+    // Only management can set restricted visibility
+    const canSetVisibility = auth.role === "admin" || auth.role === "coordinator";
+    const resolvedVisibility = canSetVisibility && visibility ? visibility : "all";
+
     const { rows } = await sql`
-      INSERT INTO projects (title, description, category, status, priority, questionnaire_id, due_date)
-      VALUES (${title}, ${description || null}, ${category}, ${status || "planned"}, ${priority || "medium"}, ${questionnaire_id || null}, ${due_date || null})
+      INSERT INTO projects (title, description, category, status, priority, questionnaire_id, due_date, visibility)
+      VALUES (${title}, ${description || null}, ${category}, ${status || "planned"}, ${priority || "medium"}, ${questionnaire_id || null}, ${due_date || null}, ${resolvedVisibility})
       RETURNING *
     `;
 

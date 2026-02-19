@@ -32,6 +32,7 @@ export type ProjectCategory = "strategic" | "marketing" | "operations" | "develo
 export type ProjectStatus = "planned" | "active" | "paused" | "completed" | "cancelled";
 export type Priority = "low" | "medium" | "high" | "critical";
 export type TaskStatus = "todo" | "in_progress" | "done";
+export type Visibility = "all" | "management" | "admin";
 
 export interface Project {
   id: string;
@@ -42,6 +43,7 @@ export interface Project {
   status: ProjectStatus;
   priority: Priority;
   due_date: string | null;
+  visibility: Visibility;
   created_at: string;
   updated_at: string;
   task_count?: number;
@@ -58,6 +60,7 @@ export interface Task {
   assignee: string | null;
   due_date: string | null;
   sort_order: number;
+  visibility: Visibility;
   created_at: string;
   updated_at: string;
 }
@@ -151,6 +154,12 @@ export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
   todo: "K řešení",
   in_progress: "Probíhá",
   done: "Hotovo",
+};
+
+export const VISIBILITY_LABELS: Record<Visibility, string> = {
+  all: "Všichni",
+  management: "Management (admin + koordinátor)",
+  admin: "Pouze administrátor",
 };
 
 // --- Bistro types ---

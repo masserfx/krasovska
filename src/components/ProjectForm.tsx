@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
 import {
   Project,
   ProjectCategory,
   ProjectStatus,
   Priority,
+  Visibility,
   PROJECT_CATEGORY_LABELS,
   PROJECT_STATUS_LABELS,
   PRIORITY_LABELS,
+  VISIBILITY_LABELS,
 } from "@/types";
 import { createProject, updateProject } from "@/lib/api";
 
@@ -23,6 +26,7 @@ interface ProjectFormProps {
 const categories = Object.entries(PROJECT_CATEGORY_LABELS) as [ProjectCategory, string][];
 const statuses = Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][];
 const priorities = Object.entries(PRIORITY_LABELS) as [Priority, string][];
+const visibilities = Object.entries(VISIBILITY_LABELS) as [Visibility, string][];
 
 export default function ProjectForm({
   questionnaire_id,
@@ -30,12 +34,17 @@ export default function ProjectForm({
   onSave,
   onCancel,
 }: ProjectFormProps) {
+  const { data: session } = useSession();
+  const role = session?.user?.role;
+  const canSetVisibility = role === "admin" || role === "coordinator";
+
   const [title, setTitle] = useState(project?.title ?? "");
   const [description, setDescription] = useState(project?.description ?? "");
   const [category, setCategory] = useState<ProjectCategory>(project?.category ?? "operations");
   const [priority, setPriority] = useState<Priority>(project?.priority ?? "medium");
   const [status, setStatus] = useState<ProjectStatus>(project?.status ?? "planned");
   const [dueDate, setDueDate] = useState(project?.due_date ?? "");
+  const [visibility, setVisibility] = useState<Visibility>(project?.visibility ?? "all");
   const [saving, setSaving] = useState(false);
 
   const isEdit = !!project;
@@ -54,6 +63,7 @@ export default function ProjectForm({
         status,
         due_date: dueDate || null,
         questionnaire_id,
+        visibility: canSetVisibility ? visibility : "all",
       };
 
       const saved = isEdit
@@ -180,6 +190,26 @@ export default function ProjectForm({
               />
             </div>
           </div>
+
+          {/* Visibility — only for admin/coordinator */}
+          {canSetVisibility && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-foreground">
+                Viditelnost
+              </label>
+              <select
+                value={visibility}
+                onChange={(e) => setVisibility(e.target.value as Visibility)}
+                className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm text-foreground focus:border-primary-light focus:outline-none focus:ring-2 focus:ring-primary-light/20"
+              >
+                {visibilities.map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">

@@ -35,6 +35,7 @@ export default function TaskForm({ projectId, onSave, onCancel }: TaskFormProps)
         assignee: assignee.trim() || null,
         due_date: dueDate || null,
         sort_order: 0,
+        visibility: "all",
       });
       onSave(task);
       setTitle("");

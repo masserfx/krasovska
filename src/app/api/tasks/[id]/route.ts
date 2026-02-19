@@ -1,17 +1,20 @@
 import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureTable } from "@/lib/db";
+import { requireAuth, isAuthError } from "@/lib/auth-helpers";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAuth("member");
+  if (isAuthError(auth)) return auth;
+
   try {
     await ensureTable();
     const { id } = await params;
     const body = await request.json();
 
-    // Fetch current task
     const { rows: current } = await sql`SELECT * FROM tasks WHERE id = ${id}`;
     if (current.length === 0) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
@@ -26,6 +29,9 @@ export async function PUT(
     const due_date = body.due_date ?? task.due_date;
     const sort_order = body.sort_order ?? task.sort_order;
 
+    const canSetVisibility = auth.role === "admin" || auth.role === "coordinator";
+    const visibility = (canSetVisibility && body.visibility) ? body.visibility : task.visibility;
+
     const { rows } = await sql`
       UPDATE tasks
       SET title = ${title},
@@ -35,6 +41,7 @@ export async function PUT(
           assignee = ${assignee},
           due_date = ${due_date},
           sort_order = ${sort_order},
+          visibility = ${visibility},
           updated_at = NOW()
       WHERE id = ${id}
       RETURNING *

@@ -63,6 +63,7 @@ function AnalysisContent() {
         status: "planned",
         priority: rec.priority,
         due_date: null,
+        visibility: "all",
       });
     },
     [id]
