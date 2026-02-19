@@ -131,6 +131,70 @@ export async function fetchStock(): Promise<StockData> {
   return res.json();
 }
 
+export async function updateStock(
+  id: string,
+  data: { stock_quantity?: number; stock_delta?: number; low_stock_threshold?: number }
+): Promise<Product> {
+  const res = await fetch(`/api/eshop/stock/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Nepodařilo se aktualizovat sklad");
+  return res.json();
+}
+
+// --- Categories ---
+
+export interface CategoryData {
+  id: string;
+  slug: string;
+  label: string;
+  sort_order: number;
+  is_active: boolean;
+  product_count: number;
+}
+
+export async function fetchCategories(): Promise<CategoryData[]> {
+  const res = await fetch("/api/eshop/categories");
+  if (!res.ok) throw new Error("Nepodařilo se načíst kategorie");
+  return res.json();
+}
+
+export async function createCategory(slug: string, label: string): Promise<CategoryData> {
+  const res = await fetch("/api/eshop/categories", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ slug, label }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Nepodařilo se vytvořit kategorii");
+  }
+  return res.json();
+}
+
+export async function updateCategory(
+  slug: string,
+  data: { label?: string; sort_order?: number; is_active?: boolean }
+): Promise<CategoryData> {
+  const res = await fetch(`/api/eshop/categories/${slug}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Nepodařilo se aktualizovat kategorii");
+  return res.json();
+}
+
+export async function deleteCategory(slug: string): Promise<void> {
+  const res = await fetch(`/api/eshop/categories/${slug}`, { method: "DELETE" });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Nepodařilo se smazat kategorii");
+  }
+}
+
 export async function fetchLowStockCount(): Promise<number> {
   try {
     const res = await fetch("/api/eshop/stock");

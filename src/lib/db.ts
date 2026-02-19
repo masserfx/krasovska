@@ -180,6 +180,18 @@ export async function ensureTable() {
   // Stock threshold migration
   await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS low_stock_threshold INTEGER DEFAULT 5`;
 
+  // Product categories table
+  await sql`
+    CREATE TABLE IF NOT EXISTS product_categories (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      slug VARCHAR(100) NOT NULL UNIQUE,
+      label VARCHAR(255) NOT NULL,
+      sort_order INTEGER DEFAULT 0,
+      is_active BOOLEAN DEFAULT true,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
   // --- Bistro tables ---
 
   await sql`
