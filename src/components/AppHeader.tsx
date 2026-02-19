@@ -1,8 +1,8 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
@@ -18,6 +18,8 @@ import {
   Users,
   Warehouse,
   ScanLine,
+  ChevronDown,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
@@ -26,58 +28,201 @@ import { ROLE_HIERARCHY } from "@/types/auth";
 
 const STORAGE_KEY = "hala-krasovska-active-qid";
 
-type TabGroup = "overview" | "project" | "operations" | "eshop-mgmt" | "admin";
+/* ─── Tab & group definitions ─── */
 
 interface TabDef {
   id: string;
   label: string;
   href: string;
   icon: LucideIcon;
-  group: TabGroup;
   minRole?: UserRole;
   appendQid?: boolean;
 }
 
-const tabs: TabDef[] = [
-  // ── Přehled ──
-  { id: "dashboard",    label: "Dashboard",   href: "/dashboard",              icon: LayoutDashboard, group: "overview",   minRole: "member",    appendQid: true },
+interface NavGroup {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  items: TabDef[];
+}
 
-  // ── Projekty & analýza ──
-  { id: "projects",     label: "Projekty",    href: "/projects",               icon: FolderKanban,    group: "project",    minRole: "member" },
-  { id: "questionnaire",label: "Dotazník",    href: "/",                       icon: ClipboardList,   group: "project",    minRole: "member",    appendQid: true },
-  { id: "analysis",     label: "Analýza",     href: "/analysis",               icon: BarChart3,       group: "project",    minRole: "admin",     appendQid: true },
-
-  // ── Provoz ──
-  { id: "bistro",       label: "Bistro",      href: "/bistro",                 icon: UtensilsCrossed, group: "operations", minRole: "member" },
-  { id: "eshop",        label: "E-shop",      href: "/eshop",                  icon: ShoppingCart,    group: "operations" },
-
-  // ── E-shop správa ──
-  { id: "objednavky",   label: "Objednávky",  href: "/eshop/admin/objednavky", icon: Receipt,         group: "eshop-mgmt", minRole: "reception" },
-  { id: "eshop-admin",  label: "Produkty",    href: "/eshop/admin",            icon: Package,         group: "eshop-mgmt", minRole: "admin" },
-  { id: "sklad",        label: "Sklad",       href: "/eshop/admin/sklad",      icon: Warehouse,       group: "eshop-mgmt", minRole: "reception" },
-
-  // ── Správa systému ──
-  { id: "users",        label: "Uživatelé",   href: "/users",                  icon: Users,           group: "admin" },
-  { id: "sessions",     label: "Relace",      href: "/sessions",               icon: FileText,        group: "admin" },
-  { id: "audit",        label: "Audit",       href: "/audit",                  icon: Shield,          group: "admin" },
-  { id: "eos",          label: "EOS",         href: "/eos",                    icon: ScanLine,        group: "admin" },
+const navGroups: NavGroup[] = [
+  {
+    id: "overview",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    items: [
+      { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member", appendQid: true },
+    ],
+  },
+  {
+    id: "project",
+    label: "Projekty",
+    icon: FolderKanban,
+    items: [
+      { id: "projects",      label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member" },
+      { id: "questionnaire", label: "Dotazník", href: "/",         icon: ClipboardList, minRole: "member", appendQid: true },
+      { id: "analysis",      label: "Analýza",  href: "/analysis", icon: BarChart3,     minRole: "admin",  appendQid: true },
+    ],
+  },
+  {
+    id: "operations",
+    label: "Provoz",
+    icon: UtensilsCrossed,
+    items: [
+      { id: "bistro", label: "Bistro", href: "/bistro", icon: UtensilsCrossed, minRole: "member" },
+      { id: "eshop",  label: "E-shop", href: "/eshop",  icon: ShoppingCart },
+    ],
+  },
+  {
+    id: "eshop-mgmt",
+    label: "E-shop správa",
+    icon: Receipt,
+    items: [
+      { id: "objednavky", label: "Objednávky", href: "/eshop/admin/objednavky", icon: Receipt,   minRole: "reception" },
+      { id: "eshop-admin", label: "Produkty",  href: "/eshop/admin",            icon: Package,   minRole: "admin" },
+      { id: "sklad",       label: "Sklad",     href: "/eshop/admin/sklad",      icon: Warehouse, minRole: "reception" },
+    ],
+  },
+  {
+    id: "admin",
+    label: "Správa",
+    icon: Settings,
+    items: [
+      { id: "users",    label: "Uživatelé", href: "/users",    icon: Users,    minRole: "admin" },
+      { id: "sessions", label: "Relace",    href: "/sessions", icon: FileText, minRole: "admin" },
+      { id: "audit",    label: "Audit",     href: "/audit",    icon: Shield,   minRole: "admin" },
+      { id: "eos",      label: "EOS",       href: "/eos",      icon: ScanLine, minRole: "admin" },
+    ],
+  },
 ];
 
-function visibleTabs(role: UserRole | undefined, sectionPerms: string[] | null): TabDef[] {
-  if (!role) return tabs.filter((t) => !t.minRole);
-  if (role === "admin") return tabs;
+/* ─── Visibility filter ─── */
 
-  if (sectionPerms !== null) {
-    // Explicit per-user permissions: show tab if id is in the list, or tab is public
-    return tabs.filter((t) => !t.minRole || sectionPerms.includes(t.id));
+function visibleGroups(role: UserRole | undefined, sectionPerms: string[] | null): NavGroup[] {
+  return navGroups
+    .map((group) => {
+      const items = group.items.filter((t) => {
+        if (!t.minRole) return true;
+        if (!role) return false;
+        if (role === "admin") return true;
+        if (sectionPerms !== null) return sectionPerms.includes(t.id);
+        return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[t.minRole];
+      });
+      return items.length > 0 ? { ...group, items } : null;
+    })
+    .filter((g): g is NavGroup => g !== null);
+}
+
+/* ─── Dropdown component ─── */
+
+function NavDropdown({
+  group,
+  activeTab,
+  qid,
+  lowStockCount,
+}: {
+  group: NavGroup;
+  activeTab: string;
+  qid: string | null;
+  lowStockCount: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) close();
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open, close]);
+
+  const hasActive = group.items.some((t) => t.id === activeTab);
+  const GroupIcon = group.icon;
+
+  // Single-item group → render as direct link
+  if (group.items.length === 1) {
+    const tab = group.items[0];
+    const Icon = tab.icon;
+    const href = qid && tab.appendQid ? `${tab.href}?id=${qid}` : tab.href;
+    const isActive = tab.id === activeTab;
+
+    return (
+      <Link
+        href={href}
+        className={`relative flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
+          isActive
+            ? "border-primary text-primary"
+            : "border-transparent text-muted hover:border-border hover:text-foreground"
+        }`}
+      >
+        <Icon className="h-4 w-4" />
+        {tab.label}
+      </Link>
+    );
   }
 
-  // Fall back to role-based minRole defaults
-  return tabs.filter((t) => {
-    if (!t.minRole) return true;
-    return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[t.minRole];
-  });
+  // Multi-item group → dropdown
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className={`flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
+          hasActive
+            ? "border-primary text-primary"
+            : "border-transparent text-muted hover:border-border hover:text-foreground"
+        }`}
+      >
+        <GroupIcon className="h-4 w-4" />
+        {group.label}
+        <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
+        {/* Badge for stock alerts in eshop-mgmt group */}
+        {group.id === "eshop-mgmt" && lowStockCount > 0 && (
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+            {lowStockCount}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-50 mt-px min-w-48 rounded-lg border border-border bg-white py-1 shadow-lg">
+          {group.items.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = tab.id === activeTab;
+            const href = qid && tab.appendQid ? `${tab.href}?id=${qid}` : tab.href;
+
+            return (
+              <Link
+                key={tab.id}
+                href={href}
+                onClick={close}
+                className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-primary/5 font-medium text-primary"
+                    : "text-foreground hover:bg-background"
+                }`}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                {tab.label}
+                {tab.id === "sklad" && lowStockCount > 0 && (
+                  <span className="ml-auto flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+                    {lowStockCount}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 }
+
+/* ─── Header content ─── */
 
 function HeaderContent({ activeTab }: { activeTab: string }) {
   const searchParams = useSearchParams();
@@ -116,7 +261,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
   const sectionPerms: string[] | null =
     livePerms !== undefined ? livePerms : (session?.user?.sectionPermissions ?? null);
 
-  const filtered = visibleTabs(role, sectionPerms);
+  const groups = visibleGroups(role, sectionPerms);
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
@@ -130,39 +275,17 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
           <UserMenu />
         </div>
 
-        {/* Tab navigation */}
-        <nav className="-mb-px flex gap-0.5 overflow-x-auto">
-          {filtered.map((tab, i) => {
-            const Icon = tab.icon;
-            const isActive = tab.id === activeTab;
-            const href = id && tab.appendQid ? `${tab.href}?id=${id}` : tab.href;
-            const prevGroup = i > 0 ? filtered[i - 1].group : null;
-            const showSep = prevGroup !== null && prevGroup !== tab.group;
-
-            return (
-              <span key={tab.id} className="flex items-center">
-                {showSep && (
-                  <span className="mx-1 h-5 w-px bg-border/60" aria-hidden />
-                )}
-                <Link
-                  href={href}
-                  className={`relative flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted hover:border-border hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {tab.label}
-                  {tab.id === "sklad" && lowStockCount > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
-                      {lowStockCount}
-                    </span>
-                  )}
-                </Link>
-              </span>
-            );
-          })}
+        {/* Navigation */}
+        <nav className="-mb-px flex gap-0.5">
+          {groups.map((group) => (
+            <NavDropdown
+              key={group.id}
+              group={group}
+              activeTab={activeTab}
+              qid={id}
+              lowStockCount={lowStockCount}
+            />
+          ))}
         </nav>
       </div>
     </header>
