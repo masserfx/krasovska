@@ -112,23 +112,21 @@ export default function SuppliersSection() {
                 key={s.name}
                 className="bg-white rounded-xl border border-border shadow-sm p-4"
               >
-                <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="text-sm font-semibold text-foreground">
-                        {s.name}
-                      </h4>
-                      <span
-                        className={`text-xs px-1.5 py-0.5 rounded ${PRIORITY_COLORS[s.priority]}`}
-                      >
-                        {PRIORITY_LABELS[s.priority]}
-                      </span>
-                    </div>
-                    <p className="text-sm text-foreground mt-1">{s.products}</p>
-                    <p className="text-xs text-muted mt-1">
-                      Podminky: {s.terms}
-                    </p>
-                    <p className="text-xs text-muted">Kontakt: {s.contact}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                  <h4 className="text-sm font-semibold text-foreground">
+                    {s.name}
+                  </h4>
+                  <span
+                    className={`text-xs px-1.5 py-0.5 rounded ${PRIORITY_COLORS[s.priority]}`}
+                  >
+                    {PRIORITY_LABELS[s.priority]}
+                  </span>
                 </div>
+                <p className="text-sm text-foreground mt-1">{s.products}</p>
+                <p className="text-xs text-muted mt-1">
+                  Podminky: {s.terms}
+                </p>
+                <p className="text-xs text-muted">Kontakt: {s.contact}</p>
               </div>
             ))}
           </div>

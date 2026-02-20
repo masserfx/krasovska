@@ -94,6 +94,12 @@ const ITEMS: CheckItem[] = [
   },
 ];
 
+const STATUS_BUTTON_STYLES: Record<CheckItem["status"], string> = {
+  done: "bg-green-500 border-green-500 text-white",
+  in_progress: "border-blue-500 bg-blue-50",
+  pending: "border-gray-300 bg-white",
+};
+
 const STATUS_CONFIG = {
   pending: { label: "Ceka", bg: "bg-gray-100", text: "text-gray-600", dot: "bg-gray-400" },
   in_progress: { label: "Resim", bg: "bg-blue-100", text: "text-blue-700", dot: "bg-blue-500" },
@@ -147,11 +153,7 @@ export default function LegislativeChecklist() {
                 <button
                   onClick={() => cycleStatus(item.id)}
                   className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    item.status === "done"
-                      ? "bg-green-500 border-green-500 text-white"
-                      : item.status === "in_progress"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300 bg-white"
+                    STATUS_BUTTON_STYLES[item.status]
                   }`}
                   title="Kliknete pro zmenu stavu"
                 >

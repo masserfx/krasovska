@@ -29,6 +29,12 @@ const TYPES: { value: BistroTaskType; label: string; icon: string; desc: string 
   { value: "goal", label: "Cíl", icon: "⚑", desc: "Měřitelný výsledek fáze" },
 ];
 
+const TITLE_PLACEHOLDERS: Record<BistroTaskType, string> = {
+  milestone: "Název milníku...",
+  goal: "Název cíle...",
+  task: "Co je potřeba udělat?",
+};
+
 const STATUSES: { value: BistroTaskStatus; label: string }[] = [
   { value: "todo", label: "K udělání" },
   { value: "in_progress", label: "Probíhá" },
@@ -152,7 +158,7 @@ export default function TaskModal({ task, phases, defaultPhaseId, defaultType, o
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              placeholder={type === "milestone" ? "Název milníku..." : type === "goal" ? "Název cíle..." : "Co je potřeba udělat?"}
+              placeholder={TITLE_PLACEHOLDERS[type]}
               className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
             />
           </div>

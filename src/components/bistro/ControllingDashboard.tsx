@@ -177,18 +177,19 @@ export default function ControllingDashboard() {
               kpi.revenue_actual !== null
                 ? kpi.revenue_actual - kpi.revenue_target
                 : null;
-            const deltaColor =
-              delta !== null
-                ? delta >= 0
-                  ? "text-green-600"
-                  : "text-red-600"
-                : "text-muted";
-            const revenueColor =
-              kpi.revenue_actual !== null
-                ? kpi.revenue_actual >= kpi.revenue_target
-                  ? "text-green-600"
-                  : "text-red-600"
-                : "";
+
+            let deltaColor = "text-muted";
+            if (delta !== null) {
+              deltaColor = delta >= 0 ? "text-green-600" : "text-red-600";
+            }
+
+            let revenueColor = "";
+            if (kpi.revenue_actual !== null) {
+              revenueColor = kpi.revenue_actual >= kpi.revenue_target
+                ? "text-green-600"
+                : "text-red-600";
+            }
+
             const breakEvenPct =
               kpi.fixed_costs > 0 && kpi.revenue_actual !== null
                 ? Math.min(
