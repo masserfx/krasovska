@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
@@ -60,9 +60,10 @@ const navGroups: NavGroup[] = [
     label: "Projekty",
     icon: FolderKanban,
     items: [
-      { id: "projects",      label: "Projekty", href: "/projects", icon: FolderKanban, minRole: "member" },
-      { id: "questionnaire", label: "Dotazník", href: "/",         icon: ClipboardList, minRole: "member", appendQid: true },
-      { id: "analysis",      label: "Analýza",  href: "/analysis", icon: BarChart3,     minRole: "admin",  appendQid: true },
+      { id: "projects",      label: "Projekty",   href: "/projects",   icon: FolderKanban, minRole: "member" },
+      { id: "questionnaire", label: "Dotazník",   href: "/",           icon: ClipboardList, minRole: "member", appendQid: true },
+      { id: "analysis",      label: "Analýza",    href: "/analysis",   icon: BarChart3,     minRole: "admin",  appendQid: true },
+      { id: "dokumenty",     label: "Dokumenty",  href: "/dokumenty",  icon: FileText,      minRole: "coordinator" },
     ],
   },
   {
