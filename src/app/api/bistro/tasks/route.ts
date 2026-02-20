@@ -11,14 +11,10 @@ interface SeedTask {
 }
 
 const SEED_TASKS_BY_PHASE: Record<number, SeedTask[]> = {
-  // ── Phase 0: Quick Start (02-03/2026) ──
   0: [
-    // Milestones
     { title: "Varianta B schválena", type: "milestone", priority: "high", assignee: "Tomáš Knopp", sort_order: 0 },
     { title: "Vybavení objednáno", type: "milestone", priority: "high", assignee: "Tomáš Knopp", sort_order: 1 },
-    // Goals
     { title: "Rozpočet 220K uvolněn", type: "goal", priority: "high", assignee: "Tomáš Knopp", sort_order: 2 },
-    // Tasks
     { title: "Rozhodnutí: spustit Quick Start", priority: "high", assignee: "Tomáš Knopp", sort_order: 3 },
     { title: "Schválit rozpočet 220 tis. Kč na Variantu B", priority: "high", assignee: "Tomáš Knopp", sort_order: 4 },
     { title: "Ověřit ŽL – hostinská činnost", priority: "high", assignee: "Tomáš Knopp", sort_order: 5 },
@@ -38,13 +34,9 @@ const SEED_TASKS_BY_PHASE: Record<number, SeedTask[]> = {
     { title: "Nákup v Makro — počáteční zásoby", priority: "high", assignee: null, sort_order: 19 },
   ],
 
-  // ── Phase 1: MVP → Standard (04/2026) ──
   1: [
-    // Milestones
     { title: "Vybavení instalováno + HACCP hotovo", type: "milestone", priority: "high", assignee: null, sort_order: 0 },
-    // Goals
     { title: "Všichni mají zdravotní průkazy", type: "goal", priority: "high", assignee: "Vedoucí bistra", sort_order: 1 },
-    // Tasks
     { title: "Instalace konvektomatu a trouby", priority: "high", assignee: "Servisní technik", sort_order: 2 },
     { title: "Instalace chladicí vitríny", priority: "high", assignee: "Servisní technik", sort_order: 3 },
     { title: "Instalace čepování (pivovar)", priority: "medium", assignee: "Pivovar", sort_order: 4 },
@@ -66,16 +58,12 @@ const SEED_TASKS_BY_PHASE: Record<number, SeedTask[]> = {
     { title: "Smlouva na svoz odpadu", priority: "low", assignee: "Tomáš Knopp", sort_order: 20 },
   ],
 
-  // ── Phase 2: Standard → Full (05-06/2026) ──
   2: [
-    // Milestones
     { title: "Soft opening pro členy", type: "milestone", priority: "high", assignee: null, sort_order: 0 },
     { title: "Grand opening", type: "milestone", priority: "high", assignee: null, sort_order: 1 },
-    // Goals
     { title: "Tržby 100K/měsíc", type: "goal", priority: "high", assignee: null, sort_order: 2 },
     { title: "Food cost < 35%", type: "goal", priority: "medium", assignee: "Kuchař", sort_order: 3 },
     { title: "Google 4.0★", type: "goal", priority: "medium", assignee: null, sort_order: 4 },
-    // Tasks
     { title: "Soft opening — testovací provoz pro členy", priority: "high", assignee: "Vedoucí bistra", sort_order: 5 },
     { title: "Sběr feedbacku od prvních zákazníků", priority: "medium", assignee: "Vedoucí bistra", sort_order: 6 },
     { title: "Úprava menu dle zpětné vazby", priority: "medium", assignee: "Kuchař", sort_order: 7 },
@@ -93,16 +81,12 @@ const SEED_TASKS_BY_PHASE: Record<number, SeedTask[]> = {
     { title: "Ochutnávky zdarma pro členy (promo akce)", priority: "low", assignee: "Kuchař", sort_order: 19 },
   ],
 
-  // ── Phase 3: Full Operace (07-12/2026) ──
   3: [
-    // Milestones
     { title: "3 měsíce provozu vyhodnoceny", type: "milestone", priority: "high", assignee: null, sort_order: 0 },
     { title: "Break-even dosažen", type: "milestone", priority: "high", assignee: null, sort_order: 1 },
-    // Goals
     { title: "Tržby 5 000 Kč/den", type: "goal", priority: "high", assignee: null, sort_order: 2 },
     { title: "Food cost ≤ 32%", type: "goal", priority: "high", assignee: "Kuchař", sort_order: 3 },
     { title: "40 zákazníků/den", type: "goal", priority: "medium", assignee: null, sort_order: 4 },
-    // Tasks
     { title: "Stabilizace provozu — rutinní procesy", priority: "high", assignee: "Vedoucí bistra", sort_order: 5 },
     { title: "Letní menu — sezonní úprava", priority: "medium", assignee: "Kuchař", sort_order: 6 },
     { title: "Catering pro letní kempy", priority: "high", assignee: "Kuchař", sort_order: 7 },
@@ -122,7 +106,6 @@ const SEED_TASKS_BY_PHASE: Record<number, SeedTask[]> = {
 };
 
 async function seedTasks() {
-  // Get all phases
   const { rows: phases } = await sql`SELECT id, phase_number FROM bistro_phases ORDER BY phase_number ASC`;
   if (phases.length === 0) return;
 
@@ -147,7 +130,6 @@ export async function GET(request: NextRequest) {
     const phaseId = searchParams.get("phase_id");
     const reseed = searchParams.get("reseed");
 
-    // Reseed: delete all tasks and re-create
     if (reseed === "true") {
       await sql`DELETE FROM bistro_tasks`;
       await seedTasks();

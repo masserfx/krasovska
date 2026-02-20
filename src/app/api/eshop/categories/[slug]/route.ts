@@ -46,7 +46,6 @@ export async function DELETE(
     await ensureTable();
     const { slug } = await params;
 
-    // Check if any products use this category
     const { rows: products } = await sql`
       SELECT COUNT(*) AS count FROM products WHERE category = ${slug}
     `;

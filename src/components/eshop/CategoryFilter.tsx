@@ -10,7 +10,6 @@ interface Props {
   onChange: (category: string | null) => void;
 }
 
-// Static fallback from enum (used when API requires auth)
 const staticCategories: CategoryData[] = (
   Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]
 ).map(([slug, label], i) => ({
@@ -34,10 +33,7 @@ export default function CategoryFilter({ value, onChange }: Props) {
           .sort((a, b) => a.sort_order - b.sort_order);
         setCategories(active.length > 0 ? active : staticCategories);
       })
-      .catch(() => {
-        // API requires auth — fallback to static categories
-        setCategories(staticCategories);
-      })
+      .catch(() => setCategories(staticCategories))
       .finally(() => setLoading(false));
   }, []);
 

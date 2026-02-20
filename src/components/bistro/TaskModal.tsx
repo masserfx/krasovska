@@ -63,7 +63,6 @@ export default function TaskModal({ task, phases, defaultPhaseId, defaultType, o
     titleRef.current?.focus();
   }, []);
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", handler);

@@ -26,7 +26,6 @@ export default function BistroPage() {
           </p>
         </div>
 
-        {/* Tab buttons */}
         <div className="flex gap-2 mb-6 border-b border-border">
           {[
             { id: "strategie", label: "Strategie" },
@@ -49,7 +48,6 @@ export default function BistroPage() {
           ))}
         </div>
 
-        {/* Tab content */}
         {activeTab === "strategie" && <StrategyView />}
         {activeTab === "kanban" && <KanbanBoard />}
         {activeTab === "gantt" && <GanttChart />}

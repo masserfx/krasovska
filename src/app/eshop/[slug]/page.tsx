@@ -125,7 +125,6 @@ function ProductDetail() {
 
   return (
     <>
-      {/* Breadcrumbs */}
       <nav className="mb-6 flex items-center gap-1 text-sm text-muted">
         <Link href="/eshop" className="hover:text-foreground">
           E-shop
@@ -139,7 +138,6 @@ function ProductDetail() {
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        {/* Image */}
         <div>
           {product.image_url ? (
             <img
@@ -154,7 +152,6 @@ function ProductDetail() {
           )}
         </div>
 
-        {/* Info */}
         <div>
           <span className="mb-2 inline-block rounded-full bg-background px-3 py-1 text-xs font-medium text-muted">
             {PRODUCT_CATEGORY_LABELS[product.category as ProductCategory] || product.category}
@@ -214,7 +211,6 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* Sticky mobile CTA */}
       {product.stock_quantity > 0 && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white p-4 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] lg:hidden">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">

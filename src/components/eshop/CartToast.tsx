@@ -19,7 +19,6 @@ export default function CartToast({ item, onDismiss }: Props) {
 
   useEffect(() => {
     if (item) {
-      // trigger slide-in
       requestAnimationFrame(() => setVisible(true));
       const timer = setTimeout(() => {
         setVisible(false);

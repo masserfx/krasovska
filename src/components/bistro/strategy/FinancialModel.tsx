@@ -1,7 +1,6 @@
 export default function FinancialModel() {
   return (
     <div className="space-y-6">
-      {/* Investment breakdown */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Rozklad pocatecni investice (Varianta B)
@@ -38,7 +37,6 @@ export default function FinancialModel() {
         </div>
       </div>
 
-      {/* Monthly costs */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Mesicni naklady (plny provoz)
@@ -107,7 +105,6 @@ export default function FinancialModel() {
         </div>
       </div>
 
-      {/* Break-even */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Break-even analyza
@@ -130,7 +127,6 @@ export default function FinancialModel() {
           </div>
         </div>
 
-        {/* Scenarios */}
         <h4 className="text-xs font-medium text-muted mb-2 uppercase tracking-wider">
           Scenare trzeb
         </h4>
@@ -172,7 +168,6 @@ export default function FinancialModel() {
         </div>
       </div>
 
-      {/* Key insight */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
         <p className="text-sm text-amber-900">
           <span className="font-semibold">Klicove zjisteni:</span> Turnajovy catering

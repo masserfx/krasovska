@@ -45,7 +45,6 @@ const SEASONAL = [
 export default function MarketingPlan() {
   return (
     <div className="space-y-6">
-      {/* Marketing phases */}
       <div className="space-y-4">
         {PHASES.map((phase) => (
           <div
@@ -74,7 +73,6 @@ export default function MarketingPlan() {
         ))}
       </div>
 
-      {/* Seasonal events */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Sezonni akce a turnajovy catering
@@ -115,7 +113,6 @@ export default function MarketingPlan() {
         </div>
       </div>
 
-      {/* Catering upsell highlight */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
         <p className="text-sm text-blue-900">
           <span className="font-semibold">Turnajovy catering upsell:</span>{" "}

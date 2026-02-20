@@ -36,7 +36,6 @@ export default function StrategyView() {
 
   return (
     <div className="space-y-6">
-      {/* Section navigation */}
       <div className="flex gap-2 flex-wrap">
         {SECTIONS.map((s) => (
           <button
@@ -53,7 +52,6 @@ export default function StrategyView() {
         ))}
       </div>
 
-      {/* Section content */}
       <div>
         {activeSection === "summary" && <ExecutiveSummary />}
         {activeSection === "variants" && <VariantComparison />}

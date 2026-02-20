@@ -112,8 +112,7 @@ export default function SuppliersSection() {
                 key={s.name}
                 className="bg-white rounded-xl border border-border shadow-sm p-4"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
+                <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4 className="text-sm font-semibold text-foreground">
                         {s.name}
@@ -129,7 +128,6 @@ export default function SuppliersSection() {
                       Podminky: {s.terms}
                     </p>
                     <p className="text-xs text-muted">Kontakt: {s.contact}</p>
-                  </div>
                 </div>
               </div>
             ))}

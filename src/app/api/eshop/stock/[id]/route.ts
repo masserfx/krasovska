@@ -15,14 +15,6 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    // Support both absolute set and delta adjustment
-    // { stock_quantity: 10 } — set to 10
-    // { stock_delta: -3 } — subtract 3
-    // { low_stock_threshold: 5 } — set threshold
-
-    const updates: string[] = [];
-    const values: unknown[] = [];
-
     if (body.stock_delta !== undefined) {
       const { rows: current } = await sql`SELECT stock_quantity FROM products WHERE id = ${id}`;
       if (current.length === 0) {

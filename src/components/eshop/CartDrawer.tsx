@@ -29,7 +29,6 @@ export default function CartDrawer({
 
   useEffect(() => {
     if (open) {
-      // mount first, then animate in
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setShow(true));
       });
@@ -38,7 +37,6 @@ export default function CartDrawer({
     }
   }, [open]);
 
-  // prevent body scroll when drawer is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -55,7 +53,6 @@ export default function CartDrawer({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-300 ${
           show ? "opacity-50" : "opacity-0"
@@ -63,7 +60,6 @@ export default function CartDrawer({
         onClick={handleClose}
       />
 
-      {/* Panel */}
       <div
         className={`relative flex w-full max-w-md flex-col bg-white shadow-xl transition-transform duration-300 ${
           show ? "translate-x-0" : "translate-x-full"

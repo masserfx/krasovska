@@ -30,12 +30,12 @@ const MONTH_LABELS: Record<string, string> = {
 };
 
 function formatCurrency(value: number | null): string {
-  if (value === null || value === undefined) return "–";
+  if (value === null) return "–";
   return value.toLocaleString("cs-CZ") + " Kč";
 }
 
 function formatNumber(value: number | null): string {
-  if (value === null || value === undefined) return "–";
+  if (value === null) return "–";
   return value.toLocaleString("cs-CZ");
 }
 
@@ -121,7 +121,6 @@ export default function ControllingDashboard() {
   }, []);
 
   async function handleSave(monthYear: string, field: string, value: number) {
-    // Optimistic update
     setKpis((prev) =>
       prev.map((k) => (k.month_year === monthYear ? { ...k, [field]: value } : k))
     );
@@ -134,7 +133,6 @@ export default function ControllingDashboard() {
       });
       if (!res.ok) throw new Error("Nepodařilo se uložit");
     } catch {
-      // Reload on error
       const res = await fetch("/api/bistro/kpis");
       if (res.ok) setKpis(await res.json());
     }

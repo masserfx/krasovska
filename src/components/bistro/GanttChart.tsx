@@ -112,7 +112,6 @@ export default function GanttChart() {
           </div>
         ))}
 
-        {/* Phase rows */}
         {sortedPhases.map((phase, idx) => {
           const color = PHASE_COLORS[idx % PHASE_COLORS.length];
           const startCol = getMonthIndex(phase.start_date) + 2; // +2 because grid col 1 is the name
@@ -121,12 +120,10 @@ export default function GanttChart() {
 
           return (
             <div key={phase.id} className="contents">
-              {/* Phase name */}
               <div className="p-2 border-t border-border">
                 <span className={`text-sm font-medium ${color.text}`}>
                   {phase.title}
                 </span>
-                {/* Tasks list */}
                 {phaseTasks.length > 0 && (
                   <ul className="mt-1 space-y-0.5">
                     {phaseTasks.map((t) => (
@@ -138,7 +135,6 @@ export default function GanttChart() {
                 )}
               </div>
 
-              {/* Timeline cells */}
               {MONTHS.map((m, mIdx) => {
                 const colIdx = mIdx + 2;
                 const isInRange = colIdx >= startCol && colIdx < endCol;
@@ -147,9 +143,7 @@ export default function GanttChart() {
                   <div
                     key={m.key}
                     className="relative border-t border-border p-1 min-h-[48px]"
-                    onMouseEnter={() =>
-                      isInRange ? setHoveredPhase(phase.id) : undefined
-                    }
+                    onMouseEnter={isInRange ? () => setHoveredPhase(phase.id) : undefined}
                     onMouseLeave={() => setHoveredPhase(null)}
                   >
                     {isInRange && (
@@ -157,7 +151,6 @@ export default function GanttChart() {
                         className={`h-6 rounded ${color.bar} opacity-80`}
                       />
                     )}
-                    {/* Tooltip */}
                     {isInRange && hoveredPhase === phase.id && (
                       <div className="absolute top-full left-1/2 -translate-x-1/2 z-10 mt-1 w-48 rounded-lg border border-border bg-white p-2 shadow-lg text-xs">
                         <p className="font-semibold text-foreground">

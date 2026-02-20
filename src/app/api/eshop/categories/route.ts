@@ -28,7 +28,6 @@ export async function GET() {
       SELECT * FROM product_categories ORDER BY sort_order ASC, label ASC
     `;
 
-    // Seed defaults if empty
     if (rows.length === 0) {
       for (const cat of DEFAULT_CATEGORIES) {
         await sql`
@@ -43,7 +42,6 @@ export async function GET() {
       rows = result.rows;
     }
 
-    // Include product count per category
     const { rows: counts } = await sql`
       SELECT category, COUNT(*) AS count
       FROM products
@@ -75,7 +73,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Slug a název jsou povinné" }, { status: 400 });
     }
 
-    // Get max sort_order
     const { rows: maxRows } = await sql`
       SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM product_categories
     `;

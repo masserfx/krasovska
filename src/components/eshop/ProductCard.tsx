@@ -45,7 +45,6 @@ export default function ProductCard({ product, onAddToCart, onClick }: Props) {
 
   return (
     <div className="group relative flex flex-col rounded-xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md overflow-hidden">
-      {/* Image */}
       <div className="relative cursor-pointer overflow-hidden" onClick={onClick}>
         {product.image_url ? (
           <img
@@ -59,7 +58,6 @@ export default function ProductCard({ product, onAddToCart, onClick }: Props) {
           </div>
         )}
 
-        {/* Sold out overlay */}
         {soldOut && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50">
             <span className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-gray-700">
@@ -68,7 +66,6 @@ export default function ProductCard({ product, onAddToCart, onClick }: Props) {
           </div>
         )}
 
-        {/* Discount badge */}
         {discountPercent && !soldOut && (
           <span className="absolute left-3 top-3 rounded-full bg-danger px-2.5 py-1 text-xs font-bold text-white">
             −{discountPercent} %
@@ -76,7 +73,6 @@ export default function ProductCard({ product, onAddToCart, onClick }: Props) {
         )}
       </div>
 
-      {/* Content */}
       <div className="flex flex-1 flex-col p-4 cursor-pointer" onClick={onClick}>
         <h3 className="font-semibold text-foreground line-clamp-1">{product.name}</h3>
         {product.description && (
@@ -99,7 +95,6 @@ export default function ProductCard({ product, onAddToCart, onClick }: Props) {
         </div>
       </div>
 
-      {/* CTA */}
       {!soldOut && (
         <div className="border-t border-border px-4 py-3">
           <button

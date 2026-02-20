@@ -26,11 +26,8 @@ import {
   deleteCategory,
   CategoryData,
 } from "@/lib/eshop-api";
-import { formatPrice } from "@/lib/eshop-utils";
-import { generateSlug } from "@/lib/eshop-utils";
+import { formatPrice, generateSlug } from "@/lib/eshop-utils";
 import AppHeader from "@/components/AppHeader";
-
-/* ─── Inline editable cell ─── */
 
 function InlineEdit({
   value,
@@ -90,8 +87,6 @@ function InlineEdit({
   );
 }
 
-/* ─── Adjustment buttons ─── */
-
 function AdjustButtons({
   onAdjust,
   saving,
@@ -121,8 +116,6 @@ function AdjustButtons({
   );
 }
 
-/* ─── Stock level bar (Shopify-style) ─── */
-
 function StockBar({ quantity, threshold }: { quantity: number; threshold: number }) {
   const max = Math.max(threshold * 3, quantity, 1);
   const pct = Math.min((quantity / max) * 100, 100);
@@ -139,8 +132,6 @@ function StockBar({ quantity, threshold }: { quantity: number; threshold: number
     </div>
   );
 }
-
-/* ─── Category manager ─── */
 
 function CategoryManager({
   categories,
@@ -267,7 +258,6 @@ function CategoryManager({
         ))}
       </div>
 
-      {/* Add new */}
       <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
         <input
           value={newLabel}
@@ -287,8 +277,6 @@ function CategoryManager({
     </div>
   );
 }
-
-/* ─── Main sklad content ─── */
 
 function SkladContent() {
   const [data, setData] = useState<StockData | null>(null);
@@ -407,7 +395,6 @@ function SkladContent() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
       {/* Main column */}
       <div>
-        {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-foreground">Sklad</h2>
@@ -440,7 +427,6 @@ function SkladContent() {
           </div>
         </div>
 
-        {/* Summary cards */}
         <div className="mb-4 grid grid-cols-3 gap-3">
           <div className="rounded-xl border border-border bg-white p-3 shadow-sm">
             <div className="text-2xl font-bold text-foreground">
@@ -472,7 +458,6 @@ function SkladContent() {
           </div>
         </div>
 
-        {/* Filters row */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <button
             onClick={() => setFilter("all")}
@@ -522,7 +507,6 @@ function SkladContent() {
           </div>
         </div>
 
-        {/* Inventory table */}
         <div className="rounded-xl border border-border bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
@@ -639,7 +623,6 @@ function SkladContent() {
         </div>
       </div>
 
-      {/* Right sidebar — Categories (always visible on desktop) */}
       <div className={`${showCategories ? "block" : "hidden"} lg:block`}>
         <CategoryManager categories={categories} onRefresh={load} />
       </div>

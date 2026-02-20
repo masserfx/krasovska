@@ -62,7 +62,6 @@ export default function SalonkySection() {
 
   return (
     <div className="space-y-6">
-      {/* Overview */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-3">
           Monetizace salonku (200 m2)
@@ -88,7 +87,6 @@ export default function SalonkySection() {
         </div>
       </div>
 
-      {/* Packages */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {PACKAGES.map((pkg) => (
           <div
@@ -119,7 +117,6 @@ export default function SalonkySection() {
         ))}
       </div>
 
-      {/* Revenue projection */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Projekce prijmu ze salonku (2026)

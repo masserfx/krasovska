@@ -76,7 +76,6 @@ const SHIFT_PLAN = [
 export default function PersonnelPlan() {
   return (
     <div className="space-y-6">
-      {/* Org overview */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-3">
           Organizacni struktura
@@ -110,7 +109,6 @@ export default function PersonnelPlan() {
         </div>
       </div>
 
-      {/* Position details */}
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-foreground">
           Pozice a mzdy
@@ -176,7 +174,6 @@ export default function PersonnelPlan() {
         ))}
       </div>
 
-      {/* Shift plan */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">
           Smenovy plan

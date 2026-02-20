@@ -118,7 +118,6 @@ export default function LegislativeChecklist() {
 
   return (
     <div className="space-y-4">
-      {/* Progress */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-foreground">
@@ -136,7 +135,6 @@ export default function LegislativeChecklist() {
         </div>
       </div>
 
-      {/* Checklist */}
       <div className="space-y-2">
         {items.map((item) => {
           const cfg = STATUS_CONFIG[item.status];

@@ -80,7 +80,6 @@ export default function VariantComparison() {
                 : "border-border"
             }`}
           >
-            {/* Header */}
             <div
               className={`px-5 py-4 ${
                 v.recommended
@@ -118,9 +117,7 @@ export default function VariantComparison() {
               </p>
             </div>
 
-            {/* Body */}
             <div className="p-5 space-y-4">
-              {/* Key numbers */}
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Investice</span>
@@ -147,7 +144,6 @@ export default function VariantComparison() {
                 <p className="text-sm text-foreground">{v.menu}</p>
               </div>
 
-              {/* Pros */}
               <div>
                 <p className="text-xs text-muted mb-1.5 font-medium">Výhody</p>
                 <ul className="space-y-1">
@@ -160,7 +156,6 @@ export default function VariantComparison() {
                 </ul>
               </div>
 
-              {/* Cons */}
               <div>
                 <p className="text-xs text-muted mb-1.5 font-medium">Nevýhody</p>
                 <ul className="space-y-1">

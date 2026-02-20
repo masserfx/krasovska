@@ -1,7 +1,6 @@
 export default function ExecutiveSummary() {
   return (
     <div className="space-y-6">
-      {/* Recommendation banner */}
       <div className="bg-green-50 border border-green-200 rounded-xl p-6">
         <div className="flex items-start gap-3">
           <span className="text-2xl">&#9989;</span>
@@ -17,7 +16,6 @@ export default function ExecutiveSummary() {
         </div>
       </div>
 
-      {/* 3 key figures */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl border border-border shadow-sm p-6 text-center">
           <p className="text-xs font-medium text-muted uppercase tracking-wider">
@@ -42,7 +40,6 @@ export default function ExecutiveSummary() {
         </div>
       </div>
 
-      {/* Timeline overview */}
       <div className="bg-white rounded-xl border border-border shadow-sm p-6">
         <h3 className="text-sm font-semibold text-foreground mb-4">Harmonogram spusteni</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -61,7 +58,6 @@ export default function ExecutiveSummary() {
         </div>
       </div>
 
-      {/* Key insight */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
         <p className="text-sm text-amber-900">
           <span className="font-semibold">Klicovy zaver:</span> Turnajovy catering
