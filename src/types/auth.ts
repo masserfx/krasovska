@@ -40,6 +40,7 @@ export const SECTION_DEFS: SectionDef[] = [
   { id: "dashboard",    label: "Dashboard",         description: "Přehled projektů a statistik",         group: "Projektové řízení", defaultRoles: ["admin", "coordinator", "member"] },
   { id: "projects",     label: "Projekty",           description: "Správa projektů a úkolů",              group: "Projektové řízení", defaultRoles: ["admin", "coordinator", "member"] },
   { id: "bistro",       label: "Bistro",             description: "Kanban, Gantt, KPIs a CEO briefing",   group: "Projektové řízení", defaultRoles: ["admin", "coordinator"] },
+  { id: "dokumenty",   label: "Dokumenty",          description: "Strategické dokumenty a analýzy",      group: "Projektové řízení", defaultRoles: ["admin", "coordinator"] },
   // Dotazníky
   { id: "questionnaire", label: "Dotazník",          description: "Vyplňování strategického dotazníku",   group: "Dotazníky",         defaultRoles: ["admin", "coordinator", "reception", "member"] },
   { id: "sessions",     label: "Relace",             description: "Správa dotazníkových sessions",        group: "Dotazníky",         defaultRoles: ["admin"] },
