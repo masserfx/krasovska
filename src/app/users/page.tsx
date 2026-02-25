@@ -419,6 +419,7 @@ export default function UsersPage() {
   const [modalUser, setModalUser] = useState<AppUser | null | undefined>(undefined);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [impersonatingId, setImpersonatingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -492,6 +493,23 @@ export default function UsersPage() {
       setError(err instanceof Error ? err.message : "Nepodařilo se smazat uživatele.");
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function handleImpersonate(user: AppUser) {
+    setImpersonatingId(user.id);
+    try {
+      const res = await fetch("/api/admin/impersonate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error ?? "Chyba");
+      window.location.reload();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Nepodařilo se impersonovat uživatele.");
+    } finally {
+      setImpersonatingId(null);
     }
   }
 
@@ -631,6 +649,20 @@ export default function UsersPage() {
                       {/* Actions */}
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
+                          {user.role !== "admin" && (
+                            <button
+                              onClick={() => handleImpersonate(user)}
+                              disabled={impersonatingId === user.id}
+                              title="Zobrazit jako tento uživatel"
+                              className="rounded-lg p-1.5 text-muted hover:bg-amber-100 hover:text-amber-700 transition-colors disabled:opacity-50"
+                            >
+                              {impersonatingId === user.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </button>
+                          )}
                           <button
                             onClick={() => setModalUser(user)}
                             title="Upravit"

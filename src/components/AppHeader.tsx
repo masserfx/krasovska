@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+import ImpersonationBanner from "@/components/ImpersonationBanner";
 import type { UserRole } from "@/types/auth";
 import { ROLE_HIERARCHY } from "@/types/auth";
 
@@ -234,6 +235,11 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
     return localStorage.getItem(STORAGE_KEY);
   });
 
+  // Impersonation state
+  const [impersonatedUser, setImpersonatedUser] = useState<{
+    id: string; name: string; email: string; role: UserRole;
+  } | null>(null);
+
   // Live-refresh permissions from DB so changes take effect without re-login
   const [livePerms, setLivePerms] = useState<string[] | null | undefined>(undefined);
   const [lowStockCount, setLowStockCount] = useState(0);
@@ -241,7 +247,14 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
     if (!session?.user?.id) return;
     fetch("/api/me")
       .then((r) => r.json())
-      .then((d) => setLivePerms(d.section_permissions ?? null))
+      .then((d) => {
+        setLivePerms(d.section_permissions ?? null);
+        if (d.impersonating) {
+          setImpersonatedUser({ id: d.id, name: d.name, email: d.email, role: d.role });
+        } else {
+          setImpersonatedUser(null);
+        }
+      })
       .catch(() => setLivePerms(null));
   }, [session?.user?.id]);
 
@@ -256,7 +269,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
   }, [session?.user?.role]);
 
   const id = idFromUrl ?? storedId;
-  const role = session?.user?.role as UserRole | undefined;
+  const role = (impersonatedUser?.role ?? session?.user?.role) as UserRole | undefined;
 
   // Use live permissions if loaded, otherwise fall back to JWT-cached value
   const sectionPerms: string[] | null =
@@ -264,32 +277,55 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
 
   const groups = visibleGroups(role, sectionPerms);
 
-  return (
-    <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Title row */}
-        <div className="flex items-center justify-between py-3">
-          <div>
-            <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
-            <p className="text-xs text-muted">Projektový management</p>
-          </div>
-          <UserMenu />
-        </div>
+  async function handleStopImpersonation() {
+    await fetch("/api/admin/impersonate", { method: "DELETE" });
+    // Re-fetch /api/me to restore admin view
+    try {
+      const r = await fetch("/api/me");
+      const d = await r.json();
+      setLivePerms(d.section_permissions ?? null);
+      setImpersonatedUser(null);
+    } catch {
+      // fallback: reload page
+      window.location.reload();
+    }
+  }
 
-        {/* Navigation */}
-        <nav className="-mb-px flex gap-0.5">
-          {groups.map((group) => (
-            <NavDropdown
-              key={group.id}
-              group={group}
-              activeTab={activeTab}
-              qid={id}
-              lowStockCount={lowStockCount}
-            />
-          ))}
-        </nav>
-      </div>
-    </header>
+  return (
+    <>
+      {impersonatedUser && (
+        <ImpersonationBanner
+          name={impersonatedUser.name}
+          role={impersonatedUser.role}
+          onStop={handleStopImpersonation}
+        />
+      )}
+      <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* Title row */}
+          <div className="flex items-center justify-between py-3">
+            <div>
+              <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
+              <p className="text-xs text-muted">Projektový management</p>
+            </div>
+            <UserMenu />
+          </div>
+
+          {/* Navigation */}
+          <nav className="-mb-px flex gap-0.5">
+            {groups.map((group) => (
+              <NavDropdown
+                key={group.id}
+                group={group}
+                activeTab={activeTab}
+                qid={id}
+                lowStockCount={lowStockCount}
+              />
+            ))}
+          </nav>
+        </div>
+      </header>
+    </>
   );
 }
 
