@@ -82,7 +82,7 @@ Na základě benchmarku sportovních hal v ČR (TJ Sokol, CZ Bowling centra, Squ
 ### 1.5 Lokalita Plzeň-Bolevec — specifika
 
 - **Rezidenční čtvrť:** Sídliště + rodinné domy, cca 25 000 obyvatel v okolí 2 km
-- **Konkurence:** Omezená — nejbližší fastfood je McDonald's na Borských polích (3,5 km), běžné restaurace v centru Bolevce
+- **Konkurence:** Velká — nejbližší fastfood je KFC na košutce - vedle Globusu, běžné restaurace v centru Bolevce
 - **Výhoda:** Monopolní pozice v rámci sportovního areálu — žádná alternativa pro sportovce
 - **Parkování 50 míst:** Umožňuje i takeaway/drive-through koncept
 - **Energie hradí město:** Zásadní konkurenční výhoda — eliminuje největší variabilní náklad gastro provozů (elektřina, plyn, teplo)
