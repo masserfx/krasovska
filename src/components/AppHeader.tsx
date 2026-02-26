@@ -53,7 +53,7 @@ const navGroups: NavGroup[] = [
     label: "Dashboard",
     icon: LayoutDashboard,
     items: [
-      { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member", appendQid: true },
+      { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, minRole: "member" },
     ],
   },
   {
