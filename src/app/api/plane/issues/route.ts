@@ -39,16 +39,26 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [issue, commentsData] = await Promise.all([
-      planeRequest(`/projects/${projectId}/issues/${issueId}/`),
-      planeRequest(`/projects/${projectId}/issues/${issueId}/comments/`),
-    ]);
+    const issue = await planeRequest(
+      `/projects/${projectId}/issues/${issueId}/`
+    );
 
-    const comments = Array.isArray(commentsData)
-      ? commentsData
-      : commentsData.results || [];
+    // Plane v1 includes comments[] in issue detail.
+    // Fetch separately only if missing.
+    if (!issue.comments) {
+      try {
+        const commentsData = await planeRequest(
+          `/projects/${projectId}/issues/${issueId}/comments/`
+        );
+        issue.comments = Array.isArray(commentsData)
+          ? commentsData
+          : commentsData.results || [];
+      } catch {
+        issue.comments = [];
+      }
+    }
 
-    return NextResponse.json({ ...issue, comments });
+    return NextResponse.json(issue);
   } catch (error: unknown) {
     const e = error as { status?: number; message?: string };
     console.error("[Plane Issue GET]", error);
