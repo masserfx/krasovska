@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   FolderKanban,
+  Columns3,
   BarChart3,
   ClipboardList,
   Shield,
@@ -62,6 +63,7 @@ const navGroups: NavGroup[] = [
     icon: FolderKanban,
     items: [
       { id: "projects",      label: "Projekty",   href: "/projects",   icon: FolderKanban, minRole: "member" },
+      { id: "kanban",        label: "Kanban",     href: "/kanban",     icon: Columns3,     minRole: "member" },
       { id: "questionnaire", label: "Dotazník",   href: "/",           icon: ClipboardList, minRole: "member", appendQid: true },
       { id: "analysis",      label: "Analýza",    href: "/analysis",   icon: BarChart3,     minRole: "admin",  appendQid: true },
       { id: "dokumenty",     label: "Dokumenty",  href: "/dokumenty",  icon: FileText,      minRole: "coordinator" },

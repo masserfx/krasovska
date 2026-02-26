@@ -2,6 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import PlaneLink from "@/components/PlaneLink";
 import { PLANE_LINKS } from "@/lib/plane-links";
@@ -17,6 +18,7 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
+  Columns3,
 } from "lucide-react";
 
 // --- Types ---
@@ -316,7 +318,16 @@ function ProjectDetailInner({
               <p className="text-sm text-muted">{data.description}</p>
             </div>
           </div>
-          {planeLink && <PlaneLink href={planeLink} />}
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/kanban?key=${data.key}`}
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background transition-colors"
+            >
+              <Columns3 className="h-4 w-4" />
+              Kanban
+            </Link>
+            {planeLink && <PlaneLink href={planeLink} />}
+          </div>
         </div>
       </div>
 
