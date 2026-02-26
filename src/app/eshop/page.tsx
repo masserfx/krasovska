@@ -9,6 +9,8 @@ import AppHeader from "@/components/AppHeader";
 import ProductGrid from "@/components/eshop/ProductGrid";
 import CartDrawer from "@/components/eshop/CartDrawer";
 import CartToast from "@/components/eshop/CartToast";
+import PlaneLink from "@/components/PlaneLink";
+import { PLANE_LINKS } from "@/lib/plane-links";
 
 interface ToastItem {
   name: string;
@@ -44,6 +46,8 @@ function EshopContent() {
           <h2 className="text-xl font-bold text-foreground">E-shop</h2>
           <p className="text-sm text-muted">Vybavení a doplňky pro badminton</p>
         </div>
+        <div className="flex items-center gap-2">
+        <PlaneLink href={PLANE_LINKS.eshop} />
         <button
           onClick={() => setCartOpen(true)}
           className="relative flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background"
@@ -56,6 +60,7 @@ function EshopContent() {
             </span>
           )}
         </button>
+        </div>
       </div>
 
       <ProductGrid

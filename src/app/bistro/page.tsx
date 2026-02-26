@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
-import KanbanBoard from "@/components/bistro/KanbanBoard";
-import GanttChart from "@/components/bistro/GanttChart";
 import ControllingDashboard from "@/components/bistro/ControllingDashboard";
 import BriefingViewer from "@/components/bistro/BriefingViewer";
 import StrategyView from "@/components/bistro/strategy/StrategyView";
+import PlaneLink from "@/components/PlaneLink";
+import { PLANE_LINKS } from "@/lib/plane-links";
 
-type Tab = "strategie" | "kanban" | "gantt" | "kontroling" | "briefing";
+type Tab = "strategie" | "kontroling" | "briefing";
 
 export default function BistroPage() {
   const [activeTab, setActiveTab] = useState<Tab>("strategie");
@@ -17,20 +17,21 @@ export default function BistroPage() {
     <div className="min-h-screen bg-background">
       <AppHeader activeTab="bistro" />
       <div className="mx-auto max-w-7xl px-4 py-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground">
-            Bistro Hala Krašovská
-          </h2>
-          <p className="text-muted mt-1">
-            Management plán spuštění bistra
-          </p>
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Bistro Hala Krašovská
+            </h2>
+            <p className="text-muted mt-1">
+              Management plán spuštění bistra
+            </p>
+          </div>
+          <PlaneLink href={PLANE_LINKS.bistro} />
         </div>
 
         <div className="flex gap-2 mb-6 border-b border-border">
           {[
             { id: "strategie", label: "Strategie" },
-            { id: "kanban", label: "Kanban" },
-            { id: "gantt", label: "Gantt" },
             { id: "kontroling", label: "Kontroling" },
             { id: "briefing", label: "CEO Briefing" },
           ].map((tab) => (
@@ -49,8 +50,6 @@ export default function BistroPage() {
         </div>
 
         {activeTab === "strategie" && <StrategyView />}
-        {activeTab === "kanban" && <KanbanBoard />}
-        {activeTab === "gantt" && <GanttChart />}
         {activeTab === "kontroling" && <ControllingDashboard />}
         {activeTab === "briefing" && <BriefingViewer />}
       </div>

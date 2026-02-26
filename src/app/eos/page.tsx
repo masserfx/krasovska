@@ -15,6 +15,8 @@ import {
   Loader2,
 } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
+import PlaneLink from "@/components/PlaneLink";
+import { PLANE_LINKS } from "@/lib/plane-links";
 
 interface CheckItem {
   id: string;
@@ -293,13 +295,16 @@ function EosContent() {
             Příprava na integraci se systémem správy členů
           </p>
         </div>
-        <button
-          onClick={() => window.print()}
-          className="flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background print:hidden"
-        >
-          <Printer className="h-4 w-4" />
-          Tisk
-        </button>
+        <div className="flex items-center gap-2 print:hidden">
+          <PlaneLink href={PLANE_LINKS.eos} />
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background"
+          >
+            <Printer className="h-4 w-4" />
+            Tisk
+          </button>
+        </div>
       </div>
 
       {/* Progress */}
