@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hala Krašovská — Code Map</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #c9d1d9; display: flex; height: 100vh; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar { width: 280px; min-width: 280px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; overflow-y: auto; }
+  .sidebar h1 { font-size: 14px; padding: 16px; border-bottom: 1px solid #30363d; color: #e6edf3; letter-spacing: 0.5px; }
+  .section { padding: 12px 16px; border-bottom: 1px solid #30363d; }
+  .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #8b949e; margin-bottom: 8px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .preset-btn { padding: 4px 10px; font-size: 12px; border: 1px solid #30363d; border-radius: 12px; background: transparent; color: #8b949e; cursor: pointer; transition: all 0.15s; }
+  .preset-btn:hover { border-color: #58a6ff; color: #58a6ff; }
+  .preset-btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+  /* Checkboxes */
+  .check-group { display: flex; flex-direction: column; gap: 4px; }
+  .check-item { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; padding: 2px 0; }
+  .check-item input { accent-color: #58a6ff; }
+  .color-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .conn-line { width: 20px; height: 2px; flex-shrink: 0; }
+
+  /* Comments */
+  .comments-section { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 16px; }
+  .comment-card { background: #1c2128; border: 1px solid #30363d; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 11px; }
+  .comment-card .target { color: #58a6ff; font-weight: 600; }
+  .comment-card .file { color: #8b949e; font-size: 10px; }
+  .comment-card .text { color: #c9d1d9; margin-top: 4px; }
+  .comment-card .del { background: none; border: none; color: #f85149; cursor: pointer; font-size: 10px; float: right; }
+
+  /* Main area */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Canvas */
+  .canvas-wrap { flex: 1; position: relative; overflow: hidden; background: #0d1117; }
+  .canvas-wrap svg { position: absolute; top: 0; left: 0; }
+
+  /* Zoom controls */
+  .zoom-controls { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; z-index: 10; }
+  .zoom-btn { width: 28px; height: 28px; border: 1px solid #30363d; border-radius: 6px; background: #161b22; color: #c9d1d9; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .zoom-btn:hover { border-color: #58a6ff; }
+
+  /* Legend */
+  .legend { position: absolute; bottom: 12px; left: 12px; background: #161b22ee; border: 1px solid #30363d; border-radius: 8px; padding: 10px 14px; font-size: 10px; z-index: 10; display: flex; gap: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; color: #8b949e; }
+
+  /* Prompt area */
+  .prompt-area { border-top: 1px solid #30363d; background: #161b22; padding: 12px 16px; max-height: 180px; overflow-y: auto; }
+  .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .prompt-header span { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #8b949e; }
+  .copy-btn { padding: 4px 12px; font-size: 11px; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; }
+  .copy-btn:hover { border-color: #58a6ff; }
+  .copy-btn.copied { background: #238636; border-color: #238636; color: #fff; }
+  .prompt-text { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; line-height: 1.6; color: #e6edf3; white-space: pre-wrap; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: #000a; z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; width: 380px; }
+  .modal h3 { font-size: 14px; color: #e6edf3; margin-bottom: 4px; }
+  .modal .subtitle { font-size: 11px; color: #8b949e; margin-bottom: 12px; font-family: monospace; }
+  .modal textarea { width: 100%; height: 80px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; padding: 8px; font-size: 12px; resize: vertical; font-family: inherit; }
+  .modal textarea:focus { outline: none; border-color: #58a6ff; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+  .modal-actions button { padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid #30363d; }
+  .btn-cancel { background: transparent; color: #8b949e; }
+  .btn-save { background: #238636; border-color: #238636; color: #fff; }
+
+  /* Tooltip */
+  .tooltip { position: fixed; background: #1c2128; border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px; font-size: 11px; color: #e6edf3; pointer-events: none; z-index: 50; display: none; max-width: 220px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h1>HALA KRAŠOVSKÁ — CODE MAP</h1>
+
+  <div class="section">
+    <div class="section-title">Pohled</div>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Vrstvy</div>
+    <div class="check-group" id="layers"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Spojení</div>
+    <div class="check-group" id="connTypes"></div>
+  </div>
+
+  <div class="comments-section">
+    <div class="section-title">Komentáře (<span id="commentCount">0</span>)</div>
+    <div id="commentList"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="canvas-wrap" id="canvasWrap">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomIn()">+</button>
+      <button class="zoom-btn" onclick="zoomOut()">−</button>
+      <button class="zoom-btn" onclick="zoomReset()" style="font-size:11px">↺</button>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="prompt-area">
+    <div class="prompt-header">
+      <span>Prompt výstup</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Kopírovat</button>
+    </div>
+    <div class="prompt-text" id="promptText">Klikněte na komponentu pro přidání komentáře.</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <div class="subtitle" id="modalSubtitle"></div>
+    <textarea id="modalInput" placeholder="Váš komentář ke komponentě..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+      <button class="btn-save" onclick="saveComment()">Uložit</button>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ── State ──
+const state = {
+  layers: { pages: true, components: true, hooks: true, api: true, libs: true, external: true },
+  connTypes: { dataFlow: true, toolCall: true, event: true, dependency: true },
+  comments: [],
+  zoom: 1,
+  panX: 0, panY: 0,
+  activePreset: 'full',
+  modalNode: null,
+};
+
+// ── Layer definitions ──
+const layerDefs = [
+  { id: 'pages', label: 'Stránky', color: '#58a6ff' },
+  { id: 'components', label: 'Komponenty', color: '#3fb950' },
+  { id: 'hooks', label: 'Hooks & Libs', color: '#bc8cff' },
+  { id: 'api', label: 'API Routes', color: '#d29922' },
+  { id: 'libs', label: 'Knihovny', color: '#f778ba' },
+  { id: 'external', label: 'Externí služby', color: '#f85149' },
+];
+
+// ── Connection type definitions ──
+const connDefs = [
+  { id: 'dataFlow', label: 'Data flow', color: '#58a6ff', dash: '' },
+  { id: 'toolCall', label: 'Volání funkce', color: '#3fb950', dash: '6,3' },
+  { id: 'event', label: 'Event / async', color: '#f85149', dash: '4,4' },
+  { id: 'dependency', label: 'Import', color: '#484f58', dash: '2,4' },
+];
+
+// ── Preset definitions ──
+const presetDefs = [
+  { id: 'full', label: 'Celý systém', layers: { pages:true, components:true, hooks:true, api:true, libs:true, external:true }, conns: { dataFlow:true, toolCall:true, event:true, dependency:true } },
+  { id: 'eshop', label: 'E-shop', layers: { pages:true, components:true, hooks:true, api:true, libs:true, external:true }, conns: { dataFlow:true, toolCall:true, event:true, dependency:false }, filter: 'eshop' },
+  { id: 'bistro', label: 'Bistro', layers: { pages:true, components:true, hooks:false, api:true, libs:false, external:true }, conns: { dataFlow:true, toolCall:true, event:false, dependency:false }, filter: 'bistro' },
+  { id: 'backend', label: 'Backend', layers: { pages:false, components:false, hooks:false, api:true, libs:true, external:true }, conns: { dataFlow:true, toolCall:true, event:true, dependency:false } },
+];
+
+// ── Nodes ──
+const nodes = [
+  // Pages - E-shop
+  { id: 'p-eshop', label: 'E-shop katalog', subtitle: 'app/eshop/page.tsx', x: 80, y: 40, w: 130, h: 44, layer: 'pages', group: 'eshop' },
+  { id: 'p-detail', label: 'Detail produktu', subtitle: 'app/eshop/[slug]/page.tsx', x: 240, y: 40, w: 130, h: 44, layer: 'pages', group: 'eshop' },
+  { id: 'p-kosik', label: 'Košík', subtitle: 'app/eshop/kosik/page.tsx', x: 400, y: 40, w: 110, h: 44, layer: 'pages', group: 'eshop' },
+  { id: 'p-pokladna', label: 'Pokladna', subtitle: 'app/eshop/pokladna/page.tsx', x: 540, y: 40, w: 110, h: 44, layer: 'pages', group: 'eshop' },
+  { id: 'p-dekujeme', label: 'Děkujeme', subtitle: 'app/eshop/dekujeme/page.tsx', x: 680, y: 40, w: 110, h: 44, layer: 'pages', group: 'eshop' },
+  { id: 'p-admin', label: 'Admin e-shop', subtitle: 'app/eshop/admin/page.tsx', x: 840, y: 40, w: 120, h: 44, layer: 'pages', group: 'eshop' },
+  // Pages - Bistro
+  { id: 'p-bistro', label: 'Bistro', subtitle: 'app/bistro/page.tsx', x: 80, y: 40, w: 110, h: 44, layer: 'pages', group: 'bistro' },
+  // Pages - Other
+  { id: 'p-dash', label: 'Dashboard', subtitle: 'app/dashboard/page.tsx', x: 1000, y: 40, w: 110, h: 44, layer: 'pages', group: 'other' },
+  { id: 'p-quest', label: 'Dotazník', subtitle: 'app/page.tsx', x: 1140, y: 40, w: 110, h: 44, layer: 'pages', group: 'other' },
+
+  // Components - E-shop
+  { id: 'c-grid', label: 'ProductGrid', subtitle: 'eshop/ProductGrid.tsx', x: 60, y: 130, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-card', label: 'ProductCard', subtitle: 'eshop/ProductCard.tsx', x: 60, y: 200, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-catfilt', label: 'CategoryFilter', subtitle: 'eshop/CategoryFilter.tsx', x: 210, y: 130, w: 130, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-skeleton', label: 'ProductSkeleton', subtitle: 'eshop/ProductSkeleton.tsx', x: 210, y: 200, w: 130, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-drawer', label: 'CartDrawer', subtitle: 'eshop/CartDrawer.tsx', x: 370, y: 130, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-toast', label: 'CartToast', subtitle: 'eshop/CartToast.tsx', x: 370, y: 200, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-steps', label: 'CheckoutSteps', subtitle: 'eshop/CheckoutSteps.tsx', x: 520, y: 130, w: 130, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-chkform', label: 'CheckoutForm', subtitle: 'eshop/CheckoutForm.tsx', x: 520, y: 200, w: 130, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-ordtable', label: 'OrderTable', subtitle: 'eshop/OrderTable.tsx', x: 680, y: 130, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  { id: 'c-prodform', label: 'ProductForm', subtitle: 'eshop/ProductForm.tsx', x: 680, y: 200, w: 120, h: 44, layer: 'components', group: 'eshop' },
+  // Components - Bistro
+  { id: 'c-kanban', label: 'KanbanBoard', subtitle: 'bistro/KanbanBoard.tsx', x: 60, y: 130, w: 120, h: 44, layer: 'components', group: 'bistro' },
+  { id: 'c-gantt', label: 'GanttChart', subtitle: 'bistro/GanttChart.tsx', x: 210, y: 130, w: 120, h: 44, layer: 'components', group: 'bistro' },
+  { id: 'c-control', label: 'Controlling', subtitle: 'bistro/ControllingDashboard.tsx', x: 360, y: 130, w: 130, h: 44, layer: 'components', group: 'bistro' },
+  { id: 'c-briefing', label: 'BriefingViewer', subtitle: 'bistro/BriefingViewer.tsx', x: 520, y: 130, w: 130, h: 44, layer: 'components', group: 'bistro' },
+  { id: 'c-taskcard', label: 'TaskCard', subtitle: 'bistro/TaskCard.tsx', x: 60, y: 200, w: 110, h: 44, layer: 'components', group: 'bistro' },
+  { id: 'c-taskmodal', label: 'TaskModal', subtitle: 'bistro/TaskModal.tsx', x: 200, y: 200, w: 120, h: 44, layer: 'components', group: 'bistro' },
+  // Components - Other
+  { id: 'c-header', label: 'AppHeader', subtitle: 'AppHeader.tsx', x: 850, y: 130, w: 110, h: 44, layer: 'components', group: 'other' },
+  { id: 'c-dashstats', label: 'DashboardStats', subtitle: 'DashboardStats.tsx', x: 990, y: 130, w: 130, h: 44, layer: 'components', group: 'other' },
+
+  // Hooks
+  { id: 'h-cart', label: 'useCart', subtitle: 'hooks/useCart.ts', x: 300, y: 290, w: 110, h: 44, layer: 'hooks', group: 'eshop' },
+  { id: 'h-autosave', label: 'useAutoSave', subtitle: 'hooks/useAutoSave.ts', x: 1100, y: 290, w: 120, h: 44, layer: 'hooks', group: 'other' },
+
+  // Libs
+  { id: 'l-eshopapi', label: 'eshop-api', subtitle: 'lib/eshop-api.ts', x: 100, y: 290, w: 110, h: 44, layer: 'libs', group: 'eshop' },
+  { id: 'l-utils', label: 'eshop-utils', subtitle: 'lib/eshop-utils.ts', x: 490, y: 290, w: 120, h: 44, layer: 'libs', group: 'eshop' },
+  { id: 'l-comgate', label: 'comgate', subtitle: 'lib/comgate.ts', x: 640, y: 290, w: 100, h: 44, layer: 'libs', group: 'eshop' },
+  { id: 'l-email', label: 'email', subtitle: 'lib/email.ts', x: 770, y: 290, w: 100, h: 44, layer: 'libs', group: 'eshop' },
+  { id: 'l-db', label: 'db', subtitle: 'lib/db.ts', x: 900, y: 290, w: 80, h: 44, layer: 'libs', group: 'other' },
+  { id: 'l-auth', label: 'auth-helpers', subtitle: 'lib/auth-helpers.ts', x: 1010, y: 290, w: 120, h: 44, layer: 'libs', group: 'other' },
+
+  // API Routes - E-shop
+  { id: 'a-products', label: '/products', subtitle: 'api/eshop/products', x: 60, y: 390, w: 110, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-categories', label: '/categories', subtitle: 'api/eshop/categories', x: 200, y: 390, w: 120, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-checkout', label: '/checkout', subtitle: 'api/eshop/checkout', x: 350, y: 390, w: 110, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-orders', label: '/orders', subtitle: 'api/eshop/orders', x: 490, y: 390, w: 110, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-stock', label: '/stock', subtitle: 'api/eshop/stock', x: 630, y: 390, w: 100, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-payment', label: '/payment', subtitle: 'api/eshop/payment/*', x: 760, y: 390, w: 110, h: 44, layer: 'api', group: 'eshop' },
+  { id: 'a-discount', label: '/discount', subtitle: 'api/eshop/discount', x: 900, y: 390, w: 110, h: 44, layer: 'api', group: 'eshop' },
+  // API Routes - Bistro
+  { id: 'a-bphases', label: '/bistro/phases', subtitle: 'api/bistro/phases', x: 60, y: 390, w: 130, h: 44, layer: 'api', group: 'bistro' },
+  { id: 'a-btasks', label: '/bistro/tasks', subtitle: 'api/bistro/tasks', x: 220, y: 390, w: 120, h: 44, layer: 'api', group: 'bistro' },
+  { id: 'a-bkpis', label: '/bistro/kpis', subtitle: 'api/bistro/kpis', x: 370, y: 390, w: 120, h: 44, layer: 'api', group: 'bistro' },
+  { id: 'a-bbriefing', label: '/bistro/briefing', subtitle: 'api/bistro/briefing', x: 520, y: 390, w: 140, h: 44, layer: 'api', group: 'bistro' },
+  // API Routes - Other
+  { id: 'a-auth', label: '/auth', subtitle: 'api/auth/[...nextauth]', x: 1040, y: 390, w: 100, h: 44, layer: 'api', group: 'other' },
+
+  // External
+  { id: 'e-postgres', label: 'Vercel Postgres', subtitle: 'Database', x: 400, y: 490, w: 140, h: 44, layer: 'external', group: 'all' },
+  { id: 'e-comgate', label: 'Comgate', subtitle: 'Platební brána', x: 600, y: 490, w: 110, h: 44, layer: 'external', group: 'eshop' },
+  { id: 'e-resend', label: 'Resend', subtitle: 'E-mail', x: 760, y: 490, w: 100, h: 44, layer: 'external', group: 'eshop' },
+  { id: 'e-storage', label: 'localStorage', subtitle: 'Klient', x: 200, y: 490, w: 120, h: 44, layer: 'external', group: 'eshop' },
+  { id: 'e-nextauth', label: 'NextAuth', subtitle: 'Session', x: 940, y: 490, w: 110, h: 44, layer: 'external', group: 'other' },
+];
+
+// ── Connections ──
+const connections = [
+  // E-shop page flow
+  { from: 'p-eshop', to: 'p-detail', type: 'dataFlow', label: 'klik produkt' },
+  { from: 'p-eshop', to: 'p-kosik', type: 'dataFlow', label: '' },
+  { from: 'p-kosik', to: 'p-pokladna', type: 'dataFlow', label: '' },
+  { from: 'p-pokladna', to: 'p-dekujeme', type: 'dataFlow', label: '' },
+
+  // Pages → Components
+  { from: 'p-eshop', to: 'c-grid', type: 'dependency', label: '' },
+  { from: 'p-eshop', to: 'c-drawer', type: 'dependency', label: '' },
+  { from: 'p-eshop', to: 'c-toast', type: 'dependency', label: '' },
+  { from: 'p-detail', to: 'c-steps', type: 'dependency', label: '' },
+  { from: 'p-kosik', to: 'c-steps', type: 'dependency', label: '' },
+  { from: 'p-pokladna', to: 'c-steps', type: 'dependency', label: '' },
+  { from: 'p-pokladna', to: 'c-chkform', type: 'dependency', label: '' },
+  { from: 'p-admin', to: 'c-ordtable', type: 'dependency', label: '' },
+  { from: 'p-admin', to: 'c-prodform', type: 'dependency', label: '' },
+
+  // Component → Component
+  { from: 'c-grid', to: 'c-card', type: 'dependency', label: '' },
+  { from: 'c-grid', to: 'c-catfilt', type: 'dependency', label: '' },
+  { from: 'c-grid', to: 'c-skeleton', type: 'dependency', label: '' },
+
+  // Components → API
+  { from: 'c-grid', to: 'l-eshopapi', type: 'toolCall', label: 'fetchProducts' },
+  { from: 'c-catfilt', to: 'l-eshopapi', type: 'toolCall', label: 'fetchCategories' },
+  { from: 'c-chkform', to: 'l-eshopapi', type: 'toolCall', label: 'submitCheckout' },
+
+  // Hook connections
+  { from: 'p-eshop', to: 'h-cart', type: 'toolCall', label: 'useCart()' },
+  { from: 'p-detail', to: 'h-cart', type: 'toolCall', label: 'useCart()' },
+  { from: 'p-kosik', to: 'h-cart', type: 'toolCall', label: 'useCart()' },
+  { from: 'h-cart', to: 'e-storage', type: 'dataFlow', label: 'persist' },
+
+  // Lib → API
+  { from: 'l-eshopapi', to: 'a-products', type: 'dataFlow', label: 'fetch' },
+  { from: 'l-eshopapi', to: 'a-categories', type: 'dataFlow', label: 'fetch' },
+  { from: 'l-eshopapi', to: 'a-checkout', type: 'dataFlow', label: 'POST' },
+  { from: 'l-eshopapi', to: 'a-orders', type: 'dataFlow', label: 'fetch' },
+  { from: 'l-eshopapi', to: 'a-stock', type: 'dataFlow', label: 'fetch' },
+  { from: 'l-eshopapi', to: 'a-discount', type: 'dataFlow', label: 'POST' },
+
+  // API → External
+  { from: 'a-products', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-categories', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-checkout', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-orders', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-stock', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-checkout', to: 'l-comgate', type: 'toolCall', label: 'createPayment' },
+  { from: 'l-comgate', to: 'e-comgate', type: 'dataFlow', label: 'HTTP' },
+  { from: 'a-payment', to: 'e-comgate', type: 'event', label: 'callback' },
+  { from: 'a-payment', to: 'l-email', type: 'toolCall', label: 'sendConfirm' },
+  { from: 'l-email', to: 'e-resend', type: 'dataFlow', label: 'API' },
+  { from: 'a-auth', to: 'e-nextauth', type: 'dataFlow', label: '' },
+  { from: 'l-auth', to: 'e-nextauth', type: 'toolCall', label: 'getSession' },
+
+  // Bistro flows
+  { from: 'p-bistro', to: 'c-kanban', type: 'dependency', label: '' },
+  { from: 'p-bistro', to: 'c-gantt', type: 'dependency', label: '' },
+  { from: 'p-bistro', to: 'c-control', type: 'dependency', label: '' },
+  { from: 'p-bistro', to: 'c-briefing', type: 'dependency', label: '' },
+  { from: 'c-kanban', to: 'c-taskcard', type: 'dependency', label: '' },
+  { from: 'c-kanban', to: 'c-taskmodal', type: 'dependency', label: '' },
+  { from: 'c-kanban', to: 'a-bphases', type: 'toolCall', label: 'fetch' },
+  { from: 'c-kanban', to: 'a-btasks', type: 'toolCall', label: 'fetch' },
+  { from: 'c-gantt', to: 'a-btasks', type: 'toolCall', label: 'fetch' },
+  { from: 'c-control', to: 'a-bkpis', type: 'toolCall', label: 'fetch' },
+  { from: 'c-briefing', to: 'a-bbriefing', type: 'toolCall', label: 'fetch' },
+  { from: 'a-bphases', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-btasks', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-bkpis', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+  { from: 'a-bbriefing', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+
+  // Utils used everywhere
+  { from: 'c-card', to: 'l-utils', type: 'dependency', label: 'formatPrice' },
+  { from: 'c-drawer', to: 'l-utils', type: 'dependency', label: 'formatPrice' },
+
+  // All API → db
+  { from: 'a-discount', to: 'e-postgres', type: 'dataFlow', label: 'SQL' },
+];
+
+// ── Rendering ──
+const svg = document.getElementById('svg');
+const wrap = document.getElementById('canvasWrap');
+let svgW = 1300, svgH = 560;
+
+function getVisibleNodes() {
+  const preset = presetDefs.find(p => p.id === state.activePreset);
+  return nodes.filter(n => {
+    if (!state.layers[n.layer]) return false;
+    if (preset?.filter && preset.filter !== 'full') {
+      return n.group === preset.filter || n.group === 'all';
+    }
+    return true;
+  });
+}
+
+function getVisibleConnections(visibleIds) {
+  return connections.filter(c => {
+    const def = connDefs.find(d => d.id === c.type);
+    if (!state.connTypes[c.type]) return false;
+    return visibleIds.has(c.from) && visibleIds.has(c.to);
+  });
+}
+
+function nodeCenter(n) {
+  return { x: n.x + n.w / 2, y: n.y + n.h / 2 };
+}
+
+function getConnPath(fromNode, toNode) {
+  const f = nodeCenter(fromNode);
+  const t = nodeCenter(toNode);
+  const dx = t.x - f.x;
+  const dy = t.y - f.y;
+  // Determine exit/entry side
+  let fx, fy, tx, ty;
+  if (Math.abs(dy) > Math.abs(dx) * 0.6) {
+    // Vertical dominant
+    if (dy > 0) { fx = f.x; fy = fromNode.y + fromNode.h; tx = t.x; ty = toNode.y; }
+    else { fx = f.x; fy = fromNode.y; tx = t.x; ty = toNode.y + toNode.h; }
+  } else {
+    // Horizontal dominant
+    if (dx > 0) { fx = fromNode.x + fromNode.w; fy = f.y; tx = toNode.x; ty = t.y; }
+    else { fx = fromNode.x; fy = f.y; tx = toNode.x + toNode.w; ty = t.y; }
+  }
+  const mx = (fx + tx) / 2;
+  const my = (fy + ty) / 2;
+  return `M${fx},${fy} Q${mx},${fy} ${mx},${my} Q${mx},${ty} ${tx},${ty}`;
+}
+
+function render() {
+  const visible = getVisibleNodes();
+  const visibleIds = new Set(visible.map(n => n.id));
+  const conns = getVisibleConnections(visibleIds);
+  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const commented = new Set(state.comments.map(c => c.target));
+
+  let html = `<defs>`;
+  connDefs.forEach(d => {
+    html += `<marker id="arrow-${d.id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="${d.color}"/></marker>`;
+  });
+  html += `</defs>`;
+
+  // Layer bands
+  const bands = [
+    { y: 20, h: 75, label: 'Stránky', layer: 'pages' },
+    { y: 110, h: 145, label: 'Komponenty', layer: 'components' },
+    { y: 270, h: 75, label: 'Hooks & Libs', layer: 'hooks,libs' },
+    { y: 370, h: 75, label: 'API Routes', layer: 'api' },
+    { y: 470, h: 75, label: 'Externí', layer: 'external' },
+  ];
+  bands.forEach(b => {
+    const layers = b.layer.split(',');
+    const anyVisible = layers.some(l => state.layers[l]);
+    if (!anyVisible) return;
+    html += `<rect x="10" y="${b.y - 8}" width="${svgW - 20}" height="${b.h}" rx="6" fill="#161b2233" stroke="#30363d44" stroke-width="0.5"/>`;
+    html += `<text x="20" y="${b.y + 6}" fill="#30363d" font-size="9" font-weight="600" text-transform="uppercase">${b.label}</text>`;
+  });
+
+  // Connections
+  conns.forEach(c => {
+    const from = nodeMap[c.from], to = nodeMap[c.to];
+    if (!from || !to) return;
+    const def = connDefs.find(d => d.id === c.type);
+    const path = getConnPath(from, to);
+    html += `<path d="${path}" fill="none" stroke="${def.color}" stroke-width="1.5" stroke-opacity="0.5" marker-end="url(#arrow-${c.type})"${def.dash ? ` stroke-dasharray="${def.dash}"` : ''}/>`;
+    if (c.label) {
+      const fm = nodeCenter(from), tm = nodeCenter(to);
+      const lx = (fm.x + tm.x) / 2, ly = (fm.y + tm.y) / 2;
+      html += `<text x="${lx}" y="${ly - 4}" fill="${def.color}" font-size="8" text-anchor="middle" opacity="0.7">${c.label}</text>`;
+    }
+  });
+
+  // Nodes
+  visible.forEach(n => {
+    const layerDef = layerDefs.find(l => l.id === n.layer);
+    const fill = getNodeFill(n.layer);
+    const hasComment = commented.has(n.id);
+    const stroke = hasComment ? '#f0883e' : layerDef.color + '44';
+    const strokeW = hasComment ? 2 : 1;
+
+    html += `<g class="node" data-id="${n.id}" style="cursor:pointer">`;
+    html += `<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}"/>`;
+    html += `<text x="${n.x + n.w/2}" y="${n.y + 18}" fill="#e6edf3" font-size="11" font-weight="600" text-anchor="middle">${n.label}</text>`;
+    html += `<text x="${n.x + n.w/2}" y="${n.y + 32}" fill="#8b949e" font-size="9" text-anchor="middle" font-family="monospace">${n.subtitle}</text>`;
+    if (hasComment) {
+      html += `<circle cx="${n.x + n.w - 6}" cy="${n.y + 6}" r="5" fill="#f0883e"/>`;
+      html += `<text x="${n.x + n.w - 6}" y="${n.y + 9.5}" fill="#fff" font-size="7" text-anchor="middle" font-weight="bold">${state.comments.filter(c => c.target === n.id).length}</text>`;
+    }
+    html += `</g>`;
+  });
+
+  svg.innerHTML = html;
+  svg.setAttribute('width', svgW * state.zoom);
+  svg.setAttribute('height', svgH * state.zoom);
+  svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+
+  // Attach click handlers
+  svg.querySelectorAll('.node').forEach(g => {
+    g.addEventListener('click', () => openModal(g.dataset.id));
+    g.addEventListener('mouseenter', (e) => showTooltip(e, g.dataset.id));
+    g.addEventListener('mouseleave', hideTooltip);
+  });
+}
+
+function getNodeFill(layer) {
+  const map = { pages: '#1a2744', components: '#1a3328', hooks: '#261a3d', api: '#2d2614', libs: '#2d1a2a', external: '#2d1a1a' };
+  return map[layer] || '#1c2128';
+}
+
+// ── Zoom ──
+function zoomIn() { state.zoom = Math.min(state.zoom * 1.2, 3); render(); }
+function zoomOut() { state.zoom = Math.max(state.zoom / 1.2, 0.5); render(); }
+function zoomReset() { state.zoom = 1; render(); }
+
+// ── Tooltip ──
+function showTooltip(e, id) {
+  const n = nodes.find(n => n.id === id);
+  if (!n) return;
+  const tip = document.getElementById('tooltip');
+  const comments = state.comments.filter(c => c.target === id);
+  let text = `<strong>${n.label}</strong><br><span style="color:#8b949e">${n.subtitle}</span>`;
+  if (comments.length) text += `<br><span style="color:#f0883e">${comments.length} komentář${comments.length > 1 ? 'e' : ''}</span>`;
+  tip.innerHTML = text;
+  tip.style.display = 'block';
+  tip.style.left = (e.clientX + 12) + 'px';
+  tip.style.top = (e.clientY - 10) + 'px';
+}
+function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; }
+
+// ── Modal (comment) ──
+function openModal(id) {
+  const n = nodes.find(n => n.id === id);
+  if (!n) return;
+  state.modalNode = n;
+  document.getElementById('modalTitle').textContent = n.label;
+  document.getElementById('modalSubtitle').textContent = n.subtitle;
+  document.getElementById('modalInput').value = '';
+  document.getElementById('modal').classList.add('show');
+  setTimeout(() => document.getElementById('modalInput').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  state.modalNode = null;
+}
+function saveComment() {
+  const text = document.getElementById('modalInput').value.trim();
+  if (!text || !state.modalNode) return;
+  state.comments.push({
+    id: Date.now(),
+    target: state.modalNode.id,
+    targetLabel: state.modalNode.label,
+    targetFile: state.modalNode.subtitle,
+    text,
+  });
+  closeModal();
+  updateAll();
+}
+
+// ── Comments list ──
+function renderComments() {
+  const list = document.getElementById('commentList');
+  document.getElementById('commentCount').textContent = state.comments.length;
+  if (!state.comments.length) { list.innerHTML = '<div style="font-size:11px;color:#484f58;padding:8px 0">Žádné komentáře. Klikněte na komponentu v diagramu.</div>'; return; }
+  list.innerHTML = state.comments.map(c => `
+    <div class="comment-card">
+      <button class="del" onclick="deleteComment(${c.id})">✕</button>
+      <div class="target">${c.targetLabel}</div>
+      <div class="file">${c.targetFile}</div>
+      <div class="text">${c.text}</div>
+    </div>
+  `).join('');
+}
+function deleteComment(id) {
+  state.comments = state.comments.filter(c => c.id !== id);
+  updateAll();
+}
+
+// ── Prompt ──
+function updatePrompt() {
+  const el = document.getElementById('promptText');
+  if (!state.comments.length) {
+    el.textContent = 'Klikněte na komponentu pro přidání komentáře.';
+    return;
+  }
+  const preset = presetDefs.find(p => p.id === state.activePreset);
+  const visibleLayers = layerDefs.filter(l => state.layers[l.id]).map(l => l.label).join(', ');
+
+  let text = `Architektura projektu Hala Krašovská`;
+  if (preset && preset.id !== 'full') text += ` (pohled: ${preset.label})`;
+  text += `.\nViditelné vrstvy: ${visibleLayers}.\n\nZpětná vazba ke komponentám:\n`;
+
+  state.comments.forEach(c => {
+    text += `\n**${c.targetLabel}** (${c.targetFile}):\n${c.text}\n`;
+  });
+
+  el.textContent = text;
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = 'Zkopírováno!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Kopírovat'; btn.classList.remove('copied'); }, 1500);
+}
+
+// ── Controls ──
+function buildControls() {
+  // Presets
+  const presetsEl = document.getElementById('presets');
+  presetsEl.innerHTML = presetDefs.map(p =>
+    `<button class="preset-btn${state.activePreset === p.id ? ' active' : ''}" data-preset="${p.id}">${p.label}</button>`
+  ).join('');
+  presetsEl.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+  });
+
+  // Layers
+  const layersEl = document.getElementById('layers');
+  layersEl.innerHTML = layerDefs.map(l => `
+    <label class="check-item">
+      <input type="checkbox" ${state.layers[l.id] ? 'checked' : ''} data-layer="${l.id}">
+      <span class="color-dot" style="background:${l.color}"></span>
+      ${l.label}
+    </label>
+  `).join('');
+  layersEl.querySelectorAll('input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      state.layers[cb.dataset.layer] = cb.checked;
+      state.activePreset = '';
+      buildControls();
+      updateAll();
+    });
+  });
+
+  // Connection types
+  const connEl = document.getElementById('connTypes');
+  connEl.innerHTML = connDefs.map(d => `
+    <label class="check-item">
+      <input type="checkbox" ${state.connTypes[d.id] ? 'checked' : ''} data-conn="${d.id}">
+      <span class="conn-line" style="background:${d.color};${d.dash ? 'background:repeating-linear-gradient(90deg,' + d.color + ' 0,' + d.color + ' 4px,transparent 4px,transparent 6px)' : ''}"></span>
+      ${d.label}
+    </label>
+  `).join('');
+  connEl.querySelectorAll('input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      state.connTypes[cb.dataset.conn] = cb.checked;
+      updateAll();
+    });
+  });
+
+  // Legend
+  const legend = document.getElementById('legend');
+  legend.innerHTML = layerDefs.map(l => `<div class="legend-item"><span class="color-dot" style="background:${l.color}"></span>${l.label}</div>`).join('');
+}
+
+function applyPreset(id) {
+  const p = presetDefs.find(pr => pr.id === id);
+  if (!p) return;
+  state.activePreset = id;
+  Object.assign(state.layers, p.layers);
+  Object.assign(state.connTypes, p.conns);
+  buildControls();
+  updateAll();
+}
+
+function updateAll() {
+  render();
+  renderComments();
+  updatePrompt();
+}
+
+// ── Init ──
+buildControls();
+updateAll();
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>

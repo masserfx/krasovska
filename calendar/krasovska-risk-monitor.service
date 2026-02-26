@@ -1,0 +1,18 @@
+[Unit]
+Description=Krasovská Risk Monitor
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=notify
+User=leos
+WorkingDirectory=/home/leos/calendar
+ExecStart=/usr/bin/python3 /home/leos/calendar/risk_monitor.py --daemon
+Restart=always
+RestartSec=30
+WatchdogSec=7200
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/leos/calendar/.env
+
+[Install]
+WantedBy=multi-user.target
