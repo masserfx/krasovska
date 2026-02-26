@@ -6,6 +6,7 @@ import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import PlaneLink from "@/components/PlaneLink";
 import { PLANE_LINKS, planeLinkForProject } from "@/lib/plane-links";
+import IssueDetailPanel from "@/components/plane/IssueDetailPanel";
 import {
   Loader2,
   FolderKanban,
@@ -59,10 +60,18 @@ interface EnrichedIssue {
   priority: string | null;
 }
 
+interface StateOption {
+  id: string;
+  name: string;
+  group: string;
+  color: string;
+}
+
 interface ProjectDetail extends ProjectSummary {
   id: string;
   issues: EnrichedIssue[];
   modules: (ModuleData & { id?: string })[];
+  states?: StateOption[];
 }
 
 // --- Helpers ---
@@ -197,12 +206,15 @@ function ProjectListView({
 function ProjectDetailView({
   data,
   onBack,
+  onRefresh,
 }: {
   data: ProjectDetail;
   onBack: () => void;
+  onRefresh: () => void;
 }) {
   const [groupBy, setGroupBy] = useState<"status" | "module">("status");
   const [showCompleted, setShowCompleted] = useState(false);
+  const [editingIssue, setEditingIssue] = useState<EnrichedIssue | null>(null);
 
   const planeLink = PLANE_LINKS[data.key] || (data.id ? planeLinkForProject(data.id) : undefined);
 
@@ -264,9 +276,22 @@ function ProjectDetailView({
               prefix={data.prefix}
               collapsible={g === "completed"}
               onCollapse={g === "completed" ? () => setShowCompleted(false) : undefined}
+              onIssueClick={setEditingIssue}
             />
           );
         })}
+
+        {editingIssue && data.states && (
+          <IssueDetailPanel
+            projectId={data.id}
+            issueId={editingIssue.id}
+            prefix={data.prefix}
+            sequenceId={editingIssue.sequence_id}
+            states={data.states}
+            onClose={() => setEditingIssue(null)}
+            onUpdated={onRefresh}
+          />
+        )}
       </ProjectDetailInner>
     );
   }
@@ -400,12 +425,14 @@ function IssueGroup({
   prefix,
   collapsible,
   onCollapse,
+  onIssueClick,
 }: {
   title: string;
   issues: EnrichedIssue[];
   prefix: string;
   collapsible?: boolean;
   onCollapse?: () => void;
+  onIssueClick?: (issue: EnrichedIssue) => void;
 }) {
   return (
     <div className="mb-4">
@@ -425,7 +452,11 @@ function IssueGroup({
             (l) => l.name === "milestone" || l.name === "goal"
           )?.name;
           return (
-            <div key={issue.id} className="flex items-center gap-3 px-4 py-2.5">
+            <button
+              key={issue.id}
+              onClick={() => onIssueClick?.(issue)}
+              className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-gray-50 transition-colors"
+            >
               <StateIcon group={issue.stateGroup} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -444,7 +475,7 @@ function IssueGroup({
                   {formatDate(issue.target_date)}
                 </span>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
@@ -534,6 +565,7 @@ function ProjectsContent() {
           // Clean URL
           window.history.replaceState({}, "", "/projects");
         }}
+        onRefresh={() => loadDetail(selectedKey)}
       />
     );
   }

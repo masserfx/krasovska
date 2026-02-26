@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
         ...stats,
         issues: enrichedIssues,
         modules,
+        states,
       });
     }
 
