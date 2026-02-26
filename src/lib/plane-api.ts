@@ -12,38 +12,61 @@ const PLANE_API_KEY =
 
 const CACHE_TTL = 300; // 5 minutes
 
-export const PLANE_PROJECTS = {
-  bistro: {
-    id: "c7f73e13-5bf2-405e-a952-3cccf2177f19",
-    name: "Bistro",
-    prefix: "BIS",
-    color: "#f59e0b",
-    description: "Management plán spuštění bistra",
-  },
-  eshop: {
-    id: "92793297-f6eb-498b-87d3-2f9f4cd7ff34",
-    name: "E-shop",
-    prefix: "ESH",
-    color: "#3b82f6",
-    description: "Vybavení a doplňky pro badminton",
-  },
-  eos: {
-    id: "2fec08e8-eb48-4eaa-b991-71f30f5cbc7c",
-    name: "EOS Integrace",
-    prefix: "EOS",
-    color: "#8b5cf6",
-    description: "Integrace se systémem správy členů",
-  },
-  salonky: {
-    id: "1addbff0-cc91-4308-9063-262e6ee3fad3",
-    name: "Salonky",
-    prefix: "SAL",
-    color: "#10b981",
-    description: "Pronájem prostor pro akce",
-  },
-} as const;
+// --- Dynamic projects from Plane API ---
 
-export type PlaneProjectKey = keyof typeof PLANE_PROJECTS;
+export interface PlaneProject {
+  id: string;
+  name: string;
+  identifier: string;
+  description: string;
+  emoji: string | null;
+  logo_props: Record<string, unknown> | null;
+  created_at: string;
+}
+
+const PROJECT_COLORS = [
+  "#f59e0b", "#3b82f6", "#8b5cf6", "#10b981",
+  "#ef4444", "#ec4899", "#06b6d4", "#84cc16",
+];
+
+let _projectsCache: { data: PlaneProjectEntry[]; ts: number } | null = null;
+
+export interface PlaneProjectEntry {
+  key: string;
+  id: string;
+  name: string;
+  prefix: string;
+  color: string;
+  description: string;
+}
+
+export async function fetchPlaneProjects(): Promise<PlaneProjectEntry[]> {
+  const now = Date.now();
+  if (_projectsCache && now - _projectsCache.ts < CACHE_TTL * 1000) {
+    return _projectsCache.data;
+  }
+
+  const data = await planeGet<{ results: PlaneProject[] } | PlaneProject[]>(
+    "/projects/"
+  );
+  const projects = Array.isArray(data) ? data : data.results;
+
+  const entries: PlaneProjectEntry[] = projects
+    .filter((p) => !p.name.startsWith("_")) // skip internal projects
+    .map((p, i) => ({
+      key: p.identifier.toLowerCase(),
+      id: p.id,
+      name: p.name,
+      prefix: p.identifier,
+      color: PROJECT_COLORS[i % PROJECT_COLORS.length],
+      description: p.description || "",
+    }));
+
+  _projectsCache = { data: entries, ts: now };
+  return entries;
+}
+
+export type PlaneProjectKey = string;
 
 export const CALENDAR_URL =
   "http://46.225.31.161:5555/calendar/krasovska.ics?token=gtQLkawoAcZyRj8X9QrpZo9JHQs7hyN9-q4BmwrUKTI";
@@ -196,9 +219,9 @@ export interface ProjectStats {
 }
 
 export async function fetchProjectStats(
-  key: PlaneProjectKey
+  proj: PlaneProjectEntry
 ): Promise<ProjectStats> {
-  const proj = PLANE_PROJECTS[key];
+  const key = proj.key;
   const [issues, states, labels, modules] = await Promise.all([
     fetchAllIssues(proj.id),
     fetchStates(proj.id),
@@ -330,8 +353,8 @@ export interface DashboardPlaneData {
 }
 
 export async function fetchDashboardData(): Promise<DashboardPlaneData> {
-  const keys = Object.keys(PLANE_PROJECTS) as PlaneProjectKey[];
-  const projects = await Promise.all(keys.map((k) => fetchProjectStats(k)));
+  const allProjects = await fetchPlaneProjects();
+  const projects = await Promise.all(allProjects.map((p) => fetchProjectStats(p)));
 
   const totals = {
     issues: 0,

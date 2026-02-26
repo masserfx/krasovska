@@ -1,25 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  PLANE_PROJECTS,
+  fetchPlaneProjects,
   fetchProjectStats,
   fetchAllIssues,
   fetchStates,
   fetchLabels,
   fetchModules,
-  type PlaneProjectKey,
 } from "@/lib/plane-api";
 
 export const revalidate = 300;
 
 export async function GET(request: NextRequest) {
-  const key = request.nextUrl.searchParams.get("key") as PlaneProjectKey | null;
+  const key = request.nextUrl.searchParams.get("key");
 
   try {
-    if (key && key in PLANE_PROJECTS) {
+    const allProjects = await fetchPlaneProjects();
+
+    if (key) {
+      const proj = allProjects.find((p) => p.key === key);
+      if (!proj) {
+        return NextResponse.json(
+          { error: `Project "${key}" not found` },
+          { status: 404 }
+        );
+      }
+
       // Single project with full issue list
-      const proj = PLANE_PROJECTS[key];
       const [stats, issues, states, labels, modules] = await Promise.all([
-        fetchProjectStats(key),
+        fetchProjectStats(proj),
         fetchAllIssues(proj.id),
         fetchStates(proj.id),
         fetchLabels(proj.id),
@@ -54,8 +62,9 @@ export async function GET(request: NextRequest) {
     }
 
     // All projects (summary only)
-    const keys = Object.keys(PLANE_PROJECTS) as PlaneProjectKey[];
-    const projects = await Promise.all(keys.map((k) => fetchProjectStats(k)));
+    const projects = await Promise.all(
+      allProjects.map((p) => fetchProjectStats(p))
+    );
     return NextResponse.json(projects);
   } catch (error) {
     console.error("[Plane Projects]", error);

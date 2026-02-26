@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import PlaneLink from "@/components/PlaneLink";
-import { PLANE_LINKS } from "@/lib/plane-links";
+import { PLANE_LINKS, planeLinkForProject } from "@/lib/plane-links";
 import {
   Loader2,
   FolderKanban,
@@ -204,7 +204,7 @@ function ProjectDetailView({
   const [groupBy, setGroupBy] = useState<"status" | "module">("status");
   const [showCompleted, setShowCompleted] = useState(false);
 
-  const planeLink = PLANE_LINKS[data.key as keyof typeof PLANE_LINKS];
+  const planeLink = PLANE_LINKS[data.key] || (data.id ? planeLinkForProject(data.id) : undefined);
 
   // Group issues
   const grouped: Record<string, EnrichedIssue[]> = {};
