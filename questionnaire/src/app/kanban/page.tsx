@@ -176,12 +176,12 @@ function KanbanContent() {
   const planeLink = PLANE_LINKS[key as keyof typeof PLANE_LINKS];
 
   // Project switcher tabs
-  const projectKeys = ["bistro", "eshop", "eos", "salonky"];
+  const projectKeys = ["bis", "esh", "eos", "sal"];
   const projectNames: Record<string, string> = {
-    bistro: "Bistro",
-    eshop: "E-shop",
+    bis: "Bistro",
+    esh: "E-shop",
     eos: "EOS",
-    salonky: "Salonky",
+    sal: "Salonky",
   };
 
   return (
