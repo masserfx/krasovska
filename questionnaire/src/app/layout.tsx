@@ -73,6 +73,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <h1 className="sr-only">Hala Krasovská — Sportovní hala Plzeň-Bolevec</h1>
         <Providers>{children}</Providers>
       </body>
     </html>

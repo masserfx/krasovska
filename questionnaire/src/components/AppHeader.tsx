@@ -307,7 +307,7 @@ function HeaderContent({ activeTab }: { activeTab: string }) {
           {/* Title row */}
           <div className="flex items-center justify-between py-3">
             <div>
-              <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
+              <span className="text-lg font-bold text-foreground">Hala Krasovská</span>
               <p className="text-xs text-muted">Projektový management</p>
             </div>
             <UserMenu />
@@ -337,7 +337,7 @@ export default function AppHeader({ activeTab }: { activeTab: string }) {
       fallback={
         <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
           <div className="mx-auto max-w-7xl px-4 py-3">
-            <h1 className="text-lg font-bold text-foreground">Hala Krašovská</h1>
+            <span className="text-lg font-bold text-foreground">Hala Krasovská</span>
             <p className="text-xs text-muted">Projektový management</p>
           </div>
         </header>

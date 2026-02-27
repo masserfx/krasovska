@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Bistro Krasovská Plzeň — Burgery, Pizza, Denní menu | Bolevec",
+  title: "Bistro Krasovská — Burgery, Pizza, Denní menu",
   description:
-    "Bistro Hala Krasovská v Plzni-Bolevci — autorské burgery z českého hovězího (od 139 Kč), pizza z vlastního těsta, denní menu od 149 Kč, protein bowly. Čepovaný Prazdroj z tanku. Krašovská 32.",
+    "Bistro v Plzni-Bolevci — burgery z českého hovězího od 139 Kč, pizza z vlastního těsta, denní menu od 149 Kč. Čepovaný Prazdroj z tanku. Krašovská 32.",
   openGraph: {
     title: "Bistro Krasovská — Burgery, Pizza, Denní menu",
     description:

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Sauna Plzeň — Finská sauna v Hale Krasovská",
+  title: "Sauna Plzeň — Finská sauna po sportu",
   description:
     "Finská sauna v Plzni-Bolevci — relaxace po sportu, teplota 80-100°C, sprchy, odpočívárna. Ideální po badmintonu nebo florbalu. Krašovská 32.",
   openGraph: {

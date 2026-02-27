@@ -189,9 +189,9 @@ function QuestionnaireApp() {
               )}
             </button>
             <div>
-              <h1 className="text-lg font-bold text-foreground">
-                {title || "Hala Krašovská"}
-              </h1>
+              <span className="text-lg font-bold text-foreground">
+                {title || "Hala Krasovská"}
+              </span>
               <p className="text-xs text-muted">
                 Projektový dotazník — ERP/CRM systém
               </p>
