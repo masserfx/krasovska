@@ -43,7 +43,7 @@ function EshopContent() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">E-shop</h2>
+          <h1 className="text-xl font-bold text-foreground">E-shop Hala Krasovská</h1>
           <p className="text-sm text-muted">Vybavení a doplňky pro badminton</p>
         </div>
         <div className="flex items-center gap-2">

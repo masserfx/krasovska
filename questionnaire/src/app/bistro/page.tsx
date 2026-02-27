@@ -19,9 +19,9 @@ export default function BistroPage() {
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="mb-6 flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">
-              Bistro Hala Krašovská
-            </h2>
+            <h1 className="text-2xl font-bold text-foreground">
+              Bistro Hala Krasovská
+            </h1>
             <p className="text-muted mt-1">
               Management plán spuštění bistra
             </p>

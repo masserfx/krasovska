@@ -14,9 +14,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hala Krašovská — Projektový management",
+  metadataBase: new URL("https://hala-krasovska.vercel.app"),
+  title: {
+    default: "Hala Krasovská — Sportovní hala Plzeň-Bolevec",
+    template: "%s | Hala Krasovská",
+  },
   description:
-    "ERP/CRM systém Sportovní haly Krašovská — dotazník, analýza, projekty a úkoly",
+    "Sportovní hala Krasovská v Plzni-Bolevci — badminton, florbal, sauna, bistro s vlastní kuchyní, e-shop sportovních potřeb. Krašovská 32.",
+  openGraph: {
+    type: "website",
+    locale: "cs_CZ",
+    url: "https://hala-krasovska.vercel.app",
+    siteName: "Hala Krasovská",
+    title: "Hala Krasovská — Sportovní hala Plzeň-Bolevec",
+    description:
+      "Sportovní hala Krasovská v Plzni-Bolevci — badminton, florbal, sauna, bistro s vlastní kuchyní, e-shop sportovních potřeb.",
+  },
+  alternates: {
+    canonical: "https://hala-krasovska.vercel.app",
+  },
 };
 
 export default function RootLayout({
