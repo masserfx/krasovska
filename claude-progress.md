@@ -3,7 +3,7 @@
 > Kontrakt mezi sessions. Agent čte na začátku, aktualizuje na konci.
 
 ## Stav projektu
-- **Fáze**: Vývoj management app + E-shop provoz
+- **Fáze**: Vývoj management app + E-shop provoz + Web přestavba
 - **Poslední session**: 2026-02-27
 - **Poslední agent**: Claude Opus 4.6
 
@@ -23,6 +23,7 @@
 | 10 | Sezónní kampaně | done | ano | SEZONNI_KAMPANE.md (347 řádků, 12 měsíců) |
 | 11 | MKT skills (mkt-post, bistro-promo, seo-audit) | done | ano | 3 skills + 3 šablony (mkt-post, mkt-campaign, mkt-email) |
 | 12 | SEO audit halakrasovska.cz | done | ano | Skóre 28/100, 7 kritických + 5 středních + 3 nízké nálezy, 15-bodový akční plán |
+| 13 | Web přestavba (Next.js) | done | ano | 12 stránek, 32 souborů, tsc+build OK, port 3002 |
 
 ### Stavy
 - `pending` — ještě nezačato
@@ -55,3 +56,14 @@
   - 3 nízké: GBP neověřen, NAP konzistence, og:url HTTP
   - Quick wins (#1-9): robots.txt, sitemap, canonical, OG tagy, title, description, H1, alt texty → odhadovaný dopad na ~55/100
   - Uloženo: vault/00-inbox/2026-02-27-seo-audit.md (238 řádků)
+- Web přestavba halakrasovska.cz → Next.js 16 (`web/`)
+  - Stack: Next.js 16, React 19, TypeScript, Tailwind CSS 4, port 3002
+  - 12 statických stránek: /, /badminton, /viceucelova-plocha, /cvicebni-sal, /cenik, /rezervace, /bistro, /salonky, /kontakt, /gdpr, robots.txt, sitemap.xml
+  - SEO: JSON-LD (SportsActivityLocation + Restaurant), OG tagy, canonical, unikátní title/description, popisné alt texty
+  - Komponenty: HeroCarousel, ServicesGrid, PricingCards, ReservationSteps, InfoBoxes, MapSection (animovaný pin + tooltip s thumbnail)
+  - Layout: Navbar (sticky, mobile hamburger), Footer (4-sloupcový), CookieConsent, GTM integrace
+  - Obrázky: 7 staženo z Azure Blob (hero 3× + services 3× + og-image)
+  - Client components: pouze 3 (HeroCarousel, MobileMenu, CookieConsent) + MapSection
+  - Build: 0 chyb, ~2s kompilace, vše staticky předrenderováno
+  - Git: e14f924 (web projekt), 26076ae (fix tooltip z-index)
+  - Zbývá: nasazení na Vercel, přesměrování DNS halakrasovska.cz
