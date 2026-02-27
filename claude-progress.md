@@ -24,6 +24,7 @@
 | 11 | MKT skills (mkt-post, bistro-promo, seo-audit) | done | ano | 3 skills + 3 šablony (mkt-post, mkt-campaign, mkt-email) |
 | 12 | SEO audit halakrasovska.cz | done | ano | Skóre 28/100, 7 kritických + 5 středních + 3 nízké nálezy, 15-bodový akční plán |
 | 13 | Web přestavba (Next.js) | done | ano | 12 stránek, 32 souborů, tsc+build OK, port 3002 |
+| 14 | Vercel deploy + doména | done | ano | halakrasovska-web.vercel.app, domény přidány, čeká DNS na WEDOS |
 
 ### Stavy
 - `pending` — ještě nezačato
@@ -34,6 +35,7 @@
 ## Blokované
 - [ ] Comgate produkční credentials (čeká na smlouvu)
 - [ ] Distributoři — smlouvy ESH #4
+- [ ] DNS přesměrování halakrasovska.cz → Vercel (WEDOS: A @ → 76.76.21.21, CNAME www → cname.vercel-dns.com)
 
 ## Deník
 ### 2026-02-27
@@ -66,4 +68,10 @@
   - Client components: pouze 3 (HeroCarousel, MobileMenu, CookieConsent) + MapSection
   - Build: 0 chyb, ~2s kompilace, vše staticky předrenderováno
   - Git: e14f924 (web projekt), 26076ae (fix tooltip z-index)
-  - Zbývá: nasazení na Vercel, přesměrování DNS halakrasovska.cz
+- Vercel deploy:
+  - Projekt: halakrasovska-web (prj_HWL9tLM5nhL6njwP3q4CLGyfBHUV)
+  - Preview: https://halakrasovska-web.vercel.app
+  - Domény přidány: halakrasovska.cz + www.halakrasovska.cz
+  - DNS: WEDOS (ns.wedos.com), aktuálně A → 161.35.193.0 (starý nginx)
+  - Potřeba: změnit A @ → 76.76.21.21, CNAME www → cname.vercel-dns.com
+  - Po DNS změně Vercel automaticky vystaví SSL
