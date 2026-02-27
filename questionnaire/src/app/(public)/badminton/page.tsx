@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Badminton Plzeň — 9 kurtů | Hala Krasovská",
+  title: "Badminton Plzeň — 9 kurtů",
   description:
     "Badminton v Plzni-Bolevci — 9 profesionálních kurtů, osvětlení 500 lux, zázemí se sprchami a saunou. Turnaje, tréninky, pronájem. Krašovská 32.",
   openGraph: {

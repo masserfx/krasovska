@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Pronájem sportovní haly Plzeň | Hala Krasovská",
+  title: "Pronájem sportovní haly Plzeň",
   description:
     "Pronájem sportovní haly v Plzni-Bolevci — badmintonové kurty, víceúčelová plocha 40x20m, cvičební sál. Pro tréninky, turnaje, ligy i firemní akce. Krašovská 32.",
   openGraph: {

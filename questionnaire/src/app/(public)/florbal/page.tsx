@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Florbal Plzeň — Víceúčelová plocha 40x20m | Hala Krasovská",
+  title: "Florbal Plzeň — Víceúčelová plocha 40x20m",
   description:
     "Florbal v Plzni-Bolevci — víceúčelová plocha 40x20m pro florbal, volejbal a futsal. Mantinely, zázemí, sauna. Pronájem pro týmy a ligy. Krašovská 32.",
   openGraph: {

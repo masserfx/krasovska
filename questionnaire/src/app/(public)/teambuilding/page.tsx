@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Teambuilding Plzeň — Sportovní akce pro firmy | Hala Krasovská",
+  title: "Teambuilding Plzeň — Sportovní akce pro firmy",
   description:
     "Teambuilding v Plzni — badminton, florbal, volejbal pro firemní týmy. Catering z vlastního bistra, sauna, celé zázemí pod jednou střechou. Krašovská 32.",
   openGraph: {
