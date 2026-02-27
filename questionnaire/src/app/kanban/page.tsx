@@ -70,7 +70,7 @@ const COLUMN_CONFIG = [
 
 function KanbanContent() {
   const searchParams = useSearchParams();
-  const key = searchParams.get("key") || "bistro";
+  const key = searchParams.get("key") || "bis";
 
   const [data, setData] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
