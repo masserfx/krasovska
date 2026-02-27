@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitální transformace Haly Krašovská</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
+    background: #f1f5f9;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .header .subtitle { font-size: 1.1rem; opacity: 0.8; }
+
+  /* Container */
+  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+  /* Section */
+  .section { margin-bottom: 2rem; }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Cards grid */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #3b82f6;
+  }
+  .card h3 { font-size: 1rem; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+  .card p { font-size: 0.9rem; color: #475569; }
+
+  /* Status badges */
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+  .badge-done { background: #dcfce7; color: #166534; }
+  .badge-wip { background: #fef9c3; color: #854d0e; }
+  .badge-plan { background: #e0e7ff; color: #3730a3; }
+
+  /* Benefits */
+  .benefit-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .benefit-card .number { font-size: 1.8rem; font-weight: 800; color: #3b82f6; }
+  .benefit-card .label { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
+  .benefit-card .desc { font-size: 0.9rem; color: #334155; margin-top: 0.5rem; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  th { background: #1e293b; color: white; text-align: left; padding: 0.75rem 1rem; font-size: 0.85rem; font-weight: 600; }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: #f8fafc; }
+
+  /* Questions */
+  .question {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #f59e0b;
+  }
+  .question strong { color: #1e293b; }
+  .question p { color: #475569; font-size: 0.9rem; margin-top: 0.25rem; }
+
+  /* List items for "Co už funguje" */
+  .feature-list { list-style: none; padding: 0; }
+  .feature-list li {
+    background: white;
+    border-radius: 10px;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+  }
+  .feature-list .icon { font-size: 1.3rem; flex-shrink: 0; }
+  .feature-list .text strong { display: block; color: #1e293b; }
+  .feature-list .text span { color: #64748b; font-size: 0.85rem; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .container { padding: 0; max-width: 100%; }
+    .header { padding: 1.5rem; break-after: avoid; }
+    .section { break-inside: avoid; }
+    .card, .benefit-card, .question, .feature-list li { box-shadow: none; border: 1px solid #e2e8f0; }
+    table { box-shadow: none; border: 1px solid #e2e8f0; }
+    .footer { display: none; }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.5rem; }
+    .cards { grid-template-columns: 1fr; }
+    .container { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 1. Titulní záhlaví -->
+<div class="header">
+  <h1>Digitální transformace Haly Krašovská</h1>
+  <div class="subtitle">Připravil: Leoš Hrádek &nbsp;|&nbsp; Pro: Tomáš Knopp &nbsp;|&nbsp; Únor 2026</div>
+</div>
+
+<div class="container">
+
+<!-- 2. Co jsem připravil -->
+<div class="section">
+  <div class="section-title">📋 Co jsem připravil</div>
+  <div class="cards">
+    <div class="card">
+      <h3>🌐 Web <span class="badge badge-done">Hotovo</span></h3>
+      <p>Nový, moderní web halakrasovska.cz — optimalizovaný pro vyhledávače, rychlý, s 10+ stránkami. Připraven k nasazení.</p>
+    </div>
+    <div class="card">
+      <h3>🛒 E-shop <span class="badge badge-done">Hotovo</span></h3>
+      <p>Online obchod s katalogem produktů, administrací, platbami a generátorem QR štítků.</p>
+    </div>
+    <div class="card">
+      <h3>🍽️ Bistro strategie <span class="badge badge-done">Hotovo</span></h3>
+      <p>Kompletní 3-fázový plán spuštění bistra — finanční model, personál, marketing, menu.</p>
+    </div>
+    <div class="card">
+      <h3>📊 Řízení projektů <span class="badge badge-done">Hotovo</span></h3>
+      <p>169 úkolů v 5 projektech s nástěnkou, termíny a sledováním průběhu.</p>
+    </div>
+    <div class="card">
+      <h3>📣 Marketing <span class="badge badge-done">Hotovo</span></h3>
+      <p>Marketingová strategie, emailové kampaně, sezónní plán, obsahový kalendář.</p>
+    </div>
+    <div class="card">
+      <h3>⚙️ Automatizace <span class="badge badge-done">Hotovo</span></h3>
+      <p>Denní přehledy, sledování rizik, kalendář s termíny přímo v telefonu.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Přínosy pro halu -->
+<div class="section">
+  <div class="section-title">💰 Přínosy pro halu</div>
+  <div class="cards">
+    <div class="benefit-card">
+      <div class="number">+2,1–4,1 mil. Kč</div>
+      <div class="label">odhadovaný roční obrat bistra</div>
+      <div class="desc">Finanční model na základě lokality, kapacity a provozu ve 3 fázích.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="number">28 → 85/100</div>
+      <div class="label">SEO skóre webu</div>
+      <div class="desc">Nový web přivede zákazníky z Googlu — lepší pozice = více návštěvníků.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="number">24/7</div>
+      <div class="label">online prodej přes e-shop</div>
+      <div class="desc">Zákazníci nakupují kdykoliv — merch, permanentky, služby.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="number">162 událostí</div>
+      <div class="label">v kalendáři v telefonu</div>
+      <div class="desc">Všechny termíny, milníky a úkoly na jednom místě — stačí se přihlásit.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="number">5 projektů</div>
+      <div class="label">řízených na jednom místě</div>
+      <div class="desc">Web, E-shop, Bistro, EOS, Salonky — přehled o všem na jedné nástěnce.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="number">0 Kč/měs.</div>
+      <div class="label">náklady na hosting a nástroje</div>
+      <div class="desc">Hosting webu i řízení projektů zdarma — žádné měsíční poplatky.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Co už funguje -->
+<div class="section">
+  <div class="section-title">✅ Co už funguje</div>
+  <ul class="feature-list">
+    <li>
+      <span class="icon">📊</span>
+      <div class="text">
+        <strong>Přehledový panel</strong>
+        <span>Stav všech projektů na jedné stránce — co je hotové, co se řeší, kde je zpoždění.</span>
+      </div>
+    </li>
+    <li>
+      <span class="icon">📋</span>
+      <div class="text">
+        <strong>Nástěnka úkolů</strong>
+        <span>Přetahování úkolů mezi sloupci (Nové → Rozpracováno → Hotovo). Filtry, hledání, termíny.</span>
+      </div>
+    </li>
+    <li>
+      <span class="icon">🛒</span>
+      <div class="text">
+        <strong>Online obchod s administrací</strong>
+        <span>Katalog produktů, správa kategorií, QR štítky na produkty, připraveno na napojení plateb.</span>
+      </div>
+    </li>
+    <li>
+      <span class="icon">🌐</span>
+      <div class="text">
+        <strong>Nový web s 10+ stránkami</strong>
+        <span>Úvodní stránka, služby, ceník, galerie, kontakt. Optimalizováno pro mobily i vyhledávače.</span>
+      </div>
+    </li>
+    <li>
+      <span class="icon">📅</span>
+      <div class="text">
+        <strong>Kalendář v telefonu</strong>
+        <span>162 událostí — milníky, termíny, fáze projektů. Stačí přidat odkaz do Apple/Google kalendáře.</span>
+      </div>
+    </li>
+    <li>
+      <span class="icon">📧</span>
+      <div class="text">
+        <strong>Automatické přehledy</strong>
+        <span>Denní a týdenní souhrn stavu projektů — co je nového, co je po termínu, kde jsou rizika.</span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- 5. Další kroky & časový plán -->
+<div class="section">
+  <div class="section-title">🗓️ Další kroky</div>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Co</th><th>Kdy</th><th>Kdo</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Přesměrování domény → nový web online</td>
+        <td>Ihned</td>
+        <td>Tomáš (WEDOS) + Leoš</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Platební brána → online platby v e-shopu</td>
+        <td>1–2 týdny</td>
+        <td>Tomáš (smlouva) + Leoš</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Napojení na účetní systém EOS</td>
+        <td>Q1 2026</td>
+        <td>Tomáš B. + Leoš</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Pokladní systém — výběr + napojení</td>
+        <td>Q1–Q2 2026</td>
+        <td>Tomáš + Leoš</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>Bistro spuštění (soft opening)</td>
+        <td>Q2 2026</td>
+        <td>Celý tým</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 6. Co potřebuji od tebe -->
+<div class="section">
+  <div class="section-title">❓ Co potřebuji od tebe</div>
+
+  <div class="question">
+    <strong>1. Pokladní systém</strong>
+    <p>Máš vybraný pokladní systém? Jaký? (Dotykačka, iKelp, Storyous?) Potřebuji vědět kvůli napojení na e-shop a účetnictví.</p>
+  </div>
+
+  <div class="question">
+    <strong>2. Správa domény</strong>
+    <p>Kdo má přístupy na WEDOS pro halakrasovska.cz? Pro přesměrování na nový web potřebuji změnit DNS záznamy.</p>
+  </div>
+
+  <div class="question">
+    <strong>3. Napojení na EOS</strong>
+    <p>Co přesně řeší Tomáš Benedikt? Máme přístupy k datům z účetního systému? Potřebuji vědět formát dat.</p>
+  </div>
+
+  <div class="question">
+    <strong>4. E-shop — co prodávat?</strong>
+    <p>Co chceš prodávat online? Merch, permanentky, služby, vstupné? Od toho se odvíjí nastavení e-shopu a plateb.</p>
+  </div>
+
+  <div class="question">
+    <strong>5. Měsíční rozpočet</strong>
+    <p>Kolik měsíčně počítáš na provoz? (Platební brána, emaily, případně další nástroje.)</p>
+  </div>
+
+  <div class="question">
+    <strong>6. Rezervace a iSport</strong>
+    <p>Chceš propojit iSport s webem? Zobrazovat obsazenost, umožnit online rezervaci přímo z webu?</p>
+  </div>
+
+  <div class="question">
+    <strong>7. Obsah a fotky</strong>
+    <p>Kdo bude tvořit fotky a texty pro web a sociální sítě? Máte grafika nebo fotografa?</p>
+  </div>
+</div>
+
+<!-- 7. Rizika & řešení -->
+<div class="section">
+  <div class="section-title">⚠️ Rizika a jak je řešíme</div>
+  <table>
+    <thead>
+      <tr><th>Riziko</th><th>Dopad</th><th>Řešení</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Přesměrování domény</td>
+        <td>Krátký výpadek webu</td>
+        <td>Provedeme mimo špičku, předem otestováno</td>
+      </tr>
+      <tr>
+        <td>Platební brána — čeká smlouva</td>
+        <td>E-shop bez online plateb</td>
+        <td>Hotovost/karta na recepci funguje jako dočasné řešení</td>
+      </tr>
+      <tr>
+        <td>EOS bez přístupu k datům</td>
+        <td>Ruční přepisování</td>
+        <td>Export/import jako dočasné řešení, plná integrace později</td>
+      </tr>
+      <tr>
+        <td>Kapacita (jeden člověk)</td>
+        <td>Pomalejší postup</td>
+        <td>Práce po fázích, jasné priority, nejdůležitější první</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 8. Měsíční náklady -->
+<div class="section">
+  <div class="section-title">💳 Měsíční náklady</div>
+  <table>
+    <thead>
+      <tr><th>Položka</th><th>Náklad</th><th>Poznámka</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hosting webu</td>
+        <td><strong>0 Kč</strong></td>
+        <td>Bezplatný tarif, stačí pro aktuální provoz</td>
+      </tr>
+      <tr>
+        <td>Správa projektů</td>
+        <td><strong>0 Kč</strong></td>
+        <td>Běží na vlastním serveru</td>
+      </tr>
+      <tr>
+        <td>Platební brána</td>
+        <td><strong>0,9–1,5 %</strong></td>
+        <td>Z každé online transakce, žádný měsíční poplatek</td>
+      </tr>
+      <tr>
+        <td>Doména</td>
+        <td><strong>stávající</strong></td>
+        <td>Už platíte, žádné navýšení</td>
+      </tr>
+      <tr>
+        <td>Emaily</td>
+        <td><strong>0 Kč</strong></td>
+        <td>Bezplatný tarif, stačí pro marketingové kampaně</td>
+      </tr>
+      <tr>
+        <td>Vývoj (Leoš)</td>
+        <td><strong>k domluvě</strong></td>
+        <td>Podle rozsahu a průběžné spolupráce</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  Hala Krašovská — Digitální transformace 2026 &nbsp;|&nbsp; Připravil Leoš Hrádek
+</div>
+
+</body>
+</html>
