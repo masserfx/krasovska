@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { restaurantSchema } from "@/lib/schema";
+import {
+  BurgerIcon,
+  PizzaIcon,
+  DailyMenuIcon,
+  ProteinBowlIcon,
+  BeerIcon,
+  CoffeeIcon,
+} from "@/components/icons/BistroIcons";
 
 export const metadata: Metadata = {
   title: "Bistro — Burgery, Pizza, Denní menu",
@@ -54,17 +63,17 @@ export default function BistroPage() {
             </div>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2">
-              {[
-                { title: "Burgery", desc: "5 autorských burgerů (139–189 Kč)", icon: "🍔" },
-                { title: "Pizza", desc: "6 pizz z vlastního těsta (129–179 Kč)", icon: "🍕" },
-                { title: "Denní menu", desc: "Polévka + hlavní jídlo (149–169 Kč)", icon: "🍽️" },
-                { title: "Protein bowly", desc: "Pro sportovce — 30g bílkovin", icon: "💪" },
-                { title: "Čepovaná Plzeň", desc: "Přímo z tanku", icon: "🍺" },
-                { title: "Káva", desc: "Pákový kávovar, espresso, cappuccino", icon: "☕" },
-              ].map((item) => (
-                <div key={item.title} className="rounded-xl border border-border p-4">
-                  <div className="text-2xl">{item.icon}</div>
-                  <h3 className="mt-2 font-bold text-foreground">{item.title}</h3>
+              {([
+                { title: "Burgery", desc: "5 autorských burgerů (139–189 Kč)", icon: <BurgerIcon className="h-12 w-12" /> },
+                { title: "Pizza", desc: "6 pizz z vlastního těsta (129–179 Kč)", icon: <PizzaIcon className="h-12 w-12" /> },
+                { title: "Denní menu", desc: "Polévka + hlavní jídlo (149–169 Kč)", icon: <DailyMenuIcon className="h-12 w-12" /> },
+                { title: "Protein bowly", desc: "Pro sportovce — 30g bílkovin", icon: <ProteinBowlIcon className="h-12 w-12" /> },
+                { title: "Čepovaná Plzeň", desc: "Přímo z tanku", icon: <BeerIcon className="h-12 w-12" /> },
+                { title: "Káva", desc: "Pákový kávovar, espresso, cappuccino", icon: <CoffeeIcon className="h-12 w-12" /> },
+              ] as { title: string; desc: string; icon: ReactNode }[]).map((item) => (
+                <div key={item.title} className="rounded-xl border border-border p-5 transition-shadow hover:shadow-md">
+                  <div>{item.icon}</div>
+                  <h3 className="mt-3 font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted">{item.desc}</p>
                 </div>
               ))}
