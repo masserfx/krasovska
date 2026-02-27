@@ -11,6 +11,7 @@ export const PLANE_LINKS: Record<string, string> = {
   eshop: `${PLANE_BASE}/92793297-f6eb-498b-87d3-2f9f4cd7ff34/issues/`,
   eos: `${PLANE_BASE}/2fec08e8-eb48-4eaa-b991-71f30f5cbc7c/issues/`,
   salonky: `${PLANE_BASE}/1addbff0-cc91-4308-9063-262e6ee3fad3/issues/`,
+  web: `${PLANE_BASE}/5ebe0ea2-42f6-49d5-b982-c7508ecc2084/issues/`,
 };
 
 /** Generate Plane link for any project by ID */
