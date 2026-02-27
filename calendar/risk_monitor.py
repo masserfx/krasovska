@@ -59,6 +59,11 @@ PROJECTS = {
         "name": "Salonky",
         "prefix": "SAL",
     },
+    "web": {
+        "id": "5ebe0ea2-42f6-49d5-b982-c7508ecc2084",
+        "name": "Web",
+        "prefix": "WEB",
+    },
 }
 
 # Bistro critical path milestones (sequence IDs or names to watch)

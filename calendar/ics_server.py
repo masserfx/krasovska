@@ -73,6 +73,11 @@ PROJECTS = {
         "name": "Salonky",
         "prefix": "SAL",
     },
+    "web": {
+        "id": "5ebe0ea2-42f6-49d5-b982-c7508ecc2084",
+        "name": "Web",
+        "prefix": "WEB",
+    },
     "test-lea": {
         "id": "7242bd2c-6883-409f-a3af-a4d48c4df636",
         "name": "TEST-Lea",
