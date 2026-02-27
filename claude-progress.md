@@ -15,7 +15,7 @@
 | 2 | Dashboard napojený na Plane | done | ano | ISR 5min cache |
 | 3 | CEO Briefing viewer | done | ano | react-markdown |
 | 4 | E-shop Go Live | pending | ne | Comgate prod credentials potřeba |
-| 5 | QR generátor štítků | wip | ne | ~20% hotovo |
+| 5 | QR generátor štítků | done | ano | Náhled, 3 velikosti, PDF export, filtr kategorií, počet kusů |
 | 6 | Session Discipline systém | done | ano | 5 změn: startup protocol, progress bridging, skill, pravidla, hook |
 | 7 | MKT strategický plán | done | ano | MKT_PLAN.md (627 řádků, 10 sekcí) |
 | 8 | Bistro launch content calendar | done | ano | BISTRO_LAUNCH_CONTENT.md (689 řádků, 10 hotových postů) |
@@ -75,3 +75,11 @@
   - DNS: WEDOS (ns.wedos.com), aktuálně A → 161.35.193.0 (starý nginx)
   - Potřeba: změnit A @ → 76.76.21.21, CNAME www → cname.vercel-dns.com
   - Po DNS změně Vercel automaticky vystaví SSL
+- QR generátor štítků — kompletní upgrade (`/eshop/admin/qr`)
+  - Náhled štítků na obrazovce (stav previewing, tlačítko "Zpět na výběr")
+  - 3 velikosti štítků: Malé (38mm, 5 sl.), Střední (50mm, 4 sl.), Velké (70mm, 3 sl.)
+  - Filtr kategorií (dropdown z PRODUCT_CATEGORY_LABELS)
+  - Počet kusů na štítek (spinner ×N, 1–99)
+  - PDF export (jspdf + html2canvas-pro, multi-page podpora)
+  - Design: zaoblené rohy, kategorie, slug, inline styles
+  - tsc --noEmit: 0 chyb
