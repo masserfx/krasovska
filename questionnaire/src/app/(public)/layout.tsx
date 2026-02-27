@@ -1,4 +1,12 @@
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Hala Krasovská — Sportovní hala Plzeň-Bolevec",
+    template: "%s | Hala Krasovská",
+  },
+};
 
 const services = [
   { href: "/badminton", label: "Badminton" },
