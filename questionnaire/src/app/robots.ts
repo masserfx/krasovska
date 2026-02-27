@@ -5,7 +5,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/bistro", "/eshop"],
+        allow: [
+          "/",
+          "/badminton",
+          "/florbal",
+          "/sauna",
+          "/teambuilding",
+          "/pronajem-haly",
+          "/bistro-krasovska",
+          "/bistro",
+          "/eshop",
+          "/blog",
+        ],
         disallow: [
           "/dashboard",
           "/projects",
