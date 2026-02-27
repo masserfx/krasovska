@@ -35,6 +35,30 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  name: "Hala Krasovská",
+  description:
+    "Sportovní hala v Plzni-Bolevci — 9 badmintonových kurtů, víceúčelová plocha, cvičební sál, sauna, bistro a e-shop.",
+  url: "https://hala-krasovska.vercel.app",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Krašovská 32",
+    addressLocality: "Plzeň",
+    addressRegion: "Plzeňský kraj",
+    postalCode: "323 00",
+    addressCountry: "CZ",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 49.7647,
+    longitude: 13.3667,
+  },
+  email: "recepce@halakrasovska.cz",
+  sameAs: ["https://www.facebook.com/halakrasovska"],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,6 +69,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Providers>{children}</Providers>
       </body>
     </html>

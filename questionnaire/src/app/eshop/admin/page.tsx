@@ -115,7 +115,8 @@ function AdminContent() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {product.image_url ? (
-                        <img src={product.image_url} alt="" className="h-10 w-10 rounded-lg object-cover" />
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={product.image_url} alt={product.name} className="h-10 w-10 rounded-lg object-cover" />
                       ) : (
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background text-xs text-muted">—</div>
                       )}
