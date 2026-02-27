@@ -174,7 +174,6 @@ function QuestionnaireApp() {
 
   return (
     <div className="min-h-screen bg-background">
-      <h1 className="sr-only">Hala Krasovská — Sportovní hala Plzeň-Bolevec</h1>
       {/* Header */}
       <header className="no-print sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
