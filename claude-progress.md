@@ -22,6 +22,7 @@
 | 9 | Email kampaně | done | ano | EMAIL_KAMPANE.md (317 řádků, 5 automatizovaných sekvencí) |
 | 10 | Sezónní kampaně | done | ano | SEZONNI_KAMPANE.md (347 řádků, 12 měsíců) |
 | 11 | MKT skills (mkt-post, bistro-promo, seo-audit) | done | ano | 3 skills + 3 šablony (mkt-post, mkt-campaign, mkt-email) |
+| 12 | SEO audit halakrasovska.cz | done | ano | Skóre 28/100, 7 kritických + 5 středních + 3 nízké nálezy, 15-bodový akční plán |
 
 ### Stavy
 - `pending` — ještě nezačato
@@ -48,3 +49,9 @@
   - 3 šablony: mkt-post, mkt-campaign, mkt-email (vault/06-templates/)
   - 3 skills: /mkt-post, /bistro-promo, /seo-audit
   - Reference přidány do CLAUDE.md a vault/CLAUDE.md
+- SEO audit: halakrasovska.cz — skóre 28/100
+  - 7 kritických nálezů: chybí robots.txt, sitemap.xml, schema.org, og:title/description, canonical, single-page architektura, zastaralý obsah (ceník 2024)
+  - 5 středních: krátký title (36 znaků), krátká description (128 znaků), generický H1, generické alt texty, žádné interní linky
+  - 3 nízké: GBP neověřen, NAP konzistence, og:url HTTP
+  - Quick wins (#1-9): robots.txt, sitemap, canonical, OG tagy, title, description, H1, alt texty → odhadovaný dopad na ~55/100
+  - Uloženo: vault/00-inbox/2026-02-27-seo-audit.md (238 řádků)
