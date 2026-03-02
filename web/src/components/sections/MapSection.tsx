@@ -29,16 +29,8 @@ export function MapSection() {
             title="Sportovní hala Krašovská na mapě"
           />
 
-          {/* Pin overlay — blocks map interaction, click opens Google Maps */}
-          <a
-            href={CONTACT.googleMaps}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute inset-0 z-20 cursor-pointer"
-            aria-label="Otevřít mapu v Google Maps"
-            onMouseEnter={() => setTooltipVisible(true)}
-            onMouseLeave={() => setTooltipVisible(false)}
-          >
+          {/* Pin overlay — pointer-events-none lets map interaction through */}
+          <div className="pointer-events-none absolute inset-0 z-20">
             {/* Centrovací wrapper pro pin */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               {/* Pulzující kruhy */}
@@ -48,8 +40,17 @@ export function MapSection() {
                 style={{ animation: "pulse-ring 2s ease-out infinite" }}
               />
 
-              {/* Pin SVG */}
-              <div className="relative -mt-14 flex flex-col items-center" style={{ animation: "pin-bounce 2s ease-in-out infinite" }}>
+              {/* Pin — clickable, opens Google Maps */}
+              <a
+                href={CONTACT.googleMaps}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pointer-events-auto relative -mt-14 flex cursor-pointer flex-col items-center"
+                style={{ animation: "pin-bounce 2s ease-in-out infinite" }}
+                aria-label="Otevřít mapu v Google Maps"
+                onMouseEnter={() => setTooltipVisible(true)}
+                onMouseLeave={() => setTooltipVisible(false)}
+              >
                 <svg
                   width="48"
                   height="64"
@@ -81,11 +82,11 @@ export function MapSection() {
                   className="mt-[-4px] h-2 w-6 rounded-full bg-black/20 blur-[2px]"
                   style={{ animation: "pin-shadow 2s ease-in-out infinite" }}
                 />
-              </div>
+              </a>
 
               {/* Tooltip */}
               <div
-                className={`absolute bottom-full left-1/2 mb-3 w-72 -translate-x-1/2 transition-all duration-200 ${
+                className={`pointer-events-none absolute bottom-full left-1/2 mb-3 w-72 -translate-x-1/2 transition-all duration-200 ${
                   tooltipVisible
                     ? "visible translate-y-0 opacity-100"
                     : "invisible translate-y-2 opacity-0"
@@ -145,7 +146,7 @@ export function MapSection() {
                 </div>
               </div>
             </div>
-          </a>
+          </div>
         </div>
 
         <div className="mt-6 flex items-center justify-center gap-6">

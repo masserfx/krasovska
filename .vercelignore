@@ -1,0 +1,8 @@
+.next
+.vercel/builders
+node_modules
+questionnaire
+vault
+calendar
+plane_*.py
+*.bak
